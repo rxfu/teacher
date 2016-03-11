@@ -42,6 +42,17 @@ class QueueManager implements FactoryContract, MonitorContract
     }
 
     /**
+     * Register an event listener for the before job event.
+     *
+     * @param  mixed  $callback
+     * @return void
+     */
+    public function before($callback)
+    {
+        $this->app['events']->listen(Events\JobProcessing::class, $callback);
+    }
+
+    /**
      * Register an event listener for the after job event.
      *
      * @param  mixed  $callback
@@ -182,6 +193,10 @@ class QueueManager implements FactoryContract, MonitorContract
      */
     protected function getConfig($name)
     {
+        if ($name === null || $name === 'null') {
+            return ['driver' => 'null'];
+        }
+
         return $this->app['config']["queue.connections.{$name}"];
     }
 
