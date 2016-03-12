@@ -99,4 +99,103 @@ class User extends Authenticatable {
 		}
 	}
 
+	/**
+	 * 学院
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function college() {
+		return $this->belongsTo('App\Models\Department', 'xy', 'dw');
+	}
+
+	/**
+	 * 性别
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function gender() {
+		return $this->belongsTo('App\Models\Gender', 'xbdm', 'dm');
+	}
+
+	/**
+	 * 证件类型
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function idtype() {
+		return $this->belongsTo('App\Models\Idtype', 'zjlx', 'dm');
+	}
+
+	/**
+	 * 国籍
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function country() {
+		return $this->belongsTo('App\Models\Country', 'gj', 'dm');
+	}
+
+	/**
+	 * 职称
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function position() {
+		return $this->belongsTo('App\Models\Position', 'zc', 'dm');
+	}
+
+	/**
+	 * 学历
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function education() {
+		return $this->belongsTo('App\Models\Education', 'xl', 'dm');
+	}
+
+	/**
+	 * 学位
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function degree() {
+		return $this->belongsTo('App\Models\Degree', 'xw', 'dm');
+	}
+
+	/**
+	 * 系所
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function school() {
+		return $this->belongsTo('App\Models\School', 'xsh', 'dm');
+	}
+
+	/**
+	 * 教研室
+	 * @author FuRongxin
+	 * @date    2016-03-12
+	 * @version 2.0
+	 * @return  object     所属对象
+	 */
+	public function section() {
+		return $this->belongsTo('App\Models\Section', 'jys', 'dm');
+	}
+
 }
