@@ -6,7 +6,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table id='scores-table' class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover datatable">
                         <thead>
                             <tr>
                                 <th class="active">年度</th>
@@ -28,7 +28,18 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                        	<tr></tr>
+                        	@foreach ($tasks as $task)
+                        		<tr>
+                        			<td>{{ $task->nd }}</td>
+                        			<td>{{ $task->xq }}</td>
+                        			<td>{{ $task->kcxh }}</td>
+                        			<td>{{ $task->kcmc }}</td>
+                        			<td>{{ $task->xs }}</td>
+                        			<td>
+                        				<a href="#" title="查询成绩">查询成绩</a>
+                        			</td>
+                        		</tr>
+                        	@endforeach
                         </tbody>
                     </table>
                 </div>
