@@ -32,6 +32,10 @@ class User extends Authenticatable {
 
 	protected $primaryKey = 'jsgh';
 
+	protected $casts = [
+		'zt' => 'boolean',
+	];
+
 	/**
 	 * 获取用户名
 	 * @author FuRongxin
