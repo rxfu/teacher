@@ -24,7 +24,7 @@ class ProfileController extends Controller {
 	public function index() {
 		return view('profile.index')
 			->withTitle('个人资料')
-			->withProfile(Aut::user());
+			->withProfile(Auth::user());
 	}
 
 }

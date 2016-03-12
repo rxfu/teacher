@@ -16,33 +16,33 @@
                         </tr>
                         <tr>
                             <th class="active">性别</th>
-                            <td>{{ $profile->gender->mc }}</td>
+                            <td>{{ count($profile->gender) ? $profile->gender->mc : '' }}</td>
                             <th class="active">出生日期</th>
                             <td>{{ $profile->csrq }}</td>
                         </tr>
                         <tr>
                             <th class="active">证件类型</th>
-                            <td>{{ $profile->idtype->mc }}</td>
+                            <td>{{ count($profile->zjlx) ? $profile->idtype->mc : '' }}</td>
                             <th class="active">证件号码</th>
                             <td>{{ $profile->sfzh }}</td>
                         </tr>
                         <tr>
                             <th class="active">国籍</th>
-                            <td>{{ $profile->country->mc }}</td>
+                            <td>{{ count($profile->country) ? $profile->country->mc : '' }}</td>
                             <th class="active">职称</th>
-                            <td>{{ $profile->position->mc }}</td>
+                            <td>{{ count($profile->positiion) ? $profile->position->mc : '' }}</td>
                         </tr>
                         <tr>
                             <th class="active">学历</th>
-                            <td>{{ $profile->education->mc }}</td>
+                            <td>{{ count($profile->education) ? $profile->education->mc : '' }}</td>
                             <th class="active">学位</th>
-                            <td>{{ $profile->degree->mc }}</td>
+                            <td>{{ count($profile->degree) ? $profile->degree->mc : '' }}</td>
                         </tr>
                         <tr>
                             <th class="active">专业</th>
                             <td>{{ $profile->zy }}</td>
                             <th class="active">学院</th>
-                            <td>{{ $profile->college->mc }}</td>
+                            <td>{{ count($profile->college) ? $profile->college->mc : '' }}</td>
                         </tr>
                         <tr>
                             <th class="active">系所</th>
