@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Term;
+
 /**
  * 显示并处理系统消息
  *
@@ -19,6 +21,11 @@ class HomeController extends Controller {
 	 * @return  \Illuminate\Http\Response 系统消息列表
 	 */
 	public function index() {
-		return view('home.index')->withTitle('综合管理系统');
+		$term = Term::find(session('term'));
+
+		return view('home.index')
+			->withTitle('综合管理系统')
+			->withYear(session('year'))
+			->withTerm($term->mc);
 	}
 }
