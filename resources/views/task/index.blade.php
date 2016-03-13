@@ -35,9 +35,9 @@
                         			<td>{{ $task->nd }}</td>
                         			<td>{{ $task->xq }}</td>
                         			<td>{{ $task->kcxh }}</td>
-                        			<td>{{ $task->kcmc }}</td>
-                                    <td>{{ $task->xs }}</td>
-                        			<td>{{ $task->rs }}</td>
+                        			<td>{{ $task->course->kcmc }}</td>
+                                    <td>{{ $task->course->xs }}</td>
+                        			<td>{{ $task->scores->count() }}</td>
                         			<td>
                         				<a href="#" title="查询成绩">查询成绩</a>
                         			</td>

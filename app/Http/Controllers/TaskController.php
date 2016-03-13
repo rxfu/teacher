@@ -21,7 +21,10 @@ class TaskController extends Controller {
 	 * @return  \Illuminate\Http\Response 教师课程列表
 	 */
 	public function index() {
-		$tasks = Task::whereJsgh(Auth::user()->jsgh)
+		$tasks = Task::with(['course' => function ($query) {
+			$query->select('kch', 'kcmc', 'xs');
+		}])
+			->whereJsgh(Auth::user()->jsgh)
 			->orderBy('nd', 'xq', 'kcxh')
 			->get();
 
