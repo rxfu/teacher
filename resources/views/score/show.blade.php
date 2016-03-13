@@ -26,14 +26,14 @@
                         </thead>
                         <tbody>
                             @foreach ($scores as $score)
-                            <tr>
+                            <tr{!! $score->zpcj < config('constants.score.passline') ? ' class="danger"' : '' !!}>
                                 <td>{{ $score->xh }}</td>
                                 <td>{{ $score->xm }}</td>
-                                @foreach (array_pluck($values, 'id') as $id)
-                                	<td{!! $score->{'cj' . $id} < config('constants.score.passline') ? ' class="danger"' : '' !!}>{{ $score->{'cj' . $id} }}</td>
+                                @foreach (array_pluck($ratios, 'id') as $id)
+                                	<td>{{ $score->{'cj' . $id} }}</td>
                                 @endforeach
-                                <td{!! $score->zpcj < config('constants.score.passline') ? ' class="danger"' : '' !!}>{{ $score->zpcj }}</td>
-                                <td>{{ $score->exstatus->mc }}</td>
+                                <td>{{ $score->zpcj }}</td>
+                                <td>{{ $score->status->mc }}</td>
                             </tr>
                             @endforeach
                         </tbody>

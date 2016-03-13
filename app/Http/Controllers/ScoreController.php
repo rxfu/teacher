@@ -57,7 +57,8 @@ class ScoreController extends Controller {
 	public function show(Request $request, $kcxh) {
 		$inputs = $request->all();
 
-		$scores = Score::whereKcxh($kcxh)
+		$scores = Score::wih('status')
+			->whereKcxh($kcxh)
 			->whereNd($inputs['year'])
 			->whereXq($inputs['term'])
 			->orderBy('xh')
