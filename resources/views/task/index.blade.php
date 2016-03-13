@@ -14,6 +14,7 @@
                                 <th class="active">课程序号</th>
                                 <th class="active">课程名称</th>
                                 <th class="active">学时</th>
+                                <th class="active">上课人数</th>
                                 <th class="active">操作</th>
                             </tr>
                         </thead>
@@ -24,6 +25,7 @@
                                 <th>课程序号</th>
                                 <th>课程名称</th>
                                 <th>学时</th>
+                                <th>上课人数</th>
                                 <th>操作</th>
                             </tr>
                         </tfoot>
@@ -34,7 +36,8 @@
                         			<td>{{ $task->xq }}</td>
                         			<td>{{ $task->kcxh }}</td>
                         			<td>{{ $task->kcmc }}</td>
-                        			<td>{{ $task->xs }}</td>
+                                    <td>{{ $task->xs }}</td>
+                        			<td>{{ $task->rs }}</td>
                         			<td>
                         				<a href="#" title="查询成绩">查询成绩</a>
                         			</td>
