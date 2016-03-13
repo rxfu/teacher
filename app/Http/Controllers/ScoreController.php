@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ratio;
 use App\Models\Score;
 use App\Models\Task;
 use Auth;
