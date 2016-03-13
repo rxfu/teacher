@@ -5,34 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 成绩比例
+ * 考试状态
  *
  * @author FuRongxin
  * @date 2016-03-13
  * @version 2.0
  */
-class Ratio extends Model {
+class Status extends Model {
 
-	protected $table = 'jx_cjfs';
+	protected $table = 'cj_kszt';
 
-	protected $primaryKey = 'fs';
+	protected $primaryKey = 'dm';
 
 	public $incrementing = false;
 
 	public $timestamps = false;
 
-	protected $casts = [
-		'jg' => 'boolean',
-	];
-
 	/**
-	 * 教学任务书
+	 * 学生成绩
 	 * @author FuRongxin
 	 * @date    2016-03-13
 	 * @version 2.0
 	 * @return  object 所属对象
 	 */
-	public function tasks() {
-		return $this->hasMany('App\Models\Task', 'cjfs', 'fs');
+	public function scores() {
+		return $this->hasMany('App\Models\Score', 'kszt', 'dm');
 	}
 }

@@ -32,7 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::group(['middleware' => ['auth']], function () {
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		Route::resource('profile', 'ProfileController', ['only' => ['index']]);
-		Route::resource('score', 'ScoreController', ['only' => ['index']]);
+		Route::resource('score', 'ScoreController', ['only' => ['index', 'show']]);
 		Route::resource('task', 'TaskController', ['only' => ['index']]);
 
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Score;
+use App\Models\Task;
+use Auth;
 use Illuminate\Http\Request;
 
 /**
@@ -21,14 +24,6 @@ class ScoreController extends Controller {
 	 * @return  \Illuminate\Http\Response 学生成绩列表
 	 */
 	public function index() {
-		$scores = Score::select('nd', 'xq', 'kcxh')
-			->groupBy('nd', 'xq', 'kcxh')
-			->orderBy('nd', 'xq', 'kcxh')
-			->get();
-
-		return view('score.index')
-			->withTitle('已录入成绩课程列表')
-			->withScores($scores);
 	}
 
 	/**
@@ -51,13 +46,46 @@ class ScoreController extends Controller {
 	}
 
 	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 显示课程成绩单
+	 * @author FuRongxin
+	 * @date    2016-03-13
+	 * @version 2.0
+	 * @param  	\Illuminate\Http\Request  $request 成绩请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 课程成绩列表
 	 */
-	public function show($id) {
-		//
+	public function show(Request $request, $kcxh) {
+		$inputs = $request->all();
+
+		$scores = Score::whereKcxh($kcxh)
+			->whereNd($inputs['year'])
+			->whereXq($inputs['term'])
+			->orderBy('xh')
+			->get();
+
+		$task = Task::whereKcxh($kcxh)
+			->whereNd($input['year'])
+			->whereXq($inputs['term'])
+			->whereJsgh(Auth::user()->jsgh)
+			->firstOrFail();
+
+		$ratios = [];
+		$items  = Ratio::whereFs($task->cjfs)
+			->orderBy('id')
+			->get();
+		foreach ($items as $ratio) {
+			$ratios[] = [
+				'id'    => $ratio->id,
+				'name'  => $ratio->idm,
+				'value' => $ratio->bl,
+			];
+		}
+
+		return view('score.show')
+			->withTitle('成绩单')
+			->withTask($task)
+			->withRatios($ratios)
+			->withScores($scores);
 	}
 
 	/**
