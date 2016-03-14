@@ -87,18 +87,15 @@
                                         <a href="#">成绩录入</a>
                                     </li>
                                     <li>
-                                        <a href="#">成绩查询</a>
+                                        <a href="{{ url('task') }}">成绩查询</a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-calendar fa-fw"></i> 课表管理<span class="fa arrow"></span></a>
+                                <a href="#"><i class="fa fa-calendar fa-fw"></i> 课程管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="#">课程表</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">课程列表</a>
+                                        <a href="#">课表查询</a>
                                     </li>
                                 </ul>
                             </li>

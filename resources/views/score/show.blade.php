@@ -12,7 +12,7 @@
         	</div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover data-table">
                         <thead>
                             <tr>
                                 <th class="active">学号</th>
