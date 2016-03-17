@@ -13,6 +13,7 @@
                                 <th class="active">学期</th>
                                 <th class="active">课程序号</th>
                                 <th class="active">课程名称</th>
+                                <th class="active">学分</th>
                                 <th class="active">学时</th>
                                 <th class="active">上课人数</th>
                                 <th class="active">操作</th>
@@ -24,6 +25,7 @@
                                 <th>学期</th>
                                 <th>课程序号</th>
                                 <th>课程名称</th>
+                                <th>学分</th>
                                 <th>学时</th>
                                 <th>上课人数</th>
                                 <th>操作</th>
@@ -33,9 +35,10 @@
                         	@foreach ($tasks as $task)
                         		<tr>
                         			<td>{{ $task->nd }}</td>
-                        			<td>{{ $task->xq }}</td>
+                        			<td>{{ $task->term->mc }}</td>
                         			<td>{{ $task->kcxh }}</td>
                         			<td>{{ $task->course->kcmc }}</td>
+                                    <td>{{ $task->course->xf }}</td>
                                     <td>{{ $task->course->xs }}</td>
                         			<td>{{ $task->scores->count() }}</td>
                         			<td>

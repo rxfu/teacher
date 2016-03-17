@@ -22,6 +22,17 @@ class Task extends Model {
 	public $timestamps = false;
 
 	/**
+	 * 学期
+	 * @author FuRongxin
+	 * @date    2016-03-17
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function term() {
+		return $this->belongsTo('App\Models\Term', 'xq', 'dm');
+	}
+
+	/**
 	 * 学生成绩
 	 * @author FuRongxin
 	 * @date    2016-03-12
@@ -29,9 +40,7 @@ class Task extends Model {
 	 * @return  object 所属对象
 	 */
 	public function scores() {
-		return $this->hasMany('App\Models\Score', 'kcxh', 'kcxh')
-			->whereNd($this->nd)
-			->whereXq($this->xq);
+		return $this->hasMany('App\Models\Score', 'kcxh', 'kcxh');
 	}
 
 	/**

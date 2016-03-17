@@ -23,11 +23,22 @@ class TaskController extends Controller {
 	 * @return  \Illuminate\Http\Response 教师课程列表
 	 */
 	public function index() {
-		$tasks = Task::with(['course' => function ($query) {
-			$query->select('kch', 'kcmc', 'xs');
-		}])
+		$tasks = Task::with([
+			'course' => function ($query) {
+				$query->select('kch', 'kcmc', 'xs');
+			},
+			'scores' => function ($query) {
+				$query->join('cj_web', function ($join) {
+					$join->on('cj_web.kcxh', '=', 'pk_jxrw.kcxh')
+						->on('cj_web.nd', '=', 'pk_jxrw.nd')
+						->on('cj_web.xq', '=', 'pk_jxrw.xq');
+				});
+			},
+			'term'])
 			->whereJsgh(Auth::user()->jsgh)
-			->orderBy('nd', 'xq', 'kcxh')
+			->orderBy('nd', 'desc')
+			->orderBy('xq', 'desc')
+			->orderBy('kcxh')
 			->get();
 
 		return view('task.index')
