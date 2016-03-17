@@ -1,19 +1,3 @@
-$.extend(true, $.fn.dataTable.defaults, {
-	'pagingType': 'full_numbers',
-	'lengthMenu': [
-		[10, 25, 50, -1],
-		[10, 25, 50, '全部']
-	],
-	'ordering': false,
-	'processing': true,
-	'serverSide': true,
-	'language': {
-		'url': '/student/js/plugins/dataTables/i18n/zh_cn.lang'
-	},
-	'deferRender': true,
-	'autoWidth': true
-});
-
 (function($) {
 	$.fn.getBaseUrl = function() {
 		var pathname = $(location).attr('pathname').substring(1);
@@ -30,7 +14,7 @@ $(document).ready(function() {
 		'pagingType': 'full_numbers',
 		'ordering': false,
 		'language': {
-			'url': '/student/js/plugins/dataTables/i18n/zh_cn.lang'
+			'url': '/teacher/js/plugins/dataTables/i18n/zh_cn.lang'
 		}
 	});
 	/** New student */

@@ -39,7 +39,7 @@
                                     <td>{{ $task->course->xs }}</td>
                         			<td>{{ $task->scores->count() }}</td>
                         			<td>
-                        				<a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq] }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
+                        				<a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
                         			</td>
                         		</tr>
                         	@endforeach
