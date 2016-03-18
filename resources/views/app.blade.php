@@ -95,7 +95,7 @@
                                 <a href="#"><i class="fa fa-calendar fa-fw"></i> 课程管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="#">课表查询</a>
+                                        <a href="{{ url('task') }}">课表查询</a>
                                     </li>
                                 </ul>
                             </li>

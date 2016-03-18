@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Selcourse;
 use App\Models\Task;
 use Auth;
 use Illuminate\Http\Request;
@@ -59,13 +60,32 @@ class TaskController extends Controller {
 	}
 
 	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 显示课程学生名单
+	 * @author FuRongxin
+	 * @date    2016-03-18
+	 * @version 2.0
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 学生名录列表
 	 */
-	public function show($id) {
-		//
+	public function show(Request $request, $kcxh) {
+		$inputs = $request->all();
+
+		$students = Selcourse::whereKcxh($kcxh)
+			->whereNd($inputs['year'])
+			->whereXq($inputs['term'])
+			->get();
+
+		$task = Task::whereKcxh($kcxh)
+			->whereNd($inputs['year'])
+			->whereXq($inputs['term'])
+			->whereJsgh(Auth::user()->jsgh)
+			->firstOrFail();
+
+		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
+
+		return view('task.show')
+			->withTitle('学生名单')
+			->withStudents($students);
 	}
 
 	/**

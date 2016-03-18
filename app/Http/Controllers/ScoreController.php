@@ -84,6 +84,7 @@ class ScoreController extends Controller {
 		}
 
 		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
+
 		return view('score.show')
 			->withTitle($title . '成绩单')
 			->withTask($task)
