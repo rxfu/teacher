@@ -33,8 +33,10 @@ Route::group(['middleware' => ['web']], function () {
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		Route::resource('profile', 'ProfileController', ['only' => ['index']]);
 		Route::resource('score', 'ScoreController', ['only' => ['index', 'show']]);
+		Route::resource('timetable', 'TimetableController', ['only' => ['index', 'show']]);
+
+		Route::get('task/timetable', 'TaskController@timetable');
 		Route::resource('task', 'TaskController', ['only' => ['index', 'show']]);
-		Route::resource('tiemtable', 'TimetableController', ['only' => ['index', 'show']]);
 
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 		Route::get('password/change', 'Auth\PasswordController@showChangeForm');

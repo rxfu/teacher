@@ -64,6 +64,7 @@ class TaskController extends Controller {
 	 * @author FuRongxin
 	 * @date    2016-03-18
 	 * @version 2.0
+	 * @param  \Illuminate\Http\Request  $request 学生名单请求
 	 * @param   string $kcxh 12位课程序号
 	 * @return  \Illuminate\Http\Response 学生名录列表
 	 */
@@ -84,8 +85,29 @@ class TaskController extends Controller {
 		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
 
 		return view('task.show')
-			->withTitle('学生名单')
+			->withTitle($title . '学生名单')
 			->withStudents($students);
+	}
+
+	/**
+	 * 显示课程学期列表
+	 * @author FuRongxin
+	 * @date    2016-03-18
+	 * @version 2.0
+	 * @return  \Illuminate\Http\Response 课程学期列表
+	 */
+	public function timetable() {
+		$periods = Task::with('term')
+			->whereJsgh(Auth::user()->jsgh)
+			->select('nd', 'xq')
+			->groupBy('nd', 'xq')
+			->orderBy('nd', 'desc')
+			->orderBy('xq', 'desc')
+			->get();
+
+		return view('task.timetable')
+			->withTitle('学期列表')
+			->withPeriods($periods);
 	}
 
 	/**

@@ -6,52 +6,56 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover data-table">
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="active">年度</th>
-                                <th class="active">学期</th>
-                                <th class="active">课程序号</th>
+                                <th class="active">课程代码</th>
                                 <th class="active">课程名称</th>
-                                <th class="active">学分</th>
-                                <th class="active">学时</th>
-                                <th class="active">上课人数</th>
-                                <th class="active">操作</th>
+                                <th class="active">校区</th>
+                                <th class="active">周一</th>
+                                <th class="active">周二</th>
+                                <th class="active">周三</th>
+                                <th class="active">周四</th>
+                                <th class="active">周五</th>
+                                <th class="active">周六</th>
+                                <th class="active">周日</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>年度</th>
-                                <th>学期</th>
-                                <th>课程序号</th>
+                                <th>课程代码</th>
                                 <th>课程名称</th>
-                                <th>学分</th>
-                                <th>学时</th>
-                                <th>上课人数</th>
-                                <th>操作</th>
+                                <th>校区</th>
+                                <th>周一</th>
+                                <th>周二</th>
+                                <th>周三</th>
+                                <th>周四</th>
+                                <th>周五</th>
+                                <th>周六</th>
+                                <th>周日</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                        	@foreach ($tasks as $task)
-                        		<tr{!! $task->scores->count() <= 0 ? ' class="danger"' : '' !!}>
-                        			<td>{{ $task->nd }}</td>
-                        			<td>{{ $task->term->mc }}</td>
-                        			<td>{{ $task->kcxh }}</td>
-                        			<td>{{ $task->course->kcmc }}</td>
-                                    <td>{{ $task->course->xf }}</td>
-                                    <td>{{ $task->course->xs }}</td>
-                        			<td>{{ $task->scores->count() }}</td>
-                        			<td>
-                                        @if ($task->scores->count() <= 0)
-                                            <span class="text-danger">上课人数为零</span>
-                                        @else
-                                            <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
-                                            <a href="{{ route('task.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="学生名单" class="btn btn-primary">学生名单</a>
-                        				    <a href="{{ route('timetable.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="课程列表" class="btn btn-primary">课程列表</a>
-                                        @endif
-                        			</td>
-                        		</tr>
-                        	@endforeach
+                            @foreach ($courses as $course)
+                                <tr>
+                                    <td>{{ $course['kcxh'] }}</td>
+                                    <td>{{ $course['kcmc'] }}</td>
+                                    <td>{{ $course['xqh'] }}</td>
+                                    @for ($week = 1; $week <= 7; $week++)
+                                        <td{!! isset($course[$week]) ? ' class="warning"' : '' !!}>
+                                            @if (isset($course[$week]))
+                                                @foreach ($course[$week] as $class)
+                                                    <p>
+                                                        <div>第 {{ $class['ksz'] === $class['jsz'] ? $class['ksz'] : $class['ksz'] . ' ~ ' . $class['jsz'] }} 周</div>
+                                                        <div class="text-danger"><strong>第 {{ $class['ksj'] === $class['jsj'] ? $class['ksj'] : $class['ksj'] . ' ~ ' . $class['jsj'] }} 节</strong></div>
+                                                        <div class="text-warning">{{ empty($class['js']) ? '未知' : $class['js'] }}教室</div>
+                                                    </p>
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                    @endfor
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
