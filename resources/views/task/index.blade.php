@@ -33,7 +33,7 @@
                         </tfoot>
                         <tbody>
                         	@foreach ($tasks as $task)
-                        		<tr>
+                        		<tr{!! $task->scores->count() <= 0 ? ' class="danger"' : '' !!}>
                         			<td>{{ $task->nd }}</td>
                         			<td>{{ $task->term->mc }}</td>
                         			<td>{{ $task->kcxh }}</td>
@@ -42,7 +42,11 @@
                                     <td>{{ $task->course->xs }}</td>
                         			<td>{{ $task->scores->count() }}</td>
                         			<td>
-                        				<a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
+                                        @if ($task->scores->count() <= 0)
+                                            <span class="text-danger">上课人数为零</span>
+                                        @else
+                        				    <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
+                                        @endif
                         			</td>
                         		</tr>
                         	@endforeach
