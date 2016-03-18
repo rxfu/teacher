@@ -27,13 +27,6 @@ class TaskController extends Controller {
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
 			},
-			'scores' => function ($query) {
-				$query->join('cj_web', function ($join) {
-					$join->on('cj_web.kcxh', '=', 'pk_jxrw.kcxh')
-						->on('cj_web.nd', '=', 'pk_jxrw.nd')
-						->on('cj_web.xq', '=', 'pk_jxrw.xq');
-				});
-			},
 			'term'])
 			->whereJsgh(Auth::user()->jsgh)
 			->orderBy('nd', 'desc')

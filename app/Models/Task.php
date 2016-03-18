@@ -40,7 +40,9 @@ class Task extends Model {
 	 * @return  object 所属对象
 	 */
 	public function scores() {
-		return $this->hasMany('App\Models\Score', 'kcxh', 'kcxh');
+		return $this->hasMany('App\Models\Score', 'kcxh', 'kcxh')
+			->whereNd($this->nd)
+			->whereXq($this->xq);
 	}
 
 	/**
@@ -64,4 +66,5 @@ class Task extends Model {
 	public function ratio() {
 		return $this->belongsTo('App\Models\Ratio', 'cjfs', 'fs');
 	}
+
 }
