@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dtscore;
 use App\Models\Ratio;
-use App\Models\Score;
 use App\Models\Task;
 use Auth;
 use Illuminate\Http\Request;
@@ -58,7 +58,7 @@ class ScoreController extends Controller {
 	public function show(Request $request, $kcxh) {
 		$inputs = $request->all();
 
-		$scores = Score::wih('status')
+		$scores = Dtscore::with('status')
 			->whereKcxh($kcxh)
 			->whereNd($inputs['year'])
 			->whereXq($inputs['term'])
@@ -66,7 +66,7 @@ class ScoreController extends Controller {
 			->get();
 
 		$task = Task::whereKcxh($kcxh)
-			->whereNd($input['year'])
+			->whereNd($inputs['year'])
 			->whereXq($inputs['term'])
 			->whereJsgh(Auth::user()->jsgh)
 			->firstOrFail();
@@ -83,8 +83,9 @@ class ScoreController extends Controller {
 			];
 		}
 
+		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
 		return view('score.show')
-			->withTitle('成绩单')
+			->withTitle($title . '成绩单')
 			->withTask($task)
 			->withRatios($ratios)
 			->withScores($scores);
