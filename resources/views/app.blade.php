@@ -84,7 +84,7 @@
                                 <a href="#"><i class="fa fa-tasks fa-fw"></i> 成绩管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="#">成绩录入</a>
+                                        <a href="{{ url('score') }}">成绩录入</a>
                                     </li>
                                     <li>
                                         <a href="{{ url('task') }}">成绩查询</a>

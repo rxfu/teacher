@@ -18,13 +18,26 @@ use Illuminate\Http\Request;
 class ScoreController extends Controller {
 
 	/**
-	 * 显示学生成绩列表
+	 * 显示当前课程列表
 	 * @author FuRongxin
 	 * @date    2016-03-12
 	 * @version 2.0
 	 * @return  \Illuminate\Http\Response 学生成绩列表
 	 */
 	public function index() {
+		$tasks = Task::with([
+			'course' => function ($query) {
+				$query->select('kch', 'kcmc', 'xs');
+			}])
+			->whereJsgh(Auth::user()->jsgh)
+			->whereNd(session('year'))
+			->whereXq(session('term'))
+			->orderBy('kcxh')
+			->get();
+
+		return view('score.index')
+			->withTitle('当前课程列表')
+			->withTasks($tasks);
 	}
 
 	/**

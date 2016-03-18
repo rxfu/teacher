@@ -10,11 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 
 class TimetableController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
+
 	/**
 	 * 显示课程列表
 	 * @author FuRongxin
@@ -79,12 +75,6 @@ class TimetableController extends Controller {
 		//
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	/**
 	 * 显示课程表
 	 * @author FuRongxin

@@ -67,4 +67,17 @@ class Task extends Model {
 		return $this->belongsTo('App\Models\Ratio', 'cjfs', 'fs');
 	}
 
+	/**
+	 * 已选课程
+	 * @author FuRongxin
+	 * @date    2016-03-18
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function selcourse() {
+		return $this->belongsTo('App\Models\Selcourse', 'kcxh', 'kcxh')
+			->whereNd($this->nd)
+			->whereXq($this->xq);
+	}
+
 }
