@@ -70,15 +70,17 @@ class TaskController extends Controller {
 	 */
 	public function show(Request $request, $kcxh) {
 		$inputs = $request->all();
+		$year   = isset($inputs['year']) ? $inputs['year'] : session('year');
+		$term   = isset($inputs['term']) ? $inputs['term'] : session('term');
 
 		$students = Selcourse::whereKcxh($kcxh)
-			->whereNd($inputs['year'])
-			->whereXq($inputs['term'])
+			->whereNd($year)
+			->whereXq($term)
 			->get();
 
 		$task = Task::whereKcxh($kcxh)
-			->whereNd($inputs['year'])
-			->whereXq($inputs['term'])
+			->whereNd($year)
+			->whereXq($term)
 			->whereJsgh(Auth::user()->jsgh)
 			->firstOrFail();
 

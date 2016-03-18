@@ -74,8 +74,8 @@ class Task extends Model {
 	 * @version 2.0
 	 * @return  object 所属对象
 	 */
-	public function selcourse() {
-		return $this->belongsTo('App\Models\Selcourse', 'kcxh', 'kcxh')
+	public function selcourses() {
+		return $this->hasMany('App\Models\Selcourse', 'kcxh', 'kcxh')
 			->whereNd($this->nd)
 			->whereXq($this->xq);
 	}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dtscore;
 use App\Models\Ratio;
 use App\Models\Task;
+use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -35,8 +36,10 @@ class ScoreController extends Controller {
 			->orderBy('kcxh')
 			->get();
 
+		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期';
+
 		return view('score.index')
-			->withTitle('当前课程列表')
+			->withTitle($title . '课程列表')
 			->withTasks($tasks);
 	}
 

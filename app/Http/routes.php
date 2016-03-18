@@ -32,7 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::group(['middleware' => ['auth']], function () {
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		Route::resource('profile', 'ProfileController', ['only' => ['index']]);
-		Route::resource('score', 'ScoreController', ['only' => ['index', 'show']]);
+		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'create']]);
 		Route::resource('timetable', 'TimetableController', ['only' => ['index', 'show']]);
 
 		Route::get('task/timetable', 'TaskController@timetable');
