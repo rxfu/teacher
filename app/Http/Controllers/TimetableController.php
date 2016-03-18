@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helper;
 use App\Models\Course;
 use App\Models\Timetable;
+use Auth;
 use Illuminate\Http\Request;
 
 class TimetableController extends Controller {
@@ -44,7 +45,7 @@ class TimetableController extends Controller {
 			}
 
 			// 在课程信息数组下生成周次为索引的课程时间数组
-			$courses[$selcourse->kcxh][$timetable->zc][] = [
+			$courses[$timetable->kcxh][$timetable->zc][] = [
 				'ksz' => $timetable->ksz,
 				'jsz' => $timetable->jsz,
 				'ksj' => $timetable->ksj,
