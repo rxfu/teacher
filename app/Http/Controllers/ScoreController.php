@@ -109,13 +109,22 @@ class ScoreController extends Controller {
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 显示可录入成绩学生名单
+	 * @author FuRongxin
+	 * @date    2016-03-19
+	 * @version 2.0
+	 * @param  	string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 学生名单
 	 */
-	public function edit($id) {
-		//
+	public function edit($kcxh) {
+		$course = Mjcourse::whereNd(session('year'))
+			->whereXq(session('term'))
+			->whereKcxh($kcxh)
+			->firstOrFail();
+
+		$title = $course->kkxy . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
+		return view('score.edit')
+			->withTitle($title . '成绩录入');
 	}
 
 	/**

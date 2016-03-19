@@ -3,15 +3,6 @@
 @section('content')
 <section class="row">
     <div class="col-sm-12">
-        <h1 class="page-header">
-            <?php echo $info['kkxy'] ?><?php echo $info['nj'] ?>级<?php echo $info['zy'] ?>专业<?php echo $session['year'] ?>年度<?php echo Dictionary::get('xq', $session['term']) ?>学期<?php echo $info['kcxh'] ?><?php echo $info['kcmc'] ?>成绩录入
-        </h1>
-        <div class="alert alert-danger" role="alert">注意：录入成绩自动保存，无需点击提交按钮。点击“<strong>成绩上报</strong>”后，<strong>成绩不可更改！</strong></div>
-    </div>
-</section>
-
-<section class="row">
-    <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="panel-title pull-left">成绩方式：<?php echo $ratios['name'] ?></div>
