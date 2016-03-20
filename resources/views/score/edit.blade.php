@@ -9,14 +9,13 @@
         		成绩组成方式：
                 {{ implode(':', array_pluck($ratios, 'name')) }} = {{ implode(':', array_map(function($n) { return $n / 10; }, array_pluck($ratios, 'value'))) }}
         		</div>
-                <?php if (Config::get('score.submit.uncommitted') == $report): ?>
-                    <div class="pull-right">
-                        <form method="post" action="<?php echo Route::to('score.confirm') ?>" role="form">
-                            <button type="button" class="btn btn-primary" title="成绩上报" data-toggle="modal" data-target="#confirmDialog" data-title="成绩上报" data-message="注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！">成绩上报</button>
-                            <input type="hidden" name="cno" id="cno" value="<?php echo $info['kcxh'] ?>">
-                        </form>
-                    </div>
-                <?php endif;?>
+        		@if ($exists)
+	                <div class="pull-right">
+	                    <form id="confirmForm" name="confirmForm" method="post" action="{{ route('score.confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
+	                        <button type="button" class="btn btn-primary" title="成绩上报">成绩上报</button>
+	                    </form>
+	                </div>
+        		@endif
             </div>
             <div class="panel-body">
                 <div class="table-responsive tab-table">
@@ -33,51 +32,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                        	@foreach ($students as $student)
-                        		<tr>
-                        			<td>
-                        				<div class="form-control-static">{{ $student->xh }}</div>
-                        			</td>
-                        			<td>
-                        				<div class="form-control-static">{{ $student->xm }}</div>
-                        			</td>
-                        		</tr>
-                        	@endforeach
-                            <?php foreach ($students as $student): ?>
-                                <tr data-row="<?php echo $student['xh'] ?>">
-                                    <td><p class="form-control-static"><?php echo $student['xh'] ?></p></td>
-                                    <td><p class="form-control-static"><?php echo $student['xm'] ?></p></td>
-                                    <?php foreach ($ratios['mode'] as $key => $value): ?>
-                                        <td>
-                                            <?php if (Config::get('score.submit.uncommitted') == $student['tjzt']): ?>
-                                                <form method="post" name="scoreForm" action="<?php echo Route::to('score.enter', $info['kcxh']) ?>" role="form">
-                                                    <div class="form-group">
-                                                        <input type="text" name="score" value="<?php echo $student['cj' . $key] ?>" class="form-control">
-                                                        <input type="hidden" name="sno" value="<?php echo $student['xh'] ?>">
-                                                        <input type="hidden" name="mode" value="score<?php echo $key ?>">
-                                                    </div>
-                                                </form>
-                                            <?php else: ?>
-                                                <p class="form-control-static"><?php echo $student['cj' . $key] ?></p>
-                                            <?php endif;?>
-                                        </td>
-                                    <?php endforeach;?>
-                                    <td data-name="total"><p class="form-control-static total"><?php echo $student['zpcj'] ?></p></td>
-                                    <td>
-                                        <?php if (Config::get('score.submit.uncommitted') == $student['tjzt'] && Config::get('score.exam.deferral') != $student['ksztdm']): ?>
-                                            <form method="post" action="<?php echo Route::to('score.status', $info['kcxh']) ?>" role="form">
-                                                <select name="status<?php echo $student['xh'] ?>" id="status<?php echo $student['xh'] ?>" class="form-control">
-                                                    <?php foreach ($statuses as $status): ?>
-                                                        <option value="<?php echo $status['dm'] ?>"<?php echo $status['dm'] === $student['ksztdm'] ? ' selected="selected"' : '' ?>><?php echo $status['mc'] ?></option>
-                                                    <?php endforeach;?>
-                                                </select>
-                                            </form>
-                                        <?php else: ?>
-                                            <p class="form-control-static"><?php echo $student['kszt'] ?></p>
-                                        <?php endif;?>
-                                    </td>
-                                </tr>
-                            <?php endforeach;?>
+                        	<form id="scoreForm" name="scoreForm" action="{{ route('score.update', $course->kcxh) }}" method="post" role="form">
+                        		{!! method_field('put') !!}
+                        		{!! csrf_field() !!}
+	                        	@foreach ($students as $student)
+	                        		<tr>
+	                        			<td>
+	                        				<div class="form-control-static">{{ $student->xh }}</div>
+	                        			</td>
+	                        			<td>
+	                        				<div class="form-control-static">{{ $student->xm }}</div>
+	                        			</td>
+	                        			<td>
+	                        			@if (config('constants.score.uncommitted') == $student->score->tjzt)
+	                        				@foreach (array_pluck($ratios, 'id') as $id)
+	                        					<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $studnet->score->{'cj' . $id} }}" class="form-control">
+	                        				@endforeach
+	                        			@else
+	                        				@foreach (array_pluck($ratios, 'id') as $id)
+	                        					<div class="form-control-static">{{ $student->score->{'cj' . $id } }}</div>
+	                        				@endforeach
+	                        			@endif
+	                        			</td>
+	                        			<td>
+	                        				<div class="form-control-static">{{ $student->score->zpcj }}</div>
+	                        			</td>
+	                        			<td>
+	                        			@if (config('constants.score.uncommitted') == $student->score->tjzt)
+	                        				<select name="{{ $student->xh . 'tjzt' }}" id="{{ $student->xh . 'tjzt' }}" class="form-control">
+	                        					@foreach ($statuses as $status)
+	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->tjzt ? ' selected' : '' }}>{{ $status->mc }}</option>
+	                        					@endforeach
+	                        				</select>
+	                        			@else
+	                        				<div class="form-control-static">{{ $student->status->mc }}</div>
+	                        			@endif
+	                        			</td>
+	                        		</tr>
+	                        	@endforeach
+	                        </form>
                         </tbody>
                     </table>
                 </div>

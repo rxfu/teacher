@@ -140,18 +140,39 @@ class ScoreController extends Controller {
 			];
 		}
 
-		$students = Selcourse::whereNd(session('year'))
+		$students = Selcourse::with([
+			'score' => function ($query) {
+				$query->whereNd(session('year'))
+					->whereXq(session('xq'))
+					->whereKcxh($course->kcxh);
+			},
+			'status',
+		])
+			->whereNd(session('year'))
 			->whereXq(session('term'))
 			->whereKcxh($course->kcxh)
 			->orderBy('xh')
 			->get();
+
+		$exists = Score::whereNd(session('year'))
+			->whereXq(session('term'))
+			->whereKcxh($course->kcxh)
+			->whereTjzt(config('constants.score.uncommitted'))
+			->exists();
+
+		$statuses = Status::orderBy('dm')->get()->filter(function ($status) {
+			return config('constants.score.deferral') != $status->dm;
+		});
 
 		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
 
 		return view('score.edit')
 			->withTitle($title . '成绩录入')
 			->withRatios($ratios)
-			->withStudents($students);
+			->withStudents($students)
+			->withCourse($course)
+			->withExists($exists)
+			->withStatuses($statuses);
 	}
 
 	/**

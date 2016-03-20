@@ -64,9 +64,6 @@ class Selcourse extends Model {
 	 * @return  object 所属对象
 	 */
 	public function score() {
-		return $this->belongsTo('App\Models\Score', 'kcxh', 'kcxh')
-			->whereXh($this->xh)
-			->whereNd($this->nd)
-			->whereXq($this->xq);
+		return $this->belongsTo('App\Models\Score', 'kcxh', 'kcxh');
 	}
 }

@@ -27,6 +27,8 @@ return [
 		'dconfirmed'  => '3', // 教务处已确认
 
 		'passline'    => 60, // 及格线
+
+		'deferal'     => '1', // 缓考
 	],
 
 	/**
