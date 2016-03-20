@@ -44,6 +44,17 @@ class Mjcourse extends Model {
 	}
 
 	/**
+	 * 开课学院
+	 * @author FuRongxin
+	 * @date    2016-03-20
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function college() {
+		return $this->belongsTo('App\Models\Department', 'kkxy', 'dw');
+	}
+
+	/**
 	 * 教学任务书
 	 * @author FuRongxin
 	 * @date    2016-03-13

@@ -5,7 +5,10 @@
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <div class="panel-title pull-left">成绩方式：<?php echo $ratios['name'] ?></div>
+                <div class="panel-title pull-left">
+        		成绩组成方式：
+                {{ implode(':', array_pluck($ratios, 'name')) }} = {{ implode(':', array_map(function($n) { return $n / 10; }, array_pluck($ratios, 'value'))) }}
+        		</div>
                 <?php if (Config::get('score.submit.uncommitted') == $report): ?>
                     <div class="pull-right">
                         <form method="post" action="<?php echo Route::to('score.confirm') ?>" role="form">

@@ -122,9 +122,29 @@ class ScoreController extends Controller {
 			->whereKcxh($kcxh)
 			->firstOrFail();
 
-		$title = $course->kkxy . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
+		$task = Task::whereKcxh($kcxh)
+			->whereNd($inputs['year'])
+			->whereXq($inputs['term'])
+			->whereJsgh(Auth::user()->jsgh)
+			->firstOrFail();
+
+		$ratios = [];
+		$items  = Ratio::whereFs($task->cjfs)
+			->orderBy('id')
+			->get();
+		foreach ($items as $ratio) {
+			$ratios[] = [
+				'id'    => $ratio->id,
+				'name'  => $ratio->idm,
+				'value' => $ratio->bl,
+			];
+		}
+
+		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
+
 		return view('score.edit')
-			->withTitle($title . '成绩录入');
+			->withTitle($title . '成绩录入')
+			->withRatios($ratios);
 	}
 
 	/**
