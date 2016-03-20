@@ -25,14 +25,24 @@
                             <tr>
                                 <th class="active">学号</th>
                                 <th class="active">姓名</th>
-                                <?php foreach ($ratios['mode'] as $ratio): ?>
-                                    <th class="active"><?php echo $ratio['idm'] ?></th>
-                                <?php endforeach;?>
+                                @foreach (array_pluck($ratios, 'name') as $name)
+                                	<th class="active">{{ $name }}</th>
+                                @endforeach
                                 <th class="active">总评</th>
                                 <th class="active">状态</th>
                             </tr>
                         </thead>
                         <tbody>
+                        	@foreach ($students as $student)
+                        		<tr>
+                        			<td>
+                        				<div class="form-control-static">{{ $student->xh }}</div>
+                        			</td>
+                        			<td>
+                        				<div class="form-control-static">{{ $student->xm }}</div>
+                        			</td>
+                        		</tr>
+                        	@endforeach
                             <?php foreach ($students as $student): ?>
                                 <tr data-row="<?php echo $student['xh'] ?>">
                                     <td><p class="form-control-static"><?php echo $student['xh'] ?></p></td>

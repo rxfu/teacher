@@ -56,4 +56,17 @@ class Selcourse extends Model {
 			->whereXq(session('term'));
 	}
 
+	/**
+	 * 学生成绩
+	 * @author FuRongxin
+	 * @date    2016-03-20
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function score() {
+		return $this->belongsTo('App\Models\Score', 'kcxh', 'kcxh')
+			->whereXh($this->xh)
+			->whereNd($this->nd)
+			->whereXq($this->xq);
+	}
 }
