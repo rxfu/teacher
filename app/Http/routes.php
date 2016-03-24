@@ -32,11 +32,13 @@ Route::group(['middleware' => ['web']], function () {
 	Route::group(['middleware' => ['auth']], function () {
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		Route::resource('profile', 'ProfileController', ['only' => ['index']]);
-		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'create']]);
 		Route::resource('timetable', 'TimetableController', ['only' => ['index', 'show']]);
 
 		Route::get('task/timetable', 'TaskController@timetable');
 		Route::resource('task', 'TaskController', ['only' => ['index', 'show']]);
+
+		Route::post('score/confirm/{kcxh}', 'ScoreController@confirm');
+		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'edit', 'update']]);
 
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 		Route::get('password/change', 'Auth\PasswordController@showChangeForm');

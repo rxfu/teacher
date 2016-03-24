@@ -39,7 +39,7 @@
                                         @if ($task->selcourses->count() <= 0)
                                             <span class="text-danger">上课人数为零</span>
                                         @else
-                        				    <a href="{{ route('score.create', ['kcxh' => $task->kcxh]) }}" title="录入成绩" class="btn btn-primary">录入成绩</a>
+                        				    <a href="{{ route('score.edit', ['kcxh' => $task->kcxh]) }}" title="录入成绩" class="btn btn-primary">录入成绩</a>
                                             <a href="{{ route('task.show', $task->kcxh) }}" title="学生名单" class="btn btn-primary">学生名单</a>
                                         @endif
                         			</td>

@@ -44,21 +44,21 @@
 	                        				<div class="form-control-static">{{ $student->xm }}</div>
 	                        			</td>
 	                        			<td>
-	                        			@if (config('constants.score.uncommitted') == $student->score->tjzt)
+	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
-	                        					<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $studnet->score->{'cj' . $id} }}" class="form-control">
+	                        					<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $studnet->{'cj' . $id} }}" class="form-control">
 	                        				@endforeach
 	                        			@else
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
-	                        					<div class="form-control-static">{{ $student->score->{'cj' . $id } }}</div>
+	                        					<div class="form-control-static">{{ $student->{'cj' . $id } }}</div>
 	                        				@endforeach
 	                        			@endif
 	                        			</td>
 	                        			<td>
-	                        				<div class="form-control-static">{{ $student->score->zpcj }}</div>
+	                        				<div class="form-control-static">{{ $student->zpcj }}</div>
 	                        			</td>
 	                        			<td>
-	                        			@if (config('constants.score.uncommitted') == $student->score->tjzt)
+	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				<select name="{{ $student->xh . 'tjzt' }}" id="{{ $student->xh . 'tjzt' }}" class="form-control">
 	                        					@foreach ($statuses as $status)
 	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->tjzt ? ' selected' : '' }}>{{ $status->mc }}</option>
