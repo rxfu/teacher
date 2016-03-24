@@ -225,13 +225,15 @@ class ScoreController extends Controller {
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 录入学生成绩
+	 * @author FuRongxin
+	 * @date    2016-03-24
+	 * @version 2.0
+	 * @param  	\Illuminate\Http\Request  $request 成绩请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return 	\Illuminate\Http\Response 学生成绩
 	 */
-	public function update(Request $request, $id) {
+	public function update(Request $request, $kcxh) {
 		//
 	}
 
