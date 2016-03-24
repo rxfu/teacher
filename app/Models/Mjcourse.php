@@ -22,28 +22,6 @@ class Mjcourse extends Model {
 	public $timestamps = false;
 
 	/**
-	 * 课程平台
-	 * @author FuRongxin
-	 * @date    2016-03-13
-	 * @version 2.0
-	 * @return  object 所属对象
-	 */
-	public function platform() {
-		return $this->belongsTo('App\Models\Platform', 'pt', 'dm');
-	}
-
-	/**
-	 * 课程性质
-	 * @author FuRongxin
-	 * @date    2016-03-13
-	 * @version 2.0
-	 * @return  object 所属对象
-	 */
-	public function property() {
-		return $this->belongsTo('App\Models\Property', 'xz', 'dm');
-	}
-
-	/**
 	 * 开课学院
 	 * @author FuRongxin
 	 * @date    2016-03-20
@@ -77,6 +55,20 @@ class Mjcourse extends Model {
 	public function timetables() {
 		return $this->hasMany('App\Models\Timetable', 'kcxh', 'kcxh')
 			->orderBy('zc');
+	}
+
+	/**
+	 * 教学计划
+	 * @author FuRongxin
+	 * @date    2016-03-24
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function plan() {
+		return $this->belongsTo('App\Models\Plan', 'zy', 'zy')
+			->whereNj($this->nj)
+			->whereZsjj($this->zsjj)
+			->whereKch(Str::substr($this->kcxh, 2, 8));
 	}
 
 }

@@ -92,11 +92,50 @@ class ScoreController extends Controller {
 			->orderBy('id')
 			->get();
 		foreach ($items as $ratio) {
-			$ratios[] = [
-				'id'    => $ratio->id,
-				'name'  => $ratio->idm,
-				'value' => $ratio->bl,
+			$ratios[$ratio->id] = [
+				'id'          => $ratio->id,
+				'name'        => $ratio->idm,
+				'value'       => $ratio->bl,
+				'must_passed' => $ratio->jg,
 			];
+		}
+
+		$noScoreStudents = Selcourse::whereNd(session('year'))
+			->whereXq(session('term'))
+			->whereKcxh($kcxh)
+			->whereNotExists(function ($query) {
+				$query->from('cj_web')
+					->where('cj_web.nd', '=', 'xk_xkxx.nd')
+					->where('cj_web.xq', '=', 'xk_xkxx.xq')
+					->where('cj_web.kcxh', '=', 'xk_xkxx.kcxh')
+					->where('cj_web.xh', '=', 'xk_xkxx.xh');
+			})
+			->select('nd', 'xq', 'kcxh')
+			->get();
+		if (count($noScoreStudents)) {
+			foreach ($noScoreStudents as $student) {
+				$score       = new Score;
+				$score->xh   = $student->xh;
+				$score->xm   = $student->xm;
+				$score->kcxh = $student->kcxh;
+				$score->kcpt = $student->pt;
+				$score->kcxz = $student->xz;
+				$score->xl   = $student->xl;
+				$score->nd   = $student->nd;
+				$score->xq   = $student->xq;
+				$score->kh   = $student->plan->kh;
+				$score->zpcj = 0;
+				$score->kszt = 0; // 考试状态：正常
+				$score->zy   = $student->zy;
+				$score->tjzt = 0; // 提交状态：未提交
+				$score->kkxy = $student->kkxy;
+
+				for ($i = 1; $i <= 6; ++$i) {
+					$score->{'cj' . $i} = 0;
+				}
+
+				$score->save();
+			}
 		}
 
 		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
