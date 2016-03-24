@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel as Model;
 
 /**
  * 学生成绩
@@ -20,6 +20,9 @@ class Score extends Model {
 	public $incrementing = false;
 
 	public $timestamps = false;
+
+	// 修复删除操作
+	protected $secondaryKey = ['xh', 'nd', 'xq', 'kcxh'];
 
 	/**
 	 * 教学任务书
