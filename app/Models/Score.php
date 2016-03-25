@@ -47,4 +47,5 @@ class Score extends Model {
 	public function status() {
 		return $this->belongsTo('App\Models\Status', 'kszt', 'dm');
 	}
+
 }
