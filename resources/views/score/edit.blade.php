@@ -55,7 +55,7 @@
 	                        			@endif
 	                        			</td>
 	                        			<td>
-	                        				<div class="form-control-static">{{ $student->zpcj }}</div>
+	                        				<div class="form-control-static"><span id="total{{ $student->xh . $id }}">{{ $student->zpcj }}</span></div>
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
@@ -79,3 +79,46 @@
     </div>
 </section>
 @stop
+
+@push('scripts')
+<script>
+$(function() {
+	$('#scoreForm input').on('change', function() {
+		// Use ajax to submit form data
+		$.ajax({
+			'url': '{{ route('score.update', $course->kcxh) }}',
+			'type': 'post',
+			'data': {
+				'_method': 'put',
+				'csrf': {!! csrf_token() !!},
+				'dataType': 'json',
+				'score': this.val(),
+				'xh': this.attr('name').substring(0, 12),
+				'id': this.attr('name').substring(12, 13)
+			},
+			'success': function(data) {
+				$('#total' + this.attr('name')).text(data);
+			}
+		})
+	});
+
+	$('#scoreForm input').on('keypress', function(e) {
+		// Enter pressed
+		if (e.keyCode == 13) {
+			var inputs = $(this).parents('table').find(':input[name="score"]');
+			var idx = inputs.index(this);
+
+			if (idx == inputs.length - 1) {
+				inputs[0].select();
+			} else {
+				inputs[idx + 1].focus();
+				inputs[idx + 1].select();
+			}
+
+			$(this).closest('form').submit();
+			return false;
+		}
+	})
+});
+</script>
+@endpush

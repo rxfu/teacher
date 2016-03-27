@@ -234,7 +234,42 @@ class ScoreController extends Controller {
 	 * @return 	\Illuminate\Http\Response 学生成绩
 	 */
 	public function update(Request $request, $kcxh) {
-		//
+		if ($request->isMethod('post')) {
+			$inputs = $request->all();
+			$this->validate($request, [
+				'score' => 'required|digits_between:0,100',
+				'id'    => 'required',
+				'xh'    => 'required|numeric|size:12',
+			]);
+
+			$student = Score::whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereKcxh($kcxh)
+				->whereXh($inputs['xh'])
+				->firstOrFail();
+
+			$task = Task::whereKcxh($kcxh)
+				->whereNd($inputs['year'])
+				->whereXq($inputs['term'])
+				->whereJsgh(Auth::user()->jsgh)
+				->firstOrFail();
+
+			$ratio = Ratio::whereFs($task->cjfs)->whereId($inputs['id'])->first();
+
+			$student->{'cj' . $inputs['id']} = $inputs['score'];
+
+			if ($inputs['score'] < config('constants.score.passline') && config('constants.status.enable') == $ratio->jg) {
+				$student->zpcj = $studnet->zpcj <= 0 ? $inputs['score'] : min($inputs['score'], $student->zpcj);
+			} else {
+				$student->zpcj += $inputs['score'] * $ratio->bl / $ratio->mf;
+			}
+
+			$student->save();
+
+			return $student->zpcj;
+		}
+
+		return false;
 	}
 
 	/**
@@ -246,7 +281,19 @@ class ScoreController extends Controller {
 	 * @return \Illuminate\Http\Response 上报成绩
 	 */
 	public function confirm($kcxh) {
+		$noScoreStudents = DB::select('SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]);
+		$scoreNoStudents = DB::select('SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]);
 
+		if (count($noScoreStudents) || count($scoreNoStudents)) {
+			return redirect()->route('score.index')->withNoScoreStudents($noScoreStudents)->withScoreNoStudents($scoreNoStudents);
+		}
+
+		$affected = DB::update('UPDATE t_cj_web SET tjzt = :committed WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh, 'committed' => config('constants.score.committed')]);
+
+		return redirect()->route('score.show', $kcxh)->withStatus('成绩上报成功');
 	}
 
 	/**
