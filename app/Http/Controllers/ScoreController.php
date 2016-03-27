@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dtscore;
+use App\Models\Mjcourse;
 use App\Models\Ratio;
+use App\Models\Score;
+use App\Models\Selcourse;
+use App\Models\Status;
 use App\Models\Task;
 use App\Models\Term;
 use Auth;
@@ -124,8 +128,8 @@ class ScoreController extends Controller {
 			->firstOrFail();
 
 		$task = Task::whereKcxh($kcxh)
-			->whereNd($inputs['year'])
-			->whereXq($inputs['term'])
+			->whereNd(session('year'))
+			->whereXq(session('term'))
 			->whereJsgh(Auth::user()->jsgh)
 			->firstOrFail();
 
