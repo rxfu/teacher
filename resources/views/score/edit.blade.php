@@ -11,7 +11,7 @@
         		</div>
         		@if ($exists)
 	                <div class="pull-right">
-	                    <form id="confirmForm" name="confirmForm" method="post" action="{{ route('score.confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
+	                    <form id="confirmForm" name="confirmForm" method="post" action="{{ url('score/confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
 	                        <button type="button" class="btn btn-primary" title="成绩上报">成绩上报</button>
 	                    </form>
 	                </div>
@@ -43,17 +43,19 @@
 	                        			<td>
 	                        				<div class="form-control-static">{{ $student->xm }}</div>
 	                        			</td>
-	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
-	                        					<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $studnet->{'cj' . $id} }}" class="form-control">
+	                        					<td>
+	                        						<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $student->{'cj' . $id} }}" class="form-control">
+	                        					</td>
 	                        				@endforeach
 	                        			@else
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
-	                        					<div class="form-control-static">{{ $student->{'cj' . $id } }}</div>
+	                        					<td>
+	                        						<div class="form-control-static">{{ $student->{'cj' . $id } }}</div>
+	                        					</td>
 	                        				@endforeach
 	                        			@endif
-	                        			</td>
 	                        			<td>
 	                        				<div class="form-control-static"><span id="total{{ $student->xh . $id }}">{{ $student->zpcj }}</span></div>
 	                        			</td>

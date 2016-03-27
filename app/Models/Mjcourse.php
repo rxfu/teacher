@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * 专业课程信息
@@ -20,6 +21,17 @@ class Mjcourse extends Model {
 	public $incrementing = false;
 
 	public $timestamps = false;
+
+	/**
+	 * 学期
+	 * @author FuRongxin
+	 * @date    2016-03-27
+	 * @version 2.0
+	 * @return  object 所属对象
+	 */
+	public function term() {
+		return $this->belongsTo('App\Models\Term', 'xq', 'dm');
+	}
 
 	/**
 	 * 开课学院

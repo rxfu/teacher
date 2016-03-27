@@ -160,10 +160,7 @@ class ScoreController extends Controller {
 			->whereKcxh($kcxh)
 			->whereNotExists(function ($query) {
 				$query->from('cj_web')
-					->where('cj_web.nd', '=', 'xk_xkxx.nd')
-					->where('cj_web.xq', '=', 'xk_xkxx.xq')
-					->where('cj_web.kcxh', '=', 'xk_xkxx.kcxh')
-					->where('cj_web.xh', '=', 'xk_xkxx.xh');
+					->whereRaw('t_cj_web.nd = t_xk_xkxx.nd AND t_cj_web.xq = t_xk_xkxx.xq AND t_cj_web.kcxh = t_xk_xkxx.kcxh AND t_cj_web.xh = t_xk_xkxx.xh');
 			})
 			->get();
 		if (count($noScoreStudents)) {
@@ -177,7 +174,7 @@ class ScoreController extends Controller {
 				$score->xl   = $student->xl;
 				$score->nd   = $student->nd;
 				$score->xq   = $student->xq;
-				$score->kh   = $student->plan->kh;
+				$score->kh   = $course->plan->kh;
 				$score->zpcj = 0;
 				$score->kszt = 0; // 考试状态：正常
 				$score->zy   = $student->zy;
@@ -197,13 +194,11 @@ class ScoreController extends Controller {
 			->whereKcxh($kcxh)
 			->whereNotExists(function ($query) {
 				$query->from('xk_xkxx')
-					->where('xk_xkxx.nd', '=', 'cj_web.nd')
-					->where('xk_xkxx.xq', '=', 'cj_web.xq')
-					->where('xk_xkxx.kcxh', '=', 'cj_web.kcxh')
-					->where('xk_xkxx.xh', '=', 'cj_web.xh');
+					->whereRaw('t_xk_xkxx.nd = t_cj_web.nd AND t_xk_xkxx.xq = t_cj_web.xq AND t_xk_xkxx.kcxh = t_cj_web.kcxh AND t_xk_xkxx.xh = t_cj_web.xh');
 			})
 			->select('nd', 'xq', 'xh', 'kcxh')
 			->get();
+
 		if (count($scoreNoStudents)) {
 			foreach ($scoreNoStudents as $student) {
 				$student->delete();
