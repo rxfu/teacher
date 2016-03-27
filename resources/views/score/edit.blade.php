@@ -85,14 +85,14 @@
 @push('scripts')
 <script>
 $(function() {
-	$('#scoreForm input').on('change', function() {
+	$('#scoreForm input').on('change', function() {alert('change');
 		// Use ajax to submit form data
 		$.ajax({
 			'url': '{{ route('score.update', $course->kcxh) }}',
 			'type': 'post',
 			'data': {
 				'_method': 'put',
-				'csrf': {!! csrf_token() !!},
+				'csrf': '{!! csrf_token() !!}',
 				'dataType': 'json',
 				'score': this.val(),
 				'xh': this.attr('name').substring(0, 12),
@@ -101,13 +101,13 @@ $(function() {
 			'success': function(data) {
 				$('#total' + this.attr('name')).text(data);
 			}
-		})
+		});
 	});
 
 	$('#scoreForm input').on('keypress', function(e) {
 		// Enter pressed
 		if (e.keyCode == 13) {
-			var inputs = $(this).parents('table').find(':input[name="score"]');
+			var inputs = $(this).parents('table').find('input');
 			var idx = inputs.index(this);
 
 			if (idx == inputs.length - 1) {
@@ -120,7 +120,7 @@ $(function() {
 			$(this).closest('form').submit();
 			return false;
 		}
-	})
+	});
 });
 </script>
 @endpush
