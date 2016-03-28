@@ -233,7 +233,7 @@ class ScoreController extends Controller {
 	 * @return 	\Illuminate\Http\Response 学生成绩
 	 */
 	public function update(Request $request, $kcxh) {
-		if ($request->isMethod('post')) {
+		if ($request->isMethod('put')) {
 			$inputs = $request->all();
 			$this->validate($request, [
 				'score' => 'required|digits_between:0,100',

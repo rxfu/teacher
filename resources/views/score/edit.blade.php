@@ -31,10 +31,10 @@
                                 <th class="active">状态</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        	<form id="scoreForm" name="scoreForm" action="{{ route('score.update', $course->kcxh) }}" method="post" role="form">
-                        		{!! method_field('put') !!}
-                        		{!! csrf_field() !!}
+                        <form id="scoreForm" name="scoreForm" action="{{ route('score.update', $course->kcxh) }}" method="post" role="form">
+                    		{!! method_field('put') !!}
+                    		{!! csrf_field() !!}
+                        	<tbody>
 	                        	@foreach ($students as $student)
 	                        		<tr>
 	                        			<td>
@@ -72,8 +72,8 @@
 	                        			</td>
 	                        		</tr>
 	                        	@endforeach
-	                        </form>
-                        </tbody>
+                        	</tbody>
+	                    </form>
                     </table>
                 </div>
             </div>
@@ -85,42 +85,59 @@
 @push('scripts')
 <script>
 $(function() {
-	$('#scoreForm input').on('change', function() {alert('change');
-		// Use ajax to submit form data
-		$.ajax({
-			'url': '{{ route('score.update', $course->kcxh) }}',
-			'type': 'post',
-			'data': {
-				'_method': 'put',
-				'csrf': '{!! csrf_token() !!}',
-				'dataType': 'json',
-				'score': this.val(),
-				'xh': this.attr('name').substring(0, 12),
-				'id': this.attr('name').substring(12, 13)
-			},
-			'success': function(data) {
-				$('#total' + this.attr('name')).text(data);
-			}
-		});
-	});
-
-	$('#scoreForm input').on('keypress', function(e) {
-		// Enter pressed
-		if (e.keyCode == 13) {
-			var inputs = $(this).parents('table').find('input');
-			var idx = inputs.index(this);
-
-			if (idx == inputs.length - 1) {
-				inputs[0].select();
-			} else {
-				inputs[idx + 1].focus();
-				inputs[idx + 1].select();
-			}
-
-			$(this).closest('form').submit();
-			return false;
+	$('tr').on({
+		'focusin': function() {
+			$(this).toggleClass('warning');
+			$(this).children('td').css('font-weight', 'bold');
+		},
+		'focusout': function() {
+			$(this).toggleClass('warning');
+			$(this).children('td').css('font-weight', 'normal');
 		}
 	});
+	$('td').on('click', function() {
+		$(this).children('input').select();
+	});
+	$('td').on({
+		'click': function() {
+			$(this).select();
+		},
+		'change': function() {
+			// Use ajax to submit form data
+			$.ajax({
+				'url': '{{ route('score.update', $course->kcxh) }}',
+				'type': 'post',
+				'data': {
+					'_method': 'put',
+					'csrf': '{!! csrf_token() !!}',
+					'dataType': 'json',
+					'score': this.val(),
+					'xh': this.attr('name').substring(0, 12),
+					'id': this.attr('name').substring(12, 13)
+				},
+				'success': function(data) {
+					$('#total' + this.attr('name')).text(data);
+				}
+			});
+		},
+		'keypress': function(e) {
+			// Enter pressed
+			if (e.keyCode == 13) {
+				var inputs = $(this).parents('table').find('input');
+				var idx = inputs.index(this);
+
+				if (idx == inputs.length - 1) {
+					inputs[0].select();
+				} else {
+					inputs[idx + 1].focus();
+					inputs[idx + 1].select();
+				}
+
+				$(this).closest('form').submit();
+				return false;
+			}
+		}
+	}, 'input');
 });
 </script>
 @endpush
