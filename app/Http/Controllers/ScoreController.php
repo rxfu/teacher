@@ -235,33 +235,55 @@ class ScoreController extends Controller {
 	public function update(Request $request, $kcxh) {
 		if ($request->isMethod('put')) {
 			$inputs = $request->all();
+
 			$this->validate($request, [
-				'score' => 'required|digits_between:0,100',
+				'score' => 'required|numeric|min:0|max:100',
 				'id'    => 'required',
-				'xh'    => 'required|numeric|size:12',
+				'sno'   => 'required',
 			]);
 
 			$student = Score::whereNd(session('year'))
 				->whereXq(session('term'))
 				->whereKcxh($kcxh)
-				->whereXh($inputs['xh'])
+				->whereXh($inputs['sno'])
 				->firstOrFail();
 
 			$task = Task::whereKcxh($kcxh)
-				->whereNd($inputs['year'])
-				->whereXq($inputs['term'])
+				->whereNd(session('year'))
+				->whereXq(session('term'))
 				->whereJsgh(Auth::user()->jsgh)
 				->firstOrFail();
 
-			$ratio = Ratio::whereFs($task->cjfs)->whereId($inputs['id'])->first();
+			$ratios = [];
+			$items  = Ratio::whereFs($task->cjfs)
+				->orderBy('id')
+				->get();
+			foreach ($items as $ratio) {
+				$ratios[$ratio->id] = [
+					'id'           => $ratio->id,
+					'name'         => $ratio->idm,
+					'value'        => $ratio->bl / $ratio->mf,
+					'allow_failed' => $ratio->jg,
+				];
+			}
 
 			$student->{'cj' . $inputs['id']} = $inputs['score'];
 
-			if ($inputs['score'] < config('constants.score.passline') && config('constants.status.enable') == $ratio->jg) {
-				$student->zpcj = $studnet->zpcj <= 0 ? $inputs['score'] : min($inputs['score'], $student->zpcj);
+			$total = 0;
+			if ($inputs['score'] < config('constants.score.passline') && config('constants.status.enable') == $ratios[$inputs['id']]['allow_failed']) {
+				foreach ($ratios as $ratio) {
+					$total = $total ? min($total, $student->{'cj' . $ratio['id']}) : $student->{'cj' . $ratio['id']};
+				}
 			} else {
-				$student->zpcj += $inputs['score'] * $ratio->bl / $ratio->mf;
+				foreach ($ratios as $ratio) {
+					if ($inputs['id'] == $ratio['id']) {
+						$total += $inputs['score'] * $ratio['value'];
+					} else {
+						$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
+					}
+				}
 			}
+			$student->zpcj = round($total);
 
 			$student->save();
 

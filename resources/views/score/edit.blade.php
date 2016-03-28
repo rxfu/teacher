@@ -29,14 +29,25 @@
                                 @endforeach
                                 <th class="active">总评</th>
                                 <th class="active">状态</th>
+                                <th class="active">录入状态</th>
                             </tr>
                         </thead>
-                        <form id="scoreForm" name="scoreForm" action="{{ route('score.update', $course->kcxh) }}" method="post" role="form">
-                    		{!! method_field('put') !!}
-                    		{!! csrf_field() !!}
+                        <tfoot>
+                            <tr>
+                                <th>学号</th>
+                                <th>姓名</th>
+                                @foreach (array_pluck($ratios, 'name') as $name)
+                                	<th>{{ $name }}</th>
+                                @endforeach
+                                <th>总评</th>
+                                <th>状态</th>
+                                <th>录入状态</th>
+                            </tr>
+                        </tfoot>
+                        <form role="form">
                         	<tbody>
 	                        	@foreach ($students as $student)
-	                        		<tr>
+	                        		<tr id="{{ $student->xh }}"{!! config('constants.score.passline') > $student->zpcj ? ' class="danger"' : '' !!}>
 	                        			<td>
 	                        				<div class="form-control-static">{{ $student->xh }}</div>
 	                        			</td>
@@ -57,7 +68,7 @@
 	                        				@endforeach
 	                        			@endif
 	                        			<td>
-	                        				<div class="form-control-static"><span id="total{{ $student->xh . $id }}">{{ $student->zpcj }}</span></div>
+	                        				<div class="form-control-static"><span id="total{{ $student->xh }}">{{ $student->zpcj }}</span></div>
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
@@ -69,6 +80,15 @@
 	                        			@else
 	                        				<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        			@endif
+	                        			</td>
+	                        			<td>
+	                        				<div id="status{{ $student->xh }}">
+	                        					@if (config('constants.score.uncommitted') == $student->tjzt)
+	                        						未上报
+	                        					@elseif (config('constants.score.committed') == $student->tjzt)
+	                        						已上报
+	                        					@endif
+	                        				</div>
 	                        			</td>
 	                        		</tr>
 	                        	@endforeach
@@ -87,11 +107,11 @@
 $(function() {
 	$('tr').on({
 		'focusin': function() {
-			$(this).toggleClass('warning');
+			$(this).addClass('warning');
 			$(this).children('td').css('font-weight', 'bold');
 		},
 		'focusout': function() {
-			$(this).toggleClass('warning');
+			$(this).removeClass('warning');
 			$(this).children('td').css('font-weight', 'normal');
 		}
 	});
@@ -103,20 +123,49 @@ $(function() {
 			$(this).select();
 		},
 		'change': function() {
+			var sno = $(this).attr('name').substring(0, 12);
+			var id = $(this).attr('name').substring(12, 13);
+
 			// Use ajax to submit form data
 			$.ajax({
+				'headers': '{{ csrf_token() }}',
 				'url': '{{ route('score.update', $course->kcxh) }}',
 				'type': 'post',
 				'data': {
 					'_method': 'put',
-					'csrf': '{!! csrf_token() !!}',
+					'_token': '{{ csrf_token() }}',
 					'dataType': 'json',
-					'score': this.val(),
-					'xh': this.attr('name').substring(0, 12),
-					'id': this.attr('name').substring(12, 13)
+					'score': $(this).val(),
+					'sno': sno,
+					'id': id
+				},
+				'beforeSend': function() {
+					$('#status' + sno).text('提交中......').addClass('text-info');
 				},
 				'success': function(data) {
-					$('#total' + this.attr('name')).text(data);
+					$('#status' + sno).removeClass();
+					$('#status' + sno).text('提交成功').addClass('text-success');
+
+					if ({{ config('constants.score.passline') }} > data) {
+						$('tr#' + sno).removeClass('success');
+						$('tr#' + sno).addClass('danger');
+
+						$('#total' + sno).removeClass();
+						$('#total' + sno).text(data).addClass('text-danger');
+					} else {
+						$('tr#' + sno).removeClass('danger');
+						$('tr#' + sno).addClass('success');
+
+						$('#total' + sno).removeClass();
+						$('#total' + sno).text(data).addClass('text-success');
+					}
+				}
+			})
+			.fail(function(jqXHR) {
+				if (422 == jqXHR.status) {
+					$.each(jqXHR.responseJSON, function(key, value) {
+						$('#status' + sno).text(value).addClass('text-danger');
+					});
 				}
 			});
 		},
