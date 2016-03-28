@@ -44,3 +44,6 @@ body {
 .table tbody > tr > th, .table tbody > tr > td {
 	vertical-align: middle;
 }
+#scores-table input {
+	width: 60px;
+}

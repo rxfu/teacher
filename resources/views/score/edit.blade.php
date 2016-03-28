@@ -19,7 +19,7 @@
             </div>
             <div class="panel-body">
                 <div class="table-responsive tab-table">
-                    <table class="table table-bordered table-striped table-hover data-table">
+                    <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
                         <thead>
                             <tr>
                                 <th class="active">学号</th>
