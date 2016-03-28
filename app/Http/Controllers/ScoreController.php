@@ -269,11 +269,11 @@ class ScoreController extends Controller {
 
 			$student->{'cj' . $inputs['id']} = $inputs['score'];
 
-			$total  = 0;
-			$failes = [];
+			$total = 0;
+			$fails = [];
 			foreach ($ratios as $ratio) {
 				if (config('constants.score.passline') > $inputs['score'] && config('constants.status.enable') == $ratio['allow_failed']) {
-					$failes[] = $student->{'cj' . $ratio['id']};
+					$fails[] = $student->{'cj' . $ratio['id']};
 				} else {
 					$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
 				}
