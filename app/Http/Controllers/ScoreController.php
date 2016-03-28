@@ -259,7 +259,7 @@ class ScoreController extends Controller {
 				->orderBy('id')
 				->get();
 			foreach ($items as $ratio) {
-				$ratios[$ratio->id] = [
+				$ratios[] = [
 					'id'           => $ratio->id,
 					'name'         => $ratio->idm,
 					'value'        => $ratio->bl / $ratio->mf,
@@ -269,28 +269,23 @@ class ScoreController extends Controller {
 
 			$student->{'cj' . $inputs['id']} = $inputs['score'];
 
-			$total = 0;
-			if ($inputs['score'] < config('constants.score.passline') && config('constants.status.enable') == $ratios[$inputs['id']]['allow_failed']) {
-				foreach ($ratios as $ratio) {
-					$total = $total ? min($total, $student->{'cj' . $ratio['id']}) : $student->{'cj' . $ratio['id']};
-				}
-			} else {
-				foreach ($ratios as $ratio) {
-					if ($inputs['id'] == $ratio['id']) {
-						$total += $inputs['score'] * $ratio['value'];
-					} else {
-						$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
-					}
+			$total  = 0;
+			$failes = [];
+			foreach ($ratios as $ratio) {
+				if (config('constants.score.passline') > $inputs['score'] && config('constants.status.enable') == $ratio['allow_failed']) {
+					$failes[] = $student->{'cj' . $ratio['id']};
+				} else {
+					$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
 				}
 			}
-			$student->zpcj = round($total);
+			$student->zpcj = round(empty($fails) ? $total : min($fails));
 
 			$student->save();
 
 			return $student->zpcj;
 		}
 
-		return false;
+		return 'failed';
 	}
 
 	/**
