@@ -47,6 +47,7 @@
                                         @else
                         				    <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
                                             <a href="{{ route('task.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="学生名单" class="btn btn-primary">学生名单</a>
+                                            <a href="{{ route('tes.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询评学结果" class="btn btn-primary">查询评学结果</a>
                                         @endif
                         			</td>
                         		</tr>

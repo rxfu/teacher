@@ -111,10 +111,10 @@
                                 <a href="#"><i class="fa fa-comments fa-fw"></i> 评学管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="#">评学录入</a>
+                                        <a href="{{ url('tes') }}">评学录入</a>
                                     </li>
                                     <li>
-                                        <a href="#">评学查询</a>
+                                        <a href="{{ url('task') }}">评学查询</a>
                                     </li>
                                 </ul>
                             </li>
