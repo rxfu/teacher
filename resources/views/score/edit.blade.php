@@ -29,7 +29,7 @@
                                 @endforeach
                                 <th class="active">总评</th>
                                 <th class="active">状态</th>
-                                <th class="active">录入状态</th>
+                                <th class="active">提交状态</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -41,7 +41,7 @@
                                 @endforeach
                                 <th>总评</th>
                                 <th>状态</th>
-                                <th>录入状态</th>
+                                <th>提交状态</th>
                             </tr>
                         </tfoot>
                         <form role="form">
@@ -140,7 +140,7 @@ $(function() {
 					'id': id
 				},
 				'beforeSend': function() {
-					$('#status' + sno).text('提交中......').addClass('text-info');
+					$('#status' + sno).text('提交中......').addClass('text-warning');
 				},
 				'success': function(data) {
 					$('#status' + sno).removeClass();
