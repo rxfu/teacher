@@ -15,6 +15,10 @@ class Tesitem extends Model {
 
 	protected $table = 'px_pjbz';
 
+	protected $casts = [
+		'zt' => 'boolean',
+	];
+
 	/**
 	 * 评价指标
 	 * @author FuRongxin

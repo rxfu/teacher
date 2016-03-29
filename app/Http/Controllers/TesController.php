@@ -107,8 +107,18 @@ class TesController extends Controller {
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($id) {
-		//
+	public function edit($kcxh) {
+		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->mc . '课程';
+
+		$items = Tesitem::with('category')
+			->whereZt(config('constants.status.enable'))
+			->orderBy('px')
+			->get();
+
+		return view('tes.edit')
+			->withTitle($title . '评学录入')
+			->withItems($items)
+			->withKcxh($kcxh);
 	}
 
 	/**

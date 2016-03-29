@@ -16,6 +16,15 @@
                                 <th class="active">评分分值</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>序号</th>
+                                <th>评价指标</th>
+                                <th>评价标准</th>
+                                <th>最高分值</th>
+                                <th>评分分值</th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             @foreach ($results as $result)
                                 <tr>
