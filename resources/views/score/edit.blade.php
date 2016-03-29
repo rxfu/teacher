@@ -12,7 +12,9 @@
         		@if ($exists)
 	                <div class="pull-right">
 	                    <form id="confirmForm" name="confirmForm" method="post" action="{{ url('score/confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
-	                        <button type="button" class="btn btn-primary" title="成绩上报">成绩上报</button>
+	                    	{!! csrf_field() !!}
+	                        <button type="submit" class="btn btn-primary" title="成绩上报">成绩上报</button>
+	                    	}
 	                    </form>
 	                </div>
         		@endif

@@ -12,6 +12,7 @@ use App\Models\Task;
 use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * 显示并处理学生成绩
@@ -343,7 +344,7 @@ class ScoreController extends Controller {
 		$affected = DB::update('UPDATE t_cj_web SET tjzt = :committed WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
 			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh, 'committed' => config('constants.score.committed')]);
 
-		return redirect()->route('score.show', $kcxh)->withStatus('成绩上报成功');
+		return redirect()->route('score.index')->withStatus('成绩上报成功');
 	}
 
 	/**
