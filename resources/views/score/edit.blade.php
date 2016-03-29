@@ -28,7 +28,7 @@
                                 	<th class="active">{{ $name }}</th>
                                 @endforeach
                                 <th class="active">总评</th>
-                                <th class="active">状态</th>
+                                <th class="active">考试状态</th>
                                 <th class="active">提交状态</th>
                             </tr>
                         </thead>
@@ -40,7 +40,7 @@
                                 	<th>{{ $name }}</th>
                                 @endforeach
                                 <th>总评</th>
-                                <th>状态</th>
+                                <th>考试状态</th>
                                 <th>提交状态</th>
                             </tr>
                         </tfoot>
@@ -72,7 +72,7 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				<select name="{{ $student->xh . 'tjzt' }}" id="{{ $student->xh . 'tjzt' }}" class="form-control">
+	                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
 	                        					@foreach ($statuses as $status)
 	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->tjzt ? ' selected' : '' }}>{{ $status->mc }}</option>
 	                        					@endforeach
@@ -143,21 +143,26 @@ $(function() {
 					$('#status' + sno).text('提交中......').addClass('text-warning');
 				},
 				'success': function(data) {
-					$('#status' + sno).removeClass();
-					$('#status' + sno).text('提交成功').addClass('text-success');
+					if ($.isNumeric(data)){
+						$('#status' + sno).removeClass();
+						$('#status' + sno).text('提交成功').addClass('text-success');
 
-					if ({{ config('constants.score.passline') }} > data) {
-						$('tr#' + sno).removeClass('success');
-						$('tr#' + sno).addClass('danger');
+						if ({{ config('constants.score.passline') }} > data) {
+							$('tr#' + sno).removeClass('success');
+							$('tr#' + sno).addClass('danger');
 
-						$('#total' + sno).removeClass();
-						$('#total' + sno).text(data).addClass('text-danger');
+							$('#total' + sno).removeClass();
+							$('#total' + sno).text(data).addClass('text-danger');
+						} else {
+							$('tr#' + sno).removeClass('danger');
+							$('tr#' + sno).addClass('success');
+
+							$('#total' + sno).removeClass();
+							$('#total' + sno).text(data).addClass('text-success');
+						}
 					} else {
-						$('tr#' + sno).removeClass('danger');
-						$('tr#' + sno).addClass('success');
-
-						$('#total' + sno).removeClass();
-						$('#total' + sno).text(data).addClass('text-success');
+						$('#status' + sno).removeClass();
+						$('#status' + sno).text('提交失败').addClass('text-danger');
 					}
 				}
 			})
@@ -187,6 +192,44 @@ $(function() {
 			}
 		}
 	}, 'input');
+	$('td').on({
+		'change': function() {
+			var sno = $(this).attr('name').substring(0, 12);
+
+			// Use ajax to submit form data
+			$.ajax({
+				'headers': '{{ csrf_token() }}',
+				'url': '{{ url('score/updateStatus', $course->kcxh) }}',
+				'type': 'post',
+				'data': {
+					'_method': 'put',
+					'_token': '{{ csrf_token() }}',
+					'dataType': 'json',
+					'status': $(this).val(),
+					'sno': sno
+				},
+				'beforeSend': function() {
+					$('#status' + sno).text('状态更新中......').addClass('text-warning');
+				},
+				'success': function(data) {
+					if ($.isNumeric(data)){
+						$('#status' + sno).removeClass();
+						$('#status' + sno).text('状态更新成功').addClass('text-success');
+					} else {
+						$('#status' + sno).removeClass();
+						$('#status' + sno).text('状态更新失败').addClass('text-danger');
+					}
+				}
+			})
+			.fail(function(jqXHR) {
+				if (422 == jqXHR.status) {
+					$.each(jqXHR.responseJSON, function(key, value) {
+						$('#status' + sno).text(value).addClass('text-danger');
+					});
+				}
+			});
+		}
+	}, 'select');
 });
 </script>
 @endpush

@@ -28,7 +28,7 @@ return [
 
 		'passline'    => 60, // 及格线
 
-		'deferal'     => '1', // 缓考
+		'deferral'    => '1', // 缓考
 	],
 
 	/**

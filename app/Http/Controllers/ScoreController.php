@@ -289,6 +289,40 @@ class ScoreController extends Controller {
 	}
 
 	/**
+	 * 更新学生考试状态
+	 * @author FuRongxin
+	 * @date    2016-03-29
+	 * @version 2.0
+	 * @param  	\Illuminate\Http\Request  $request 考试状态请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return 	\Illuminate\Http\Response 考试状态
+	 */
+	public function updateStatus(Request $request, $kcxh) {
+		if ($request->isMethod('put')) {
+			$inputs = $request->all();
+
+			$this->validate($request, [
+				'status' => 'required|numeric',
+				'sno'    => 'required',
+			]);
+
+			$student = Score::whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereKcxh($kcxh)
+				->whereXh($inputs['sno'])
+				->firstOrFail();
+
+			$student->kszt = $inputs['status'];
+
+			$student->save();
+
+			return $student->kszt;
+		}
+
+		return 'failed';
+	}
+
+	/**
 	 * 上报学生成绩
 	 * @author FuRongxin
 	 * @date    2016-03-24

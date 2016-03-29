@@ -37,6 +37,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('task/timetable', 'TaskController@timetable');
 		Route::resource('task', 'TaskController', ['only' => ['index', 'show']]);
 
+		Route::put('score/updateStatus/{kcxh}', 'ScoreController@updateStatus');
 		Route::post('score/confirm/{kcxh}', 'ScoreController@confirm');
 		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'edit', 'update']]);
 
