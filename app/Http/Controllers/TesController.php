@@ -94,7 +94,7 @@ class TesController extends Controller {
 			->where('zgfz', '>=', $total)
 			->firstOrFail();
 
-		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->mc . '课程';
+		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程';
 
 		return view('tes.show')
 			->withTitle($title . '评学结果')
@@ -128,7 +128,7 @@ class TesController extends Controller {
 		if (count($items->first()->results)) {
 			return redirect()->route('tes.show', ['kcxh' => $kcxh, 'year' => session('year'), 'term' => session('term')])->withStatus($kcxh . '课程评学数据已录入');
 		} else {
-			$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->mc . '课程';
+			$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程';
 
 			return view('tes.edit')
 				->withTitle($title . '评学录入')

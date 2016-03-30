@@ -16,35 +16,29 @@
                                 <th class="active">一级指标得分</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>一级指标</th>
-                                <th>二级指标</th>
-                                <th>二级指标得分</th>
-                                <th>一级指标得分</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
-                            @foreach ($scores['zb'] as $key => $index): ?>
-	                            <tr>
-	                                <td{{ $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' }}>{{ $key }}.{{ $index['zb_mc'] }}</td>
-	                                <td>{{ $index['ejzb'][0]['ejzb_id'] }}.{{ $index['ejzb'][0]['ejzb_mc'] }}</td>
-	                                <td>{{ $index['ejzb'][0]['score'] }}</td>
-	                                <td{{ $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' }}>{{ $indexes[$key] }}</td>
-	                            </tr>
-                                @foreach ($index['ejzb'] as $k => $score)
-                                    @if (0 != $k)
-                                        <tr>
-                                            <td>{{ $score['ejzb_id'] }}.{{ $score['ejzb_mc'] }}</td>
-                                            <td>{{ $score['score'] }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            @endforeach
+                        	@if (count($scores))
+	                            @foreach ($scores['zb'] as $key => $index)
+		                            <tr>
+		                                <td{!! $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' !!}>{{ $key }}.{{ $index['zb_mc'] }}</td>
+		                                <td>{{ $index['ejzb'][0]['ejzb_id'] }}.{{ $index['ejzb'][0]['ejzb_mc'] }}</td>
+		                                <td>{{ $index['ejzb'][0]['score'] }}</td>
+		                                <td{!! $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' !!}>{{ $scores[$key] }}</td>
+		                            </tr>
+	                                @foreach ($index['ejzb'] as $k => $score)
+	                                    @if (0 != $k)
+	                                        <tr>
+	                                            <td>{{ $score['ejzb_id'] }}.{{ $score['ejzb_mc'] }}</td>
+	                                            <td>{{ $score['score'] }}</td>
+	                                        </tr>
+	                                    @endif
+	                                @endforeach
+	                            @endforeach
+                            @endif
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="active text-right" colspan="4">综合评分：{{ $indexes['zhpf'] }}分</td>
+                                <td class="active text-right" colspan="4">综合评分：{{ count($scores) ? $scores['zhpf'] : 0 }}分</td>
                             </tr>
                         </tfoot>
                     </table>

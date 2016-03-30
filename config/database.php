@@ -77,10 +77,10 @@ return [
 
 		'pgset'  => [
 			'driver'   => 'pgsql',
-			'host'     => env('DB_HOST', '202.193.171.253'),
-			'database' => env('DB_DATABASE', 'jxpg'),
-			'username' => env('DB_USERNAME', 'jwxt'),
-			'password' => env('DB_PASSWORD', 'jwxt..'),
+			'host'     => '202.193.171.253',
+			'database' => 'jxpg',
+			'username' => 'jwxt',
+			'password' => 'jwxt..',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',

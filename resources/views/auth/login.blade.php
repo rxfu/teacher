@@ -28,7 +28,7 @@
 				    <div class="col-sm-4 col-sm-offset-4">
 				        <div class="panel panel-default login-panel">
 				            <div class="panel-heading">
-				                <h3 class="panel-title">教师录</h3>
+				                <h3 class="panel-title">教师登录</h3>
 				            </div>
 				            <!-- /.panel-heading -->
 

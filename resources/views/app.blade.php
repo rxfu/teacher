@@ -103,7 +103,7 @@
                                 <a href="#"><i class="fa fa-anchor fa-fw"></i> 评教管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="{{ url('task') }}">评教结果</a>
+                                        <a href="{{ url('task') }}">评教查询</a>
                                     </li>
                                 </ul>
                             </li>
