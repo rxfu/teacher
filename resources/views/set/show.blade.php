@@ -16,27 +16,35 @@
                                 <th class="active">一级指标得分</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php foreach ($indexes['zb'] as $key => $index): ?>
+                        <tfoot>
                             <tr>
-                                <td<?php echo $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' ?>><?php echo $key ?>.<?php echo $index['zb_mc'] ?></td>
-                                <td><?php echo $index['ejzb'][0]['ejzb_id'] ?>.<?php echo $index['ejzb'][0]['ejzb_mc'] ?></td>
-                                <td><?php echo $index['ejzb'][0]['score'] ?></td>
-                                <td<?php echo $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' ?>><?php echo $indexes[$key] ?></td>
+                                <th>一级指标</th>
+                                <th>二级指标</th>
+                                <th>二级指标得分</th>
+                                <th>一级指标得分</th>
                             </tr>
-                                <?php foreach ($index['ejzb'] as $k => $score): ?>
-                                    <?php if (0 != $k): ?>
+                        </tfoot>
+                        <tbody>
+                            @foreach ($scores['zb'] as $key => $index): ?>
+	                            <tr>
+	                                <td{{ $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' }}>{{ $key }}.{{ $index['zb_mc'] }}</td>
+	                                <td>{{ $index['ejzb'][0]['ejzb_id'] }}.{{ $index['ejzb'][0]['ejzb_mc'] }}</td>
+	                                <td>{{ $index['ejzb'][0]['score'] }}</td>
+	                                <td{{ $index['total'] ? ' rowspan="' . $index['total'] . '"' : '' }}>{{ $indexes[$key] }}</td>
+	                            </tr>
+                                @foreach ($index['ejzb'] as $k => $score)
+                                    @if (0 != $k)
                                         <tr>
-                                            <td><?php echo $score['ejzb_id'] ?>.<?php echo $score['ejzb_mc'] ?></td>
-                                            <td><?php echo $score['score'] ?></td>
+                                            <td>{{ $score['ejzb_id'] }}.{{ $score['ejzb_mc'] }}</td>
+                                            <td>{{ $score['score'] }}</td>
                                         </tr>
-                                    <?php endif;?>
-                                <?php endforeach;?>
-                            <?php endforeach;?>
+                                    @endif
+                                @endforeach
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="active text-right" colspan="4">综合评分：<?php echo $indexes['zhpf'] ?>分</td>
+                                <td class="active text-right" colspan="4">综合评分：{{ $indexes['zhpf'] }}分</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -49,7 +57,7 @@
 <section class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
-            <div class="panel-heading">学生评语，共<?php echo count($comments) ?>条评语</div>
+            <div class="panel-heading">学生评语，共{{ count($comments) }}条评语</div>
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover">
@@ -61,16 +69,24 @@
                                 <th class="active">在教学方面，您的学生最想对您说的一句话</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php $i = 0?>
-                            <?php foreach ($comments as $comment): ?>
+                        <tfoot>
                             <tr>
-                                <td><i>#<?php echo ++$i ?></i></td>
-                                <td class="text-success"><?php echo $comment['c_yd'] ?></td>
-                                <td class="text-danger"><?php echo $comment['c_qd'] ?></td>
-                                <td class="text-info"><?php echo $comment['c_one'] ?></td>
+                                <th><i>#</i></th>
+                                <th>优点</th>
+                                <th>缺点</th>
+                                <th>在教学方面，您的学生最想对您说的一句话</th>
                             </tr>
-                            <?php endforeach;?>
+                        </tfoot>
+                        <tbody>
+                            <?php $i = 0;?>
+                            @foreach ($comments as $comment)
+	                            <tr>
+	                                <td><i>#{{ ++$i }}</i></td>
+	                                <td class="text-success">{{ $comment->c_yd }}</td>
+	                                <td class="text-danger">{{ $comment->c_qd }}</td>
+	                                <td class="text-info">{{ $comment->c_one }}</td>
+	                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

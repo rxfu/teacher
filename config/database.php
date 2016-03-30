@@ -46,13 +46,13 @@ return [
 
 	'connections' => [
 
-		'sqlite'   => [
+		'sqlite' => [
 			'driver'   => 'sqlite',
 			'database' => database_path('database.sqlite'),
 			'prefix'   => '',
 		],
 
-		'mysql'    => [
+		'mysql'  => [
 			'driver'    => 'mysql',
 			'host'      => env('DB_HOST', 'localhost'),
 			'database'  => env('DB_DATABASE', 'forge'),
@@ -64,7 +64,7 @@ return [
 			'strict'    => false,
 		],
 
-		'pgsql'    => [
+		'pgsql'  => [
 			'driver'   => 'pgsql',
 			'host'     => env('DB_HOST', '202.193.171.253'),
 			'database' => env('DB_DATABASE', 'abc'),
@@ -75,7 +75,7 @@ return [
 			'schema'   => 'public',
 		],
 
-		'pgsqlset' => [
+		'pgset'  => [
 			'driver'   => 'pgsql',
 			'host'     => env('DB_HOST', '202.193.171.253'),
 			'database' => env('DB_DATABASE', 'jxpg'),
@@ -86,7 +86,7 @@ return [
 			'schema'   => 'public',
 		],
 
-		'sqlsrv'   => [
+		'sqlsrv' => [
 			'driver'   => 'sqlsrv',
 			'host'     => env('DB_HOST', 'localhost'),
 			'database' => env('DB_DATABASE', 'forge'),
