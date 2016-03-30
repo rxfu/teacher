@@ -34,22 +34,14 @@
                                         <td>{{ $item->xh }}</td>
                                         <td>{{ $item->category->mc }}</td>
                                         <td>{{ $item->mc }}</td>
-                                        <td>{{ $item->zgfz }}</td>
+                                        <td>{{ $item->fz }}</td>
                                         <td>
                                             <div class="form-group">
-                                                <input type="text" name="scores[{{ $result->pjbz_id }}][fz]" placeholder="评分分值" value="{{ $result->fz }}" data-fv-notempty="true" data-fv-integer="true" min="0" max="{{ $result->item->zgfz}}" required{{ isset($result->fz) ? ' disabled' : '' }}>
-                                                <input type="hidden" name="scores[{{ $result->pjbz_id }}][pjbz]" value="{{ $result->pjbz_id }}">
+                                                <input type="text" name="score[{{ $item->id }}][fz]" placeholder="评分分值" data-fv-notempty="true" data-fv-integer="true" min="0" max="{{ $item->zgfz}}" required>
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <th>评价等级与总分</th>
-                                    <th>等级</th>
-                                    <td>{{ $grade }}</td>
-                                    <th>总分</th>
-                                    <td>{{ $total }}</td>
-                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -58,11 +50,9 @@
                             </tfoot>
                         </table>
                     </div>
-                    @if (count($results))
                     <div class="col-lg-4 col-lg-offset-4">
                         <button type="submit" name="submitScore" title="提交评分" class="btn btn-primary btn-block">提交评分</button>
                     </div>
-                    @endif
                 </form>
             </div>
         </div>

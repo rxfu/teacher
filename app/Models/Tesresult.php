@@ -19,8 +19,6 @@ class Tesresult extends Model {
 
 	public $incrementing = false;
 
-	public $timestamps = false;
-
 	/**
 	 * 评价标准
 	 * @author FuRongxin

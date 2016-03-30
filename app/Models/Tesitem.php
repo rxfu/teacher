@@ -38,6 +38,6 @@ class Tesitem extends Model {
 	 * @return  object 所属对象
 	 */
 	public function results() {
-		return $this->belongsTo('App\Models\Tesresult', 'pjbz_id', 'id');
+		return $this->hasMany('App\Models\Tesresult', 'pjbz_id', 'id');
 	}
 }

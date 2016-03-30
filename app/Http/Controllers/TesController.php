@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper;
 use App\Models\Course;
+use App\Models\Mjcourse;
 use App\Models\Task;
 use App\Models\Term;
 use App\Models\Tesgrade;
+use App\Models\Tesitem;
 use App\Models\Tesresult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,34 +104,76 @@ class TesController extends Controller {
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 显示录入评学界面
+	 * @author FuRongxin
+	 * @date    2016-03-30
+	 * @version 2.0
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 评学录入界面
 	 */
 	public function edit($kcxh) {
-		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->mc . '课程';
-
-		$items = Tesitem::with('category')
+		$items = Tesitem::with([
+			'results' => function ($query) use ($kcxh) {
+				$query->whereNd(session('year'))
+					->whereXq(session('term'))
+					->whereKcxh($kcxh)
+					->whereJsgh(Auth::user()->jsgh);
+			},
+			'category',
+		])
 			->whereZt(config('constants.status.enable'))
 			->orderBy('px')
 			->get();
 
-		return view('tes.edit')
-			->withTitle($title . '评学录入')
-			->withItems($items)
-			->withKcxh($kcxh);
+		if (count($items->first()->results)) {
+			return redirect()->route('tes.show', ['kcxh' => $kcxh, 'year' => session('year'), 'term' => session('term')])->withStatus($kcxh . '课程评学数据已录入');
+		} else {
+			$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->mc . '课程';
+
+			return view('tes.edit')
+				->withTitle($title . '评学录入')
+				->withItems($items)
+				->withKcxh($kcxh);
+		}
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * 录入评学结果
+	 * @author FuRongxin
+	 * @date    2016-03-30
+	 * @version 2.0
+	 * @param   \Illuminate\Http\Request  $request 评学结果请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 评学结果
 	 */
-	public function update(Request $request, $id) {
-		//
+	public function update(Request $request, $kcxh) {
+		$inputs = $request->all();
+
+		$this->validate($request, [
+			'score.*.fz' => 'required|numeric|min:0|max:10',
+		]);
+
+		$course = Mjcourse::whereNd(session('year'))
+			->whereXq(session('term'))
+			->whereKcxh($kcxh)
+			->firstOrFail();
+
+		foreach ($inputs['score'] as $id => $score) {
+			$result          = new Tesresult;
+			$result->jsgh    = Auth::user()->jsgh;
+			$result->kcxh    = $kcxh;
+			$result->kch     = Helper::getCno($kcxh);
+			$result->pjbz_id = $id;
+			$result->kkxy    = $course->kkxy;
+			$result->zy      = $course->zy;
+			$result->nj      = $course->nj;
+			$result->nd      = $course->nd;
+			$result->xq      = $course->xq;
+			$result->fz      = $score['fz'];
+			$result->save();
+		}
+
+		return redirect()->route('tes.show', ['kcxh' => $kcxh, 'year' => $course->nd, 'term' => $course->xq])->withStatus('评学成功');
 	}
 
 	/**
