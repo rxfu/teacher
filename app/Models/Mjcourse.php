@@ -83,4 +83,15 @@ class Mjcourse extends Model {
 			->whereKch(Str::substr($this->kcxh, 2, 8));
 	}
 
+	/**
+	 * 专业
+	 * @author FuRongxin
+	 * @date    2016-05-05
+	 * @version 2.1
+	 * @return  object 所属对象
+	 */
+	public function major() {
+		return $this->belongsTo('App\Models\Major', 'zy', 'zy');
+	}
+
 }

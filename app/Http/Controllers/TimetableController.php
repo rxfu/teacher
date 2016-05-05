@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper;
 use App\Models\Course;
+use App\Models\Mjcourse;
 use App\Models\Term;
 use App\Models\Timetable;
 use Auth;
@@ -16,6 +17,14 @@ class TimetableController extends Controller {
 	 * @author FuRongxin
 	 * @date    2016-03-18
 	 * @version 2.0
+	 * @param   \Illuminate\Http\Request $request 课程列表请求
+	 * @return  \Illuminate\Http\Response 课程列表
+	 */
+	/**
+	 * 应教务处要求增加年级、专业、考核方式、总学时
+	 * @author FuRongxin
+	 * @date    2016-05-05
+	 * @version 2.1
 	 * @param   \Illuminate\Http\Request $request 课程列表请求
 	 * @return  \Illuminate\Http\Response 课程列表
 	 */
@@ -33,10 +42,19 @@ class TimetableController extends Controller {
 
 			// 生成课程序号为索引的课程信息数组
 			if (!isset($courses[$timetable->kcxh])) {
+				$mjcourse = Mjcourse::whereKcxh($timetable->kcxh)
+					->whereNd($inputs['year'])
+					->whereXq($inputs['term'])
+					->firstOrFail();
+
 				$courses[$timetable->kcxh] = [
 					'kcxh' => $timetable->kcxh,
 					'kcmc' => Course::find(Helper::getCno($timetable->kcxh))->kcmc,
 					'xqh'  => $timetable->campus->mc,
+					'nj'   => $mjcourse->nj,
+					'zy'   => $mjcourse->major->mc,
+					'kh'   => $mjcourse->plan->mode->mc,
+					'zxs'  => $mjcourse->plan->zxs,
 				];
 			}
 
