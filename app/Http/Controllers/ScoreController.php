@@ -213,7 +213,7 @@ class ScoreController extends Controller {
 			->orderBy('xh')
 			->get();
 
-		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
+		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->plan->course->kcmc . '课程';
 
 		return view('score.edit')
 			->withTitle($title . '成绩录入')
