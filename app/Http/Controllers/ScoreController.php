@@ -356,4 +356,8 @@ class ScoreController extends Controller {
 	public function destroy($id) {
 		//
 	}
+
+	public function batchUpdate(Request $request) {
+
+	}
 }

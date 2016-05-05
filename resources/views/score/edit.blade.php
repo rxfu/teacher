@@ -11,7 +11,7 @@
         		</div>
         		@if ($exists)
 	                <div class="pull-right">
-	                    <form id="confirmForm" name="confirmForm" method="post" action="{{ url('score/confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
+	                    <form id="confirmForm" name="confirmForm" action="{{ url('score/confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
 	                    	{!! csrf_field() !!}
 	                        <button type="submit" class="btn btn-primary" title="成绩上报">成绩上报</button>
 	                    </form>
@@ -22,7 +22,7 @@
             	<div class="alert alert-danger" role="alert">
             		<strong>注意：</strong>录入成绩自动保存，无需点击提交按钮。点击“<strong>成绩上报</strong>”后，<strong>成绩不可更改！</strong>请老师在录入一项成绩后使用回车键，才会确认成绩的录入并移到下一格和生成总评成绩。
             	</div>
-                <div class="table-responsive tab-table">
+                <div class="table-responsive">
                     <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
                         <thead>
                             <tr>
@@ -48,7 +48,9 @@
                                 <th>提交状态</th>
                             </tr>
                         </tfoot>
-                        <form role="form">
+                        <form id="scoresForm" name="scoresForm" action="{{ route('score.batchUpdate') }}" method="post" role="form">
+                        	{{ method_field('put') }}
+                        	{{ csrf_field() }}
                         	<tbody>
 	                        	@foreach ($students as $student)
 	                        		<tr id="{{ $student->xh }}"{!! config('constants.score.passline') > $student->zpcj ? ' class="danger"' : '' !!}>
@@ -97,6 +99,7 @@
 	                        		</tr>
 	                        	@endforeach
                         	</tbody>
+                        	<button type="submit" class="btn btn-success btn-right btn-circle btn-lg" title="保存成绩"><i class="glyphicon glyphicon-cloud-upload"></i></button>
 	                    </form>
                     </table>
                 </div>
