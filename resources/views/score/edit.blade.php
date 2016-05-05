@@ -19,6 +19,9 @@
         		@endif
             </div>
             <div class="panel-body">
+            	<div class="alert alert-danger" role="alert">
+            		<strong>注意：</strong>录入成绩自动保存，无需点击提交按钮。点击“<strong>成绩上报</strong>”后，<strong>成绩不可更改！</strong>请老师在录入一项成绩后使用回车键，才会确认成绩的录入并移到下一格和生成总评成绩。
+            	</div>
                 <div class="table-responsive tab-table">
                     <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
                         <thead>
