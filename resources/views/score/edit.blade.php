@@ -23,34 +23,34 @@
             		<strong>注意：</strong>录入成绩自动保存，无需点击提交按钮。点击“<strong>成绩上报</strong>”后，<strong>成绩不可更改！</strong>请老师在录入一项成绩后使用回车键，才会确认成绩的录入并移到下一格和生成总评成绩。
             	</div>
                 <div class="table-responsive">
-                    <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
-                        <thead>
-                            <tr>
-                                <th class="active">学号</th>
-                                <th class="active">姓名</th>
-                                @foreach (array_pluck($ratios, 'name') as $name)
-                                	<th class="active">{{ $name }}</th>
-                                @endforeach
-                                <th class="active">总评</th>
-                                <th class="active">考试状态</th>
-                                <th class="active">提交状态</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>学号</th>
-                                <th>姓名</th>
-                                @foreach (array_pluck($ratios, 'name') as $name)
-                                	<th>{{ $name }}</th>
-                                @endforeach
-                                <th>总评</th>
-                                <th>考试状态</th>
-                                <th>提交状态</th>
-                            </tr>
-                        </tfoot>
-                        <form id="scoresForm" name="scoresForm" action="{{ route('score.batchUpdate') }}" method="post" role="form">
-                        	{{ method_field('put') }}
-                        	{{ csrf_field() }}
+                	<form id="scoresForm" name="scoresForm" action="{{ route('score.batchUpdate', $course->kcxh) }}" method="post" role="form" onsubmit="return $('processing').modal()">
+                    	{{ method_field('put') }}
+                    	{{ csrf_field() }}
+	                    <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
+	                        <thead>
+	                            <tr>
+	                                <th class="active">学号</th>
+	                                <th class="active">姓名</th>
+	                                @foreach (array_pluck($ratios, 'name') as $name)
+	                                	<th class="active">{{ $name }}</th>
+	                                @endforeach
+	                                <th class="active">总评</th>
+	                                <th class="active">考试状态</th>
+	                                <th class="active">提交状态</th>
+	                            </tr>
+	                        </thead>
+	                        <tfoot>
+	                            <tr>
+	                                <th>学号</th>
+	                                <th>姓名</th>
+	                                @foreach (array_pluck($ratios, 'name') as $name)
+	                                	<th>{{ $name }}</th>
+	                                @endforeach
+	                                <th>总评</th>
+	                                <th>考试状态</th>
+	                                <th>提交状态</th>
+	                            </tr>
+	                        </tfoot>
                         	<tbody>
 	                        	@foreach ($students as $student)
 	                        		<tr id="{{ $student->xh }}"{!! config('constants.score.passline') > $student->zpcj ? ' class="danger"' : '' !!}>
@@ -100,13 +100,30 @@
 	                        	@endforeach
                         	</tbody>
                         	<button type="submit" class="btn btn-success btn-right btn-circle btn-lg" title="保存成绩"><i class="glyphicon glyphicon-cloud-upload"></i></button>
-	                    </form>
-                    </table>
+                    	</table>
+	                </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<div class="modal fade hide" tabindex="-1" role="dialog" id="processing" data-backdrop="static" data-keyboard="false">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+			<div class="modal-header">
+	        	<h1 class="modal-title">提交中……</h1>
+	    	</div>
+	      	<div class="modal-body">
+	        	<div class="progress">
+	        		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+	        			<span class="sr-only">提交中……</span>
+	        		</div>
+	        	</div>
+	      	</div>
+    	</div><!-- /.modal-content -->
+  	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 @stop
 
 @push('scripts')

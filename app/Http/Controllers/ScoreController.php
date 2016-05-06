@@ -357,7 +357,72 @@ class ScoreController extends Controller {
 		//
 	}
 
-	public function batchUpdate(Request $request) {
+	/**
+	 * 批量更新成绩
+	 * @author FuRongxin
+	 * @date    2016-05-06
+	 * @version 2.1
+	 * @param   \Illuminate\Http\Request $request 更新成绩请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 学生成绩
+	 */
+	public function batchUpdate(Request $request, $kcxh) {
+		if ($request->isMethod('put')) {
+			$inputs = $request->all();
 
+			$task = Task::whereKcxh($kcxh)
+				->whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereJsgh(Auth::user()->jsgh)
+				->firstOrFail();
+
+			$ratios = [];
+			$items  = Ratio::whereFs($task->cjfs)
+				->orderBy('id')
+				->get();
+			foreach ($items as $ratio) {
+				$ratios[] = [
+					'id'           => $ratio->id,
+					'name'         => $ratio->idm,
+					'value'        => $ratio->bl / $ratio->mf,
+					'allow_failed' => $ratio->jg,
+				];
+			}
+
+			$students = Score::whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereKcxh($kcxh)
+				->get();
+
+			foreach ($students as $student) {
+				$rules = [];
+				foreach ($items as $item) {
+					$rules = [
+						$student->xh . $item->id => 'required|numeric|min:0|max:100',
+						$student->xh . 'kszt'    => 'required|numeric',
+					];
+
+					$student->{'cj' . $item->id} = $inputs[$student->xh . $item->id];
+				}
+				$student->kszt = $inputs[$student->xh . 'kszt'];
+
+				$this->validate($request, $rules);
+
+				$total = 0;
+				$fails = [];
+				foreach ($ratios as $ratio) {
+					if (config('constants.score.passline') > $student->{'cj' . $ratio['id']} && config('constants.status.enable') == $ratio['allow_failed']) {
+						$fails[] = $student->{'cj' . $ratio['id']};
+					} else {
+						$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
+					}
+				}
+				$student->zpcj = round(empty($fails) ? $total : min($fails));
+
+				$student->save();
+			}
+		}
+
+		return redirect()->route('score.edit', $kcxh);
 	}
 }
