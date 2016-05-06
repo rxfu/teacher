@@ -400,6 +400,7 @@ class ScoreController extends Controller {
 				$student = Score::whereNd(session('year'))
 					->whereXq(session('term'))
 					->whereKcxh($kcxh)
+					->whereXh($sno)
 					->firstOrFail();
 
 				$rules = [];
@@ -430,6 +431,6 @@ class ScoreController extends Controller {
 			}
 		}
 
-		return redirect()->route('score.edit', $kcxh);
+		return redirect()->route('score.edit', $kcxh)->withStatus('保存成绩成功');
 	}
 }

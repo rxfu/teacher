@@ -23,7 +23,7 @@
             		<strong>注意：</strong>录入成绩自动保存，无需点击提交按钮。点击“<strong>成绩上报</strong>”后，<strong>成绩不可更改！</strong>请老师在录入一项成绩后使用回车键，才会确认成绩的录入并移到下一格和生成总评成绩。
             	</div>
                 <div class="table-responsive">
-                	<form id="scoresForm" name="scoresForm" action="{{ route('score.batchUpdate', $course->kcxh) }}" method="post" role="form" onsubmit="return $('processing').modal()">
+                	<form id="scoresForm" name="scoresForm" action="{{ route('score.batchUpdate', $course->kcxh) }}" method="post" role="form">
                     	{{ method_field('put') }}
                     	{{ csrf_field() }}
 	                    <table id="scores-table" class="table table-bordered table-striped table-hover data-table">
@@ -108,16 +108,16 @@
     </div>
 </section>
 
-<div class="modal fade hide" tabindex="-1" role="dialog" id="processing" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" tabindex="-1" role="dialog" id="processing" data-backdrop="static" data-keyboard="false">
   	<div class="modal-dialog">
     	<div class="modal-content">
 			<div class="modal-header">
-	        	<h1 class="modal-title">提交中……</h1>
+	        	<h1 class="modal-title">保存中……</h1>
 	    	</div>
 	      	<div class="modal-body">
 	        	<div class="progress">
 	        		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-	        			<span class="sr-only">提交中……</span>
+	        			<span class="sr-only">保存中……</span>
 	        		</div>
 	        	</div>
 	      	</div>
@@ -129,6 +129,9 @@
 @push('scripts')
 <script>
 $(function() {
+	$('#scoresForm').on('submit', function(e) {
+		$('#processing').modal();
+	});
 	$('tr').on({
 		'focusin': function() {
 			$(this).addClass('warning');
