@@ -13,6 +13,7 @@ use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * 显示并处理学生成绩
@@ -370,6 +371,12 @@ class ScoreController extends Controller {
 		if ($request->isMethod('put')) {
 			$inputs = $request->all();
 
+			$snos = array_unique(array_map(function ($val) {
+				return Str::substr($val, 0, 12);
+			}, array_filter(array_keys($inputs), function ($val) {
+				return is_numeric($val);
+			})));
+
 			$task = Task::whereKcxh($kcxh)
 				->whereNd(session('year'))
 				->whereXq(session('term'))
@@ -389,24 +396,24 @@ class ScoreController extends Controller {
 				];
 			}
 
-			$students = Score::whereNd(session('year'))
-				->whereXq(session('term'))
-				->whereKcxh($kcxh)
-				->get();
+			foreach ($snos as $sno) {
+				$student = Score::whereNd(session('year'))
+					->whereXq(session('term'))
+					->whereKcxh($kcxh)
+					->firstOrFail();
 
-			foreach ($students as $student) {
 				$rules = [];
 				foreach ($items as $item) {
-					$rules = [
-						$student->xh . $item->id => 'required|numeric|min:0|max:100',
-						$student->xh . 'kszt'    => 'required|numeric',
-					];
+					$rules[$student->xh . $item->id] = 'required|numeric|min:0|max:100';
 
+				}
+				$rules[$student->xh . 'kszt'] = 'required|numeric';
+				$this->validate($request, $rules);
+
+				foreach ($items as $item) {
 					$student->{'cj' . $item->id} = $inputs[$student->xh . $item->id];
 				}
 				$student->kszt = $inputs[$student->xh . 'kszt'];
-
-				$this->validate($request, $rules);
 
 				$total = 0;
 				$fails = [];
