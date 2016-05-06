@@ -80,7 +80,7 @@
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
 	                        					@foreach ($statuses as $status)
-	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->tjzt ? ' selected' : '' }}>{{ $status->mc }}</option>
+	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->kszt ? ' selected' : '' }}>{{ $status->mc }}</option>
 	                        					@endforeach
 	                        				</select>
 	                        			@else
@@ -147,12 +147,12 @@ $(function() {
 					'id': id
 				},
 				'beforeSend': function() {
-					$('#status' + sno).text('提交中......').addClass('text-warning');
+					$('#status' + sno).text('保存中......').addClass('text-warning');
 				},
 				'success': function(data) {
 					if ($.isNumeric(data)){
 						$('#status' + sno).removeClass();
-						$('#status' + sno).text('提交成功').addClass('text-success');
+						$('#status' + sno).text('保存成功').addClass('text-success');
 
 						if ({{ config('constants.score.passline') }} > data) {
 							$('tr#' + sno).removeClass('success');
@@ -169,7 +169,7 @@ $(function() {
 						}
 					} else {
 						$('#status' + sno).removeClass();
-						$('#status' + sno).text('提交失败').addClass('text-danger');
+						$('#status' + sno).text('保存失败').addClass('text-danger');
 					}
 				}
 			})
