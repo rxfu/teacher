@@ -214,7 +214,7 @@ $(function() {
 					inputs[idx + 1].select();
 				}
 
-				$(this).closest('form').submit();
+				// $(this).closest('form').submit();
 				return false;
 			}
 		}
