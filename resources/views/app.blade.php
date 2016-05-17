@@ -97,6 +97,9 @@
                                     <li>
                                         <a href="{{ url('task/timetable') }}">课表查询</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ url('timetable/search') }}">听课查询</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li>

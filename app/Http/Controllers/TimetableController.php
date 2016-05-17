@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\Mjcourse;
 use App\Models\Term;
 use App\Models\Timetable;
@@ -181,5 +182,90 @@ class TimetableController extends Controller {
 	 */
 	public function destroy($id) {
 		//
+	}
+
+	/**
+	 * 显示查询听课表单
+	 * @author FuRongxin
+	 * @date    2016-05-17
+	 * @version 2.1
+	 * @return  \Illuminate\Http\Response 听课查询表单
+	 */
+	public function showSearchForm() {
+		$departments = Department::where('dw', '<>', '')
+			->whereLx('1')
+			->whereZt(config('constants.status.enable'))
+			->orderBy('dw')
+			->get();
+		$search = false;
+		$title  = '听课查询';
+
+		return view('timetable.search', compact('title', 'departments', 'search'));
+	}
+
+	/**
+	 * 查询听课列表
+	 * @author FuRongxin
+	 * @date    2016-05-17
+	 * @version 2.1
+	 * @param   \Illuminate\Http\Request $request 听课查询请求
+	 * @return  \Illuminate\Http\Response 听课列表
+	 */
+	public function search(Request $request) {
+		if ($request->isMethod('post')) {
+			$this->validate($request, [
+				'department' => 'required',
+				'week'       => 'required',
+				'begclass'   => 'required',
+				'endclass'   => 'required',
+			]);
+
+			$input = $request->all();
+
+			$query = Timetable::with([
+				'classroom' => function ($query) {
+					$query->select('jsh', 'mc');
+				},
+				'user'      => function ($query) {
+					$query->select('jsgh', 'xm', 'zc');
+				},
+				'user.position',
+				'campus',
+			])
+				->whereNd(session('year'))
+				->whereXq(session('term'));
+
+			if ('all' != $input['department']) {
+				$kcxhs = Mjcourse::whereNd(session('year'))
+					->whereXq(session('term'))
+					->whereKkxy($input['department'])
+					->select('kcxh')
+					->distinct()
+					->get()
+					->pluck('kcxh');
+
+				$query = $query->whereIn('kcxh', $kcxhs);
+			}
+			if ('all' !== $input['week']) {
+				$query = $query->whereZc($input['week']);
+			}
+			if ('all' != $input['begclass']) {
+				$query = $query->where('ksj', '<=', $input['begclass']);
+			}
+			if ('all' != $input['endclass']) {
+				$query = $query->where('jsj', '>=', $input['endclass']);
+			}
+
+			$results = $query->get();
+		}
+
+		$departments = Department::where('dw', '<>', '')
+			->whereLx('1')
+			->whereZt(config('constants.status.enable'))
+			->orderBy('dw')
+			->get();
+		$title = '听课查询';
+
+		return view('timetable.search', compact('title', 'departments', 'results'));
 	}
 }
