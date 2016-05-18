@@ -6,6 +6,7 @@ use App\Http\Helper;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\Mjcourse;
+use App\Models\Selcourse;
 use App\Models\Term;
 use App\Models\Timetable;
 use Auth;
@@ -212,12 +213,19 @@ class TimetableController extends Controller {
 	 * @return  \Illuminate\Http\Response 听课列表
 	 */
 	public function search(Request $request) {
+		$departments = Department::where('dw', '<>', '')
+			->whereLx('1')
+			->whereZt(config('constants.status.enable'))
+			->orderBy('dw')
+			->get();
+		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . '听课查询';
+
+		$courses = [];
 		if ($request->isMethod('post')) {
 			$this->validate($request, [
 				'department' => 'required',
 				'week'       => 'required',
-				'begclass'   => 'required',
-				'endclass'   => 'required',
+				'class'      => 'required',
 			]);
 
 			$input = $request->all();
@@ -233,7 +241,9 @@ class TimetableController extends Controller {
 				'campus',
 			])
 				->whereNd(session('year'))
-				->whereXq(session('term'));
+				->whereXq(session('term'))
+				->where('ksj', '<=', $input['class'])
+				->where('jsj', '>=', $input['class']);
 
 			if ('all' != $input['department']) {
 				$kcxhs = Mjcourse::whereNd(session('year'))
@@ -249,23 +259,30 @@ class TimetableController extends Controller {
 			if ('all' !== $input['week']) {
 				$query = $query->whereZc($input['week']);
 			}
-			if ('all' != $input['begclass']) {
-				$query = $query->where('ksj', '<=', $input['begclass']);
-			}
-			if ('all' != $input['endclass']) {
-				$query = $query->where('jsj', '>=', $input['endclass']);
-			}
 
 			$results = $query->get();
+
+			foreach ($results as $result) {
+				$courses[] = [
+					'kcmc' => Course::find(Helper::getCno($result->kcxh))->kcmc,
+					'xqh'  => $result->campus->mc,
+					'jsmc' => count($result->classroom) ? $result->classroom->mc : '',
+					'kkxy' => count($result->mjcourse) ? $result->mjcourse->college->mc : '',
+					'xy'   => count($result->mjcourse) ? $result->mjcourse->college->mc : '',
+					'zy'   => count($result->mjcourse) ? $result->mjcourse->major->mc : '',
+					'nj'   => count($result->mjcourse) ? $result->mjcourse->nj : '',
+					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
+					'jsxm' => $result->user->xm,
+					'jszc' => $result->user->position->mc,
+				];
+			}
+
+			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
+			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
+			$class_name      = '第' . $input['class'] . '节课程';
+			$subtitle        = '查询条件：' . $department_name . $week_name . $class_name;
 		}
 
-		$departments = Department::where('dw', '<>', '')
-			->whereLx('1')
-			->whereZt(config('constants.status.enable'))
-			->orderBy('dw')
-			->get();
-		$title = '听课查询';
-
-		return view('timetable.search', compact('title', 'departments', 'results'));
+		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle'));
 	}
 }

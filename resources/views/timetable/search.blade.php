@@ -24,35 +24,27 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="begclass" class="sr-only">开始节</label>
-                <select name="begclass" class="selectpicker" data-style="btn-success" data-width="120px">
-                    <option value="all">所有开始节</option>
+                <label for="class" class="sr-only">节次</label>
+                <select name="class" class="selectpicker" data-style="btn-success" data-width="120px">
                     @for($class = 1; $class <= 12; ++$class)
                         <option value="{{ $class }}">第 {{ $class }} 节</option>
                     @endfor
                 </select>
             </div>
-            <div class="form-group">
-                <label for="endclass" class="sr-only">结束节</label>
-                <select name="endclass" class="selectpicker" data-style="btn-success" data-width="120px">
-                    <option value="all">所有结束节</option>
-                    @for($class = 1; $class <= 12; ++$class)
-                        <option value="{{ $class }}">第 {{ $class }} 节</option>
-                    @endfor
-                </select>
-            </div>
-            <button class="btn btn-primary" type="submit">Go!</button>
-            </div>
+            <button class="btn btn-primary" type="submit" title="查询">查询</button>
         </form>
     </div>
 </section>
 
-@if (isset($results))
+@if (count($courses))
     <section class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">{{ $subtitle }}</div>
+                </div>
                 <div class="panel-body">
-                    <table id="search-table" class="table table-bordered table-striped table-hover">
+                    <table id="search-table" class="table table-bordered table-striped table-hover" width="100%">
                         <thead>
                             <tr>
                                 <th class="active">课程名称</th>
@@ -82,18 +74,18 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($results as $result)
+                            @foreach ($courses as $course)
                                 <tr>
-                                    <td>{{ $result->task->course->mc }}</td>
-                                    <td>{{ $result->campus->mc }}</td>
-                                    <td>{{ $result->classroom->mc }}</td>
-                                    <td>{{ $result->mjcourse->college->mc }}</td>
-                                    <td>{{ $result->task->course->mc }}</td>
-                                    <td>{{ $result->mjcourse->major->mc }}</td>
-                                    <td>{{ $result->mjcourse->nj }}</td>
-                                    <td>{{ $result->task->course->mc }}</td>
-                                    <td>{{ $result->user->xm }}</td>
-                                    <td>{{ $result->user->position->mc}}</td>
+                                    <td>{{ $course['kcmc'] }}</td>
+                                    <td>{{ $course['xqh'] }}</td>
+                                    <td>{{ $course['jsmc'] }}</td>
+                                    <td>{{ $course['kkxy'] }}</td>
+                                    <td>{{ $course['xy'] }}</td>
+                                    <td>{{ $course['zy'] }}</td>
+                                    <td>{{ $course['nj'] }}</td>
+                                    <td>{{ $course['rs'] }}</td>
+                                    <td>{{ $course['jsxm'] }}</td>
+                                    <td>{{ $course['jszc'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
