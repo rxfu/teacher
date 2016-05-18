@@ -263,7 +263,7 @@ class TimetableController extends Controller {
 					'xqh'  => $result->campus->mc,
 					'jsmc' => count($result->classroom) ? $result->classroom->mc : '',
 					'kkxy' => count($result->mjcourse) ? $result->mjcourse->college->mc : '',
-					'xy'   => count($result->mjcourse) ? $result->mjcourse->college->mc : '',
+					'xy'   => count($result->mjcourse) ? $result->mjcourse->major->college->mc : '',
 					'zy'   => count($result->mjcourse) ? $result->mjcourse->major->mc : '',
 					'nj'   => count($result->mjcourse) ? $result->mjcourse->nj : '',
 					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
@@ -274,7 +274,7 @@ class TimetableController extends Controller {
 
 			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
-			$class_name      = '第' . $input['class'] . '节课程';
+			$class_name      = '第 ' . $input['class'] . ' 节课';
 			$subtitle        = '查询条件：' . $department_name . $week_name . $class_name;
 		}
 
