@@ -8,7 +8,6 @@
             <div class="form-group">
                 <label for="departmtent" class="sr-only">学院</label>
                 <select name="department" class="selectpicker" data-style="btn-success">
-                    <option value="all">所有学院</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->dw }}">{{ $department->mc }}</option>
                     @endforeach
@@ -17,7 +16,6 @@
             <div class="form-group">
                 <label for="week" class="sr-only">周次</label>
                 <select name="week" class="selectpicker" data-style="btn-success" data-width="100px">
-                    <option value="all">所有周次</option>
                     @for($week = 1; $week <= 7; ++$week)
                         <option value="{{ $week }}">星期{{ config('constants.week.' . $week) }}</option>
                     @endfor

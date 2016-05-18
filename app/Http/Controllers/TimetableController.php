@@ -242,23 +242,18 @@ class TimetableController extends Controller {
 			])
 				->whereNd(session('year'))
 				->whereXq(session('term'))
+				->whereZc($input['week'])
 				->where('ksj', '<=', $input['class'])
 				->where('jsj', '>=', $input['class']);
 
-			if ('all' != $input['department']) {
-				$kcxhs = Mjcourse::whereNd(session('year'))
-					->whereXq(session('term'))
-					->whereKkxy($input['department'])
-					->select('kcxh')
-					->distinct()
-					->get()
-					->pluck('kcxh');
-
-				$query = $query->whereIn('kcxh', $kcxhs);
-			}
-			if ('all' !== $input['week']) {
-				$query = $query->whereZc($input['week']);
-			}
+			$kcxhs = Mjcourse::whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereKkxy($input['department'])
+				->select('kcxh')
+				->distinct()
+				->get()
+				->pluck('kcxh');
+			$query = $query->whereIn('kcxh', $kcxhs);
 
 			$results = $query->get();
 
