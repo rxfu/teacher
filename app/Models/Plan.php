@@ -56,4 +56,15 @@ class Plan extends Model {
 			->whereZsjj($this->zsjj);
 	}
 
+	/**
+	 * 考核方式
+	 * @author FuRongxin
+	 * @date    2016-05-05
+	 * @version 2.1
+	 * @return  object 所属对象
+	 */
+	public function mode() {
+		return $this->belongsTo('App\Models\Mode', 'kh', 'dm');
+	}
+
 }

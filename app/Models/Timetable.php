@@ -78,8 +78,7 @@ class Timetable extends Model {
 	public function mjcourse() {
 		return $this->belongsTo('App\Models\Mjcourse', 'kcxh', 'kcxh')
 			->whereNd($this->nd)
-			->whereXq($this->xq)
-			->whereZsjj($this->zsjj);
+			->whereXq($this->xq);
 	}
 
 }

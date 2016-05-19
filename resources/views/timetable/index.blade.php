@@ -19,6 +19,10 @@
                                 <th class="active">周五</th>
                                 <th class="active">周六</th>
                                 <th class="active">周日</th>
+                                <th class="active">年级</th>
+                                <th class="active">专业</th>
+                                <th class="active">考核方式</th>
+                                <th class="active">总学时</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -33,6 +37,10 @@
                                 <th>周五</th>
                                 <th>周六</th>
                                 <th>周日</th>
+                                <th>年级</th>
+                                <th>专业</th>
+                                <th>考核方式</th>
+                                <th>总学时</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -54,6 +62,10 @@
                                             @endif
                                         </td>
                                     @endfor
+                                    <td>{{ $course['nj'] }}</td>
+                                    <td>{{ $course['zy'] }}</td>
+                                    <td>{{ $course['kh'] }}</td>
+                                    <td>{{ $course['zxs'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
