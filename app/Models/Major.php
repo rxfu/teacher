@@ -24,4 +24,8 @@ class Major extends Model {
 	public function mjcourses() {
 		return $this->hasMany('App\Models\Mjcourse', 'zy', 'zy');
 	}
+
+	public function college() {
+		return $this->belongsTo('App\Models\Department', 'xy', 'dw');
+	}
 }
