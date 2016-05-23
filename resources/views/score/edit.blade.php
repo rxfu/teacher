@@ -78,11 +78,15 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
-	                        					@foreach ($statuses as $status)
-	                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->kszt ? ' selected' : '' }}>{{ $status->mc }}</option>
-	                        					@endforeach
-	                        				</select>
+	                        				@if (config('constants.score.deferral') == $student->kszt)
+	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
+	                        				@else
+		                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
+		                        					@foreach ($statuses as $status)
+		                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->kszt ? ' selected' : '' }}>{{ $status->mc }}</option>
+		                        					@endforeach
+		                        				</select>
+	                        				@endif
 	                        			@else
 	                        				<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        			@endif
