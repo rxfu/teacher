@@ -16,9 +16,9 @@ class ComposerStaticInitc72c6a0a5570b3d9eab5344fe16fa2b4
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -1083,6 +1083,7 @@ class ComposerStaticInitc72c6a0a5570b3d9eab5344fe16fa2b4
         'Illuminate\\Auth\\AuthManager' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/AuthManager.php',
         'Illuminate\\Auth\\AuthServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/AuthServiceProvider.php',
         'Illuminate\\Auth\\Authenticatable' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Authenticatable.php',
+        'Illuminate\\Auth\\AuthenticationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/AuthenticationException.php',
         'Illuminate\\Auth\\Console\\ClearResetsCommand' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Console/ClearResetsCommand.php',
         'Illuminate\\Auth\\Console\\MakeAuthCommand' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Console/MakeAuthCommand.php',
         'Illuminate\\Auth\\CreatesUserProviders' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/CreatesUserProviders.php',
@@ -1308,6 +1309,7 @@ class ComposerStaticInitc72c6a0a5570b3d9eab5344fe16fa2b4
         'Illuminate\\Database\\Query\\Grammars\\SQLiteGrammar' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/Grammars/SQLiteGrammar.php',
         'Illuminate\\Database\\Query\\Grammars\\SqlServerGrammar' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/Grammars/SqlServerGrammar.php',
         'Illuminate\\Database\\Query\\JoinClause' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/JoinClause.php',
+        'Illuminate\\Database\\Query\\JsonExpression' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/JsonExpression.php',
         'Illuminate\\Database\\Query\\Processors\\MySqlProcessor' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/Processors/MySqlProcessor.php',
         'Illuminate\\Database\\Query\\Processors\\PostgresProcessor' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/Processors/PostgresProcessor.php',
         'Illuminate\\Database\\Query\\Processors\\Processor' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php',
