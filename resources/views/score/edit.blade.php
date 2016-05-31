@@ -103,7 +103,9 @@
 	                        		</tr>
 	                        	@endforeach
                         	</tbody>
-                        	<button type="submit" class="btn btn-success btn-right btn-circle btn-lg" title="保存成绩"><i class="glyphicon glyphicon-cloud-upload"></i></button>
+                        	@if ($exists)
+                        		<button type="submit" class="btn btn-success btn-right btn-circle btn-lg" title="保存成绩"><i class="glyphicon glyphicon-cloud-upload"></i></button>
+                        	@endif
                     	</table>
 	                </form>
                 </div>
@@ -134,6 +136,9 @@
 <script>
 $(function() {
 	$('#scoresForm').on('submit', function(e) {
+		$('#processing').modal();
+	});
+	$('#confirmForm').on('submit', function(e) {
 		$('#processing').modal();
 	});
 	$('tr').on({
