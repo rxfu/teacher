@@ -76,6 +76,7 @@ class TaskController extends Controller {
 		$students = Selcourse::whereKcxh($kcxh)
 			->whereNd($year)
 			->whereXq($term)
+			->orderBy('xh')
 			->get();
 
 		$task = Task::whereKcxh($kcxh)
