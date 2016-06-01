@@ -405,16 +405,19 @@ class ScoreController extends Controller {
 
 				$rules = [];
 				foreach ($items as $item) {
-					$rules[$student->xh . $item->id] = 'required|numeric|min:0|max:100';
+					$rules[$student->xh . $item->id] = 'numeric|min:0|max:100';
 
 				}
-				$rules[$student->xh . 'kszt'] = 'required|numeric';
+				$rules[$student->xh . 'kszt'] = 'numeric';
 				$this->validate($request, $rules);
 
 				foreach ($items as $item) {
-					$student->{'cj' . $item->id} = $inputs[$student->xh . $item->id];
+					$student->{'cj' . $item->id} = isset($inputs[$student->xh . $item->id]) ? $inputs[$student->xh . $item->id] : 0;
 				}
-				$student->kszt = $inputs[$student->xh . 'kszt'];
+
+				if (isset($inputs[$student->xh . 'kszt'])) {
+					$student->kszt = $inputs[$student->xh . 'kszt'];
+				}
 
 				$total = 0;
 				$fails = [];
