@@ -79,6 +79,7 @@ class TesController extends Controller {
 		$inputs = $request->all();
 
 		$results = Tesresult::with('item', 'item.category')
+			->whereKcxh($kcxh)
 			->whereNd($inputs['year'])
 			->whereXq($inputs['term'])
 			->whereJsgh(Auth::user()->jsgh)

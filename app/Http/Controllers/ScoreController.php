@@ -13,6 +13,7 @@ use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * 显示并处理学生成绩
@@ -213,7 +214,7 @@ class ScoreController extends Controller {
 			->orderBy('xh')
 			->get();
 
-		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->kcmc;
+		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->plan->course->kcmc . '课程';
 
 		return view('score.edit')
 			->withTitle($title . '成绩录入')
@@ -355,5 +356,84 @@ class ScoreController extends Controller {
 	 */
 	public function destroy($id) {
 		//
+	}
+
+	/**
+	 * 批量更新成绩
+	 * @author FuRongxin
+	 * @date    2016-05-06
+	 * @version 2.1
+	 * @param   \Illuminate\Http\Request $request 更新成绩请求
+	 * @param   string $kcxh 12位课程序号
+	 * @return  \Illuminate\Http\Response 学生成绩
+	 */
+	public function batchUpdate(Request $request, $kcxh) {
+		if ($request->isMethod('put')) {
+			$inputs = $request->all();
+
+			$snos = array_unique(array_map(function ($val) {
+				return Str::substr($val, 0, 12);
+			}, array_filter(array_keys($inputs), function ($val) {
+				return is_numeric($val);
+			})));
+
+			$task = Task::whereKcxh($kcxh)
+				->whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereJsgh(Auth::user()->jsgh)
+				->firstOrFail();
+
+			$ratios = [];
+			$items  = Ratio::whereFs($task->cjfs)
+				->orderBy('id')
+				->get();
+			foreach ($items as $ratio) {
+				$ratios[] = [
+					'id'           => $ratio->id,
+					'name'         => $ratio->idm,
+					'value'        => $ratio->bl / $ratio->mf,
+					'allow_failed' => $ratio->jg,
+				];
+			}
+
+			foreach ($snos as $sno) {
+				$student = Score::whereNd(session('year'))
+					->whereXq(session('term'))
+					->whereKcxh($kcxh)
+					->whereXh($sno)
+					->firstOrFail();
+
+				$rules = [];
+				foreach ($items as $item) {
+					$rules[$student->xh . $item->id] = 'numeric|min:0|max:100';
+
+				}
+				$rules[$student->xh . 'kszt'] = 'numeric';
+				$this->validate($request, $rules);
+
+				foreach ($items as $item) {
+					$student->{'cj' . $item->id} = isset($inputs[$student->xh . $item->id]) ? $inputs[$student->xh . $item->id] : 0;
+				}
+
+				if (isset($inputs[$student->xh . 'kszt'])) {
+					$student->kszt = $inputs[$student->xh . 'kszt'];
+				}
+
+				$total = 0;
+				$fails = [];
+				foreach ($ratios as $ratio) {
+					if (config('constants.score.passline') > $student->{'cj' . $ratio['id']} && config('constants.status.enable') == $ratio['allow_failed']) {
+						$fails[] = $student->{'cj' . $ratio['id']};
+					} else {
+						$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
+					}
+				}
+				$student->zpcj = round(empty($fails) ? $total : min($fails));
+
+				$student->save();
+			}
+		}
+
+		return redirect()->route('score.edit', $kcxh)->withStatus('保存成绩成功');
 	}
 }
