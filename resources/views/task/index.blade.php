@@ -43,7 +43,7 @@
                         			<td>{{ $task->scores->count() }}</td>
                         			<td>
                                         @if ($task->scores->count() <= 0)
-                                            <span class="text-danger">上课人数为零</span>
+                                            <span class="text-danger">成绩未确认相关查询暂不能使用</span>
                                         @else
                         				    <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
                                             <a href="{{ route('task.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="学生名单" class="btn btn-primary">学生名单</a>
