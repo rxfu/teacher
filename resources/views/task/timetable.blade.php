@@ -28,7 +28,7 @@
                         			<td>{{ $period->term->mc }}</td>
                                     <td>
                                         <a href="{{ route('timetable.index', ['year' => $period->nd, 'term' => $period->xq]) }}" title="课程列表" class="btn btn-primary">课程列表</a>
-                                        <a href="{{ route('timetable.show', [$period->nd, 'term' => $period->xq]) }}" title="课程列表" class="btn btn-primary">课程表</a>
+                                        <a href="{{ route('timetable.show', [$period->nd, 'term' => $period->xq]) }}" title="课程表" class="btn btn-primary">课程表</a>
                                     </td>
                         		</tr>
                         	@endforeach
