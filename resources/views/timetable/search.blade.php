@@ -55,6 +55,8 @@
                                 <th class="active">选课人数</th>
                                 <th class="active">教师姓名</th>
                                 <th class="active">教师职称</th>
+                                <th class="active">开始周</th>
+                                <th class="active">结束周</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -69,6 +71,8 @@
                                 <th>选课人数</th>
                                 <th>教师姓名</th>
                                 <th>教师职称</th>
+                                <th>开始周</th>
+                                <th>结束周</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -84,6 +88,8 @@
                                     <td>{{ $course['rs'] }}</td>
                                     <td>{{ $course['jsxm'] }}</td>
                                     <td>{{ $course['jszc'] }}</td>
+                                    <td>{{ $course['ksz'] }}</td>
+                                    <td>{{ $course['jsz'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

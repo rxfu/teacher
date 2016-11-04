@@ -269,6 +269,8 @@ class TimetableController extends Controller {
 					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
 					'jsxm' => $result->user->xm,
 					'jszc' => $result->user->position->mc,
+					'ksz'  => $result->ksz,
+					'jsz'  => $result->jsz,
 				];
 			}
 
