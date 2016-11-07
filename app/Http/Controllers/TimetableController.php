@@ -214,15 +214,17 @@ class TimetableController extends Controller {
 	 */
 	public function search(Request $request) {
 		$departments = Department::where('dw', '<>', '')
-			->whereLx('1')
+			->whereLx(config('constants.department.college'))
 			->whereZt(config('constants.status.enable'))
 			->orderBy('dw')
 			->get();
-		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . '听课查询';
+		$title = '听课查询';
 
 		$courses = [];
 		if ($request->isMethod('post')) {
 			$this->validate($request, [
+				'year'       => 'required',
+				'term'       => 'required',
 				'department' => 'required',
 				'week'       => 'required',
 				'class'      => 'required',
@@ -240,14 +242,14 @@ class TimetableController extends Controller {
 				'user.position',
 				'campus',
 			])
-				->whereNd(session('year'))
-				->whereXq(session('term'))
+				->whereNd($input['year'])
+				->whereXq($input['term'])
 				->whereZc($input['week'])
 				->where('ksj', '<=', $input['class'])
 				->where('jsj', '>=', $input['class']);
 
-			$kcxhs = Mjcourse::whereNd(session('year'))
-				->whereXq(session('term'))
+			$kcxhs = Mjcourse::whereNd($input['year'])
+				->whereXq($input['term'])
 				->whereKkxy($input['department'])
 				->select('kcxh')
 				->distinct()
@@ -274,10 +276,12 @@ class TimetableController extends Controller {
 				];
 			}
 
+			$year_name       = $input['year'] . '年度';
+			$term_name       = Term::find($input['term'])->mc . '学期';
 			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
 			$class_name      = '第 ' . $input['class'] . ' 节课';
-			$subtitle        = '查询条件：' . $department_name . $week_name . $class_name;
+			$subtitle        = '查询条件：' . $year_name . $term_name . $department_name . $week_name . $class_name;
 		}
 
 		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle'));

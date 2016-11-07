@@ -6,6 +6,21 @@
         <form id="searchForm" name="searchForm" method="post" action="{{ url('timetable/search') }}" role="form" class="form-inline">
             {{ csrf_field() }}
             <div class="form-group">
+                <label for="year" class="sr-only">年度</label>
+                <select name="year" class="selectpicker" data-style="btn-success" data-width="120px">
+                    <option value="{{ Carbon\Carbon::now()->format('Y') }}">{{ Carbon\Carbon::now()->format('Y') }}年度</option>
+                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}">{{ Carbon\Carbon::now()->subYear()->format('Y') }}年度</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="term" class="sr-only">学期</label>
+                <select name="term" class="selectpicker" data-style="btn-success" data-width="120px">
+                    @for ($i = 1; $i < 3; $i++)
+                        <option value="{{ $i }}">{{ App\Models\Term::find($i)->mc }}学期</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="departmtent" class="sr-only">学院</label>
                 <select name="department" class="selectpicker" data-style="btn-success">
                     @foreach ($departments as $department)
@@ -23,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label for="class" class="sr-only">节次</label>
-                <select name="class" class="selectpicker" data-style="btn-success" data-width="120px">
+                <select name="class" class="selectpicker" data-style="btn-success" data-width="100px">
                     @for($class = 1; $class <= 12; ++$class)
                         <option value="{{ $class }}">第 {{ $class }} 节</option>
                     @endfor
