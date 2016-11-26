@@ -13,8 +13,12 @@
                                 <th class="active">学期</th>
                                 <th class="active">课程序号</th>
                                 <th class="active">课程名称</th>
-                                <th class="active">学分</th>
-                                <th class="active">学时</th>
+                                <th class="active">理论学分</th>
+                                <th class="active">实验学分</th>
+                                <th class="active">总学分</th>
+                                <th class="active">理论学时</th>
+                                <th class="active">实验学时</th>
+                                <th class="active">总学时</th>
                                 <th class="active">上课人数</th>
                                 <th class="active">操作</th>
                             </tr>
@@ -25,25 +29,33 @@
                                 <th>学期</th>
                                 <th>课程序号</th>
                                 <th>课程名称</th>
-                                <th>学分</th>
-                                <th>学时</th>
+                                <th>理论学分</th>
+                                <th>实验学分</th>
+                                <th>总学分</th>
+                                <th>理论学时</th>
+                                <th>实验学时</th>
+                                <th>总学时</th>
                                 <th>上课人数</th>
                                 <th>操作</th>
                             </tr>
                         </tfoot>
                         <tbody>
                         	@foreach ($tasks as $task)
-                        		<tr{!! $task->scores->count() <= 0 ? ' class="danger"' : '' !!}>
+                        		<tr{!! $task->total <= 0 ? ' class="danger"' : '' !!}>
                         			<td>{{ $task->nd }}</td>
-                        			<td>{{ $task->term->mc }}</td>
+                        			<td>{{ $task->xqmc }}</td>
                         			<td>{{ $task->kcxh }}</td>
-                        			<td>{{ $task->course->kcmc }}</td>
-                                    <td>{{ $task->course->xf }}</td>
-                                    <td>{{ $task->course->xs }}</td>
-                        			<td>{{ $task->scores->count() }}</td>
+                        			<td>{{ $task->kcmc }}</td>
+                                    <td>{{ $task->llxf }}</td>
+                                    <td>{{ $task->syxf}}</td>
+                                    <td>{{ $task->zxf }}</td>
+                                    <td>{{ $task->llxs }}</td>
+                                    <td>{{ $task->syxs }}</td>
+                                    <td>{{ $task->zxs }}</td>
+                        			<td>{{ $task->total }}</td>
                         			<td>
                                         <a href="{{ route('task.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="学生名单" class="btn btn-primary">学生名单</a>
-                                        @if ($task->scores->count() <= 0)
+                                        @if ($task->total <= 0)
                                             <span class="text-danger">成绩未确认相关查询暂不能使用</span>
                                         @else
                         				    <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="查询成绩" class="btn btn-primary">查询成绩</a>
