@@ -87,7 +87,7 @@ class TaskController extends Controller {
 
 		$title = Helper::getAcademicYear($task->nd) . '学年' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程' . '学生名单';
 
-		return view('task.show', compact('ttile', 'students', 'year', 'term', 'kcxh'));
+		return view('task.show', compact('title', 'students', 'year', 'term', 'kcxh'));
 	}
 
 	/**
