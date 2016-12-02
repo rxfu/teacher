@@ -72,7 +72,8 @@ class TaskController extends Controller {
 		$year   = isset($inputs['year']) ? $inputs['year'] : session('year');
 		$term   = isset($inputs['term']) ? $inputs['term'] : session('term');
 
-		$students = Selcourse::whereKcxh($kcxh)
+		$students = Selcourse::with('student.major')
+			->whereKcxh($kcxh)
 			->whereNd($year)
 			->whereXq($term)
 			->orderBy('xh')
@@ -86,9 +87,7 @@ class TaskController extends Controller {
 
 		$title = Helper::getAcademicYear($task->nd) . '学年' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程' . '学生名单';
 
-		return view('task.show')
-			->withTitle($title)
-			->withStudents($students);
+		return view('task.show', compact('ttile', 'students', 'year', 'term', 'kcxh'));
 	}
 
 	/**
@@ -110,6 +109,10 @@ class TaskController extends Controller {
 		return view('task.timetable')
 			->withTitle('学期列表')
 			->withPeriods($periods);
+	}
+
+	public function exportStudents($year, $term, $kcxh) {
+
 	}
 
 }

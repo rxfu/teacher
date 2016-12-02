@@ -40,6 +40,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::resource('timetable', 'TimetableController', ['only' => ['index', 'show']]);
 
 		Route::get('task/timetable', 'TaskController@timetable');
+		Route::get('task/export/{year}/{term}/{kcxh}', ['as' => 'task.export', 'uses' => 'TaskController@exportStudents']);
 		Route::resource('task', 'TaskController', ['only' => ['index', 'show']]);
 
 		Route::put('score/updateStatus/{kcxh}', 'ScoreController@updateStatus');
