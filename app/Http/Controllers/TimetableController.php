@@ -16,14 +16,7 @@ class TimetableController extends Controller {
 
 	/**
 	 * 显示课程列表
-	 * @author FuRongxin
-	 * @date    2016-03-18
-	 * @version 2.0
-	 * @param   \Illuminate\Http\Request $request 课程列表请求
-	 * @return  \Illuminate\Http\Response 课程列表
-	 */
-	/**
-	 * 应教务处要求增加年级、专业、考核方式、总学时
+	 * 2016-05-05：应教务处要求增加年级、专业、考核方式、总学时
 	 * @author FuRongxin
 	 * @date    2016-05-05
 	 * @version 2.1
@@ -70,29 +63,10 @@ class TimetableController extends Controller {
 			];
 		}
 
-		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期';
+		$title = Helper::getAcademicYear($inputs['year']) . '学年' . Term::find($inputs['term'])->mc . '学期' . '课程列表';
 		return view('timetable.index')
-			->withTitle($title . '课程列表')
+			->withTitle($title)
 			->withCourses($courses);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
 	}
 
 	/**
@@ -147,42 +121,11 @@ class TimetableController extends Controller {
 			];
 		}
 
-		$title = $nd . '年度' . Term::find($inputs['term'])->mc . '学期';
+		$title = Helper::getAcademicYear($nd) . '学年' . Term::find($inputs['term'])->mc . '学期' . '课程表';
 		return view('timetable.timetable')
-			->withTitle('课程表')
+			->withTitle($title)
 			->withCourses($courses)
 			->withPeriods($periods);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id) {
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id) {
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
 	}
 
 	/**

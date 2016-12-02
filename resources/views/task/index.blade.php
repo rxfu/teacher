@@ -9,7 +9,8 @@
                     <table class="table table-bordered table-striped table-hover data-table">
                         <thead>
                             <tr>
-                                <th class="active">学年度</th>
+                                <th class="active">学年</th>
+                                <th class="active">学期</th>
                                 <th class="active">课程序号</th>
                                 <th class="active">课程名称</th>
                                 <th class="active">理论学分</th>
@@ -23,7 +24,8 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>年度</th>
+                                <th>学年</th>
+                                <th>学期</th>
                                 <th>课程序号</th>
                                 <th>课程名称</th>
                                 <th>理论学分</th>
@@ -38,7 +40,8 @@
                         <tbody>
                         	@foreach ($tasks as $task)
                         		<tr{!! $task->total <= 0 ? ' class="danger"' : '' !!}>
-                        			<td>{{ $task->nd }}~{{ $task->nd + 1 }}学年{{ $task->xqmc }}学期</td>
+                                    <td>{{ App\Http\Helper::getAcademicYear($task->nd) }}</td>
+                        			<td>{{ $task->xqmc }}</td>
                         			<td>{{ $task->kcxh }}</td>
                         			<td>{{ $task->kcmc }}</td>
                                     <td>{{ $task->llxf }}</td>

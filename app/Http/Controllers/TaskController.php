@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper;
 use App\Models\Selcourse;
 use App\Models\Task;
 use Auth;
@@ -58,25 +59,6 @@ class TaskController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
-	}
-
-	/**
 	 * 显示课程学生名单
 	 * @author FuRongxin
 	 * @date    2016-03-18
@@ -102,10 +84,10 @@ class TaskController extends Controller {
 			->whereJsgh(Auth::user()->jsgh)
 			->firstOrFail();
 
-		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
+		$title = Helper::getAcademicYear($task->nd) . '学年' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程' . '学生名单';
 
 		return view('task.show')
-			->withTitle($title . '学生名单')
+			->withTitle($title)
 			->withStudents($students);
 	}
 
@@ -130,34 +112,4 @@ class TaskController extends Controller {
 			->withPeriods($periods);
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id) {
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id) {
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
-	}
 }

@@ -17,33 +17,6 @@ use Illuminate\Support\Facades\DB;
  * @version 2.0
  */
 class SetController extends Controller {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index() {
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
-	}
 
 	/**
 	 * 显示评教结果
@@ -95,42 +68,11 @@ class SetController extends Controller {
 		// 获取评教评语
 		$comments = DB::connection('pgset')->select('SELECT c_yd, c_qd, c_one, c_xh FROM t_zl_xspy a INNER JOIN "' . $table . '" b ON a.c_kcxh = b.c_kcxh WHERE a.c_nd = ? AND a.c_xq = ? AND b.c_jsgh = ? AND b.c_kcxh = ?', [$inputs['year'], $inputs['term'], Auth::user()->jsgh, $kcxh]);
 
-		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程';
+		$title = Helper::getAcademicYear($inputs['year']) . '学年' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程' . '评教结果';
 
 		return view('set.show')
-			->withTitle($title . '评教结果')
+			->withTitle($title)
 			->withScores($scores)
 			->withComments($comments);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id) {
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id) {
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
 	}
 }

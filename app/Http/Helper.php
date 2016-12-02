@@ -36,4 +36,16 @@ class Helper {
 	public static function getCno($kcxh) {
 		return Str::substr($kcxh, 2, 8);
 	}
+
+	/**
+	 * 将系统年度设置转换为学年度设置
+	 * @author FuRongxin
+	 * @date    2016-12-02
+	 * @version 2.1.3
+	 * @param   string $year 系统年度
+	 * @return  string 学年度
+	 */
+	public static function getAcademicYear($year) {
+		return $year . '~' . ($year + 1);
+	}
 }

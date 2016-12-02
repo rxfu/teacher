@@ -7,14 +7,14 @@
             {{ csrf_field() }}
             <div class="form-group">
                 <label for="year" class="sr-only">年度</label>
-                <select name="year" class="selectpicker" data-style="btn-success" data-width="120px">
-                    <option value="{{ Carbon\Carbon::now()->format('Y') }}">{{ Carbon\Carbon::now()->format('Y') }}年度</option>
-                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}">{{ Carbon\Carbon::now()->subYear()->format('Y') }}年度</option>
+                <select name="year" class="selectpicker" data-style="btn-success" data-width="150px">
+                    <option value="{{ Carbon\Carbon::now()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->format('Y')) }}学年</option>
+                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->subYear()->format('Y')) }}学年</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="term" class="sr-only">学期</label>
-                <select name="term" class="selectpicker" data-style="btn-success" data-width="120px">
+                <select name="term" class="selectpicker" data-style="btn-success" data-width="100px">
                     @for ($i = 1; $i < 3; $i++)
                         <option value="{{ $i }}">{{ App\Models\Term::find($i)->mc }}学期</option>
                     @endfor
@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="week" class="sr-only">周次</label>
-                <select name="week" class="selectpicker" data-style="btn-success" data-width="100px">
+                <select name="week" class="selectpicker" data-style="btn-success" data-width="90px">
                     @for($week = 1; $week <= 7; ++$week)
                         <option value="{{ $week }}">星期{{ config('constants.week.' . $week) }}</option>
                     @endfor

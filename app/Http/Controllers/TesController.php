@@ -40,30 +40,11 @@ class TesController extends Controller {
 			->orderBy('kcxh')
 			->get();
 
-		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期';
+		$title = Helper::getAcademicYear(session('year')) . '学年' . Term::find(session('term'))->mc . '学期' . '课程列表';
 
 		return view('tes.index')
-			->withTitle($title . '课程列表')
+			->withTitle($title)
 			->withTasks($tasks);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
 	}
 
 	/**
@@ -95,10 +76,10 @@ class TesController extends Controller {
 			->where('zgfz', '>=', $total)
 			->firstOrFail();
 
-		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程';
+		$title = Helper::getAcademicYear($inputs['year']) . '学年' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程' . '评学结果';
 
 		return view('tes.show')
-			->withTitle($title . '评学结果')
+			->withTitle($title)
 			->withResults($results)
 			->withTotal($total)
 			->withGrade($grade->mc);
@@ -129,10 +110,10 @@ class TesController extends Controller {
 		if (count($items->first()->results)) {
 			return redirect()->route('tes.show', ['kcxh' => $kcxh, 'year' => session('year'), 'term' => session('term')])->withStatus($kcxh . '课程评学数据已录入');
 		} else {
-			$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程';
+			$title = Helper::getAcademicYear(session('year')) . '学年' . Term::find(session('term'))->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程' . '评学录入';
 
 			return view('tes.edit')
-				->withTitle($title . '评学录入')
+				->withTitle($title)
 				->withItems($items)
 				->withKcxh($kcxh);
 		}
@@ -177,13 +158,4 @@ class TesController extends Controller {
 		return redirect()->route('tes.show', ['kcxh' => $kcxh, 'year' => $course->nd, 'term' => $course->xq])->withStatus('评学成功');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
-	}
 }
