@@ -25,16 +25,6 @@ class TaskController extends Controller {
 	 * @return  \Illuminate\Http\Response 教师课程列表
 	 */
 	public function index() {
-		/*$tasks = Task::with([
-			'course' => function ($query) {
-				$query->select('kch', 'kcmc', 'xs');
-			},
-			'term'])
-			->whereJsgh(Auth::user()->jsgh)
-			->orderBy('nd', 'desc')
-			->orderBy('xq', 'desc')
-			->orderBy('kcxh')
-			->get();*/
 		$tasks = DB::table('pk_jxrw')
 			->join('pk_kczy', function ($join) {
 				$join->on('pk_kczy.nd', '=', 'pk_jxrw.nd')
