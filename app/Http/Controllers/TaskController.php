@@ -139,6 +139,7 @@ class TaskController extends Controller {
 			->orderBy('xh')
 			->get();
 
+		$fileName  = $course->kcmc . '-' . date('Ymd');
 		$sheetName = $course->kcmc;
 		$data[0][] = '广西师范大学' . Helper::getAcademicYear($year) . '学年' . Term::find($term)->mc . '学期成绩单';
 		$data[1][] = '课程名称：' . $course->kcmc;
@@ -160,8 +161,6 @@ class TaskController extends Controller {
 		foreach ($ratios as $ratio) {
 			$data[5][] = $ratio;
 		}
-		$data[5][] = '总评';
-		$data[5][] = '备注';
 
 		foreach ($students as $student) {
 			$row   = [];
@@ -171,7 +170,7 @@ class TaskController extends Controller {
 			$data[] = $row;
 		}
 
-		Excel::create('list', function ($excel) use ($sheetName, $data) {
+		Excel::create($fileName, function ($excel) use ($sheetName, $data) {
 
 			// Set the title
 			$excel->setTitle('Guangxi Normal University Student Score Report');
@@ -185,6 +184,12 @@ class TaskController extends Controller {
 			$excel->sheet($sheetName, function ($sheet) use ($data) {
 
 				$sheet->setOrientation('landscape');
+				$sheet->setFreeze('A7');
+				$sheet->setWidth('A', 15);
+
+				for ($i = 1; $i <= 5; ++$i) {
+					$sheet->mergeCells('A' . $i . ':' . 'E' . $i);
+				}
 
 				$sheet->fromArray($data, null, 'A1', false, false);
 			});
