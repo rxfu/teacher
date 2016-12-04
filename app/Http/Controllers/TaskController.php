@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper;
+use App\Models\Course;
+use App\Models\Platform;
+use App\Models\Property;
+use App\Models\Ratio;
 use App\Models\Selcourse;
 use App\Models\Task;
+use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * 显示并处理教师任务书
@@ -111,8 +117,79 @@ class TaskController extends Controller {
 			->withPeriods($periods);
 	}
 
+	/**
+	 * 导出学生空白成绩单
+	 * @author FuRongxin
+	 * @date    2016-12-04
+	 * @version 2.1.3
+	 * @param   string $year 年度
+	 * @param   string $term 学期
+	 * @param   string $kcxh 12位课程序号
+	 * @return  file Excel文件
+	 */
 	public function exportStudents($year, $term, $kcxh) {
+		$cnos     = Helper::splitCno($kcxh);
+		$platform = Platform::find($cnos['platform']);
+		$property = Property::find($cnos['property']);
+		$course   = Course::find($cnos['course']);
 
+		$students = Selcourse::whereKcxh($kcxh)
+			->whereNd($year)
+			->whereXq($term)
+			->orderBy('xh')
+			->get();
+
+		$sheetName = $course->kcmc;
+		$data[0][] = '广西师范大学' . Helper::getAcademicYear($year) . '学年' . Term::find($term)->mc . '学期成绩单';
+		$data[1][] = '课程名称：' . $course->kcmc;
+		$data[2][] = '课程序号：' . $kcxh;
+		$data[3][] = '课程平台：' . $platform->mc;
+		$data[4][] = '课程性质：' . $property->mc;
+
+		$task = Task::whereKcxh($kcxh)
+			->whereNd($year)
+			->whereXq($term)
+			->whereJsgh(Auth::user()->jsgh)
+			->firstOrFail();
+		$ratios = Ratio::whereFs($task->cjfs)
+			->orderBy('id')
+			->get()
+			->pluck('idm');
+
+		$data[5] = ['学号', '姓名'];
+		foreach ($ratios as $ratio) {
+			$data[5][] = $ratio;
+		}
+		$data[5][] = '总评';
+		$data[5][] = '备注';
+
+		foreach ($students as $student) {
+			$row   = [];
+			$row[] = $student->xh;
+			$row[] = $student->xm;
+
+			$data[] = $row;
+		}
+
+		Excel::create('list', function ($excel) use ($sheetName, $data) {
+
+			// Set the title
+			$excel->setTitle('Guangxi Normal University Student Score Report');
+
+			// Chain the setters
+			$excel->setCreator('Administrator')->setCompany('Dean of Guangxi Normal University');
+
+			// Call them separately
+			$excel->setDescription('Student score report of Guangxi Normal University');
+
+			$excel->sheet($sheetName, function ($sheet) use ($data) {
+
+				$sheet->setOrientation('landscape');
+
+				$sheet->fromArray($data, null, 'A1', false, false);
+			});
+
+		})->export('xlsx');
 	}
 
 }
