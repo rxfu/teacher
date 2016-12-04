@@ -41,6 +41,7 @@
                                         @else
                         				    <a href="{{ route('score.edit', $task->kcxh) }}" title="录入成绩" class="btn btn-primary">录入成绩</a>
                                             <a href="{{ route('task.show', $task->kcxh) }}" title="学生名单" class="btn btn-primary">学生名单</a>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="导入成绩">导入成绩</button>
                                         @endif
                         			</td>
                         		</tr>
@@ -52,4 +53,27 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="importModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="importForm" name="importForm" action="{{ route('score.import', $task->kcxh) }}" method="post" role="form">
+                {{ csrf_field() }}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">导入成绩</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" id="import" name="import">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="取消">取消</button>
+                    <button type="button" class="btn btn-primary" title="导入">导入</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 @stop

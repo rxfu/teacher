@@ -408,4 +408,8 @@ class ScoreController extends Controller {
 
 		return redirect()->route('score.edit', $kcxh)->withStatus('保存成绩成功');
 	}
+
+	public function import(Request $request, $kcxh) {
+
+	}
 }
