@@ -14,7 +14,9 @@ use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * 显示并处理学生成绩
@@ -410,6 +412,73 @@ class ScoreController extends Controller {
 	}
 
 	public function import(Request $request, $kcxh) {
+		if ($request->isMethod('post') && $request->hasFile('file')) {
+			$this->validate($request, [
+				'file' => 'required|mimes:' . config('constants.file.mimes.ext'),
+			]);
 
+			if ($request->file('file')->isValid()) {
+				$file     = $request->file('file');
+				$contents = file_get_contents($file->getRealPath());
+				$filepath = config('constants.file.path.import') . Auth::user()->jsgh . '/';
+				$filename = $filepath . $kcxh . '-' . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+				Storage::put($filename, $contents);
+
+				Excel::selectSheetsByIndex(0)->load(Storage::url('uploads/' . $filename), function ($excel) use ($kcxh) {
+
+					$excel->noHeading();
+
+					$task = Task::whereKcxh($kcxh)
+						->whereNd(session('year'))
+						->whereXq(session('term'))
+						->whereJsgh(Auth::user()->jsgh)
+						->firstOrFail();
+
+					$ratios = [];
+					$items  = Ratio::whereFs($task->cjfs)
+						->orderBy('id')
+						->get();
+					foreach ($items as $ratio) {
+						$ratios[] = [
+							'id'           => $ratio->id,
+							'name'         => $ratio->idm,
+							'value'        => $ratio->bl / $ratio->mf,
+							'allow_failed' => $ratio->jg,
+						];
+					}
+
+					// 获取所有成绩
+					$results = $excel->skip(6)->get();
+					foreach ($results as $result) {
+						$student = Score::whereNd(session('year'))
+							->whereXq(session('term'))
+							->whereKcxh($kcxh)
+							->whereXh($result[0])
+							->firstOrFail();
+
+						foreach ($items as $item) {
+							$student->{'cj' . $item->id} = $result[$item->id + 1];
+						}
+
+						$total = 0;
+						$fails = [];
+						foreach ($ratios as $ratio) {
+							if (config('constants.score.passline') > $student->{'cj' . $ratio['id']} && config('constants.status.enable') == $ratio['allow_failed']) {
+								$fails[] = $student->{'cj' . $ratio['id']};
+							} else {
+								$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
+							}
+						}
+						$student->zpcj = round(empty($fails) ? $total : min($fails));
+
+						$student->save();
+					};
+				}, 'UTF-8');
+
+				return redirect()->route('score.edit', $kcxh)->withStatus('导入成绩成功');
+			}
+		}
+
+		abort(404, '没有文件');
 	}
 }

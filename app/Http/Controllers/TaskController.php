@@ -139,7 +139,7 @@ class TaskController extends Controller {
 			->orderBy('xh')
 			->get();
 
-		$fileName  = $course->kcmc . '-' . date('Ymd');
+		$fileName  = $kcxh . '-' . date('Ymd');
 		$sheetName = $course->kcmc;
 		$data[0][] = '广西师范大学' . Helper::getAcademicYear($year) . '学年' . Term::find($term)->mc . '学期成绩单';
 		$data[1][] = '课程名称：' . $course->kcmc;

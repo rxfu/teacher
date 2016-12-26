@@ -45,8 +45,8 @@ Route::group(['middleware' => ['web']], function () {
 
 		Route::put('score/updateStatus/{kcxh}', 'ScoreController@updateStatus');
 		Route::post('score/confirm/{kcxh}', 'ScoreController@confirm');
-		Route::put('batchUpdate/{kcxh}', ['as' => 'score.batchUpdate', 'uses' => 'ScoreController@batchUpdate']);
-		Route::post('import/{kcxh}', ['as' => 'score.import', 'uses' => 'ScoreController@import']);
+		Route::put('score/batch-update/{kcxh}', ['as' => 'score.batchUpdate', 'uses' => 'ScoreController@batchUpdate']);
+		Route::post('score/import/{kcxh}', ['as' => 'score.import', 'uses' => 'ScoreController@import']);
 		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'edit', 'update']]);
 
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);

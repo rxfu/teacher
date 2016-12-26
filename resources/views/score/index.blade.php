@@ -57,7 +57,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="importModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="importForm" name="importForm" action="{{ route('score.import', $task->kcxh) }}" method="post" role="form">
+            <form id="upfile" name="upfile" action="{{ route('score.import', $task->kcxh) }}" method="post" enctype="multipart/form-data" role="form">
                 {{ csrf_field() }}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -66,11 +66,12 @@
                     <h4 class="modal-title">导入成绩</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="file" id="import" name="import">
+                    <label for="file" class="control-label">上传成绩</label>
+                    <input type="file" name="file" id="file" placeholder="上传成绩" class="form-control" autofocus required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" title="取消">取消</button>
-                    <button type="button" class="btn btn-primary" title="导入">导入</button>
+                    <button type="submit" class="btn btn-primary" title="导入">导入</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->
