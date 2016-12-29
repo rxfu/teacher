@@ -64,7 +64,11 @@
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
 	                        					<td>
-	                        						<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $student->{'cj' . $id} }}" class="form-control">
+	                        						@if (config('constants.score.deferral') == $student->kszt)
+	                        							<div class="form-control-static">{{ $student->{'cj' . $id } }}</div>
+	                        						@else
+	                        							<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $student->{'cj' . $id} }}" class="form-control">
+	                        						@endif
 	                        					</td>
 	                        				@endforeach
 	                        			@else
@@ -164,6 +168,10 @@ $(function() {
 		$('#processing').modal();
 	});
 	$('#confirmForm').on('submit', function(e) {
+		$('#processing').modal();
+	});
+	$('#importForm').on('submit', function(e){
+		$('#importModal').modal('toggle');
 		$('#processing').modal();
 	});
 	$('tr').on({

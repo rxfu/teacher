@@ -418,13 +418,14 @@ class ScoreController extends Controller {
 			]);
 
 			if ($request->file('file')->isValid()) {
+				$status   = '导入成绩成功';
 				$file     = $request->file('file');
 				$contents = file_get_contents($file->getRealPath());
 				$filepath = config('constants.file.path.import') . Auth::user()->jsgh . '/';
 				$filename = $filepath . $kcxh . '-' . date('YmdHis') . '.' . $file->getClientOriginalExtension();
 				Storage::put($filename, $contents);
 
-				Excel::selectSheetsByIndex(0)->load(Storage::url('uploads/' . $filename), function ($excel) use ($kcxh) {
+				Excel::selectSheetsByIndex(0)->load(Storage::url('uploads/' . $filename), function ($excel) use ($kcxh, &$status) {
 
 					$excel->noHeading();
 
@@ -457,7 +458,13 @@ class ScoreController extends Controller {
 							->firstOrFail();
 
 						foreach ($items as $item) {
-							$student->{'cj' . $item->id} = $result[$item->id + 1];
+							$score = $result[$item->id + 1];
+
+							if (100 < $score || 0 > $score) {
+								return $status = '学生' . $student->xh . '成绩有误，请检查后再重新导入';
+							} else {
+								$student->{'cj' . $item->id} = empty($score) ? 0 : $score;
+							}
 						}
 
 						$total = 0;
@@ -475,7 +482,7 @@ class ScoreController extends Controller {
 					};
 				}, 'UTF-8');
 
-				return redirect()->route('score.edit', $kcxh)->withStatus('导入成绩成功');
+				return redirect()->route('score.edit', $kcxh)->withStatus($status);
 			}
 		}
 
