@@ -8,6 +8,7 @@ use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * 显示并处理评教信息
@@ -32,6 +33,10 @@ class SetController extends Controller {
 
 		$table = $inputs['year'] . $inputs['term'] . 't';
 		$mark  = $inputs['year'] . $inputs['term'] . 'Mark';
+
+		if (!Schema::hasTable($table)) {
+			return back()->withStatus('没有评教数据');
+		}
 
 		// 获取评教分值
 		$data = DB::connection('pgset')->selectOne('SELECT AVG(s_jxtd) AS jxtd, AVG(s_jxnr) AS jxnr, AVG(s_jxff) AS jxff, AVG(s_jxxg) AS jxxg, AVG(s_zhpf) As zhpf FROM "' . $table . '" WHERE c_kcxh = ? and c_jsgh = ? GROUP BY c_kcbh, c_jsgh', [$kcxh, Auth::user()->jsgh]);
