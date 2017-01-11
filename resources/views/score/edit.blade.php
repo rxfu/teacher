@@ -64,11 +64,7 @@
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        				@foreach (array_pluck($ratios, 'id') as $id)
 	                        					<td>
-	                        						@if (config('constants.score.deferral') == $student->kszt)
-	                        							<div class="form-control-static">{{ $student->{'cj' . $id } }}</div>
-	                        						@else
-	                        							<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $student->{'cj' . $id} }}" class="form-control">
-	                        						@endif
+	                        						<input type="text" name="{{ $student->xh . $id }}" id="{{ $student->xh . $id }}" value="{{ $student->{'cj' . $id} }}" class="form-control">
 	                        					</td>
 	                        				@endforeach
 	                        			@else
@@ -83,7 +79,7 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				@if (config('constants.score.deferral') == $student->kszt || config('constants.score.retake') == $student->kszt)
+	                        				@if (config('constants.score.deferral') == $student->kszt)
 	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        				@else
 		                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
