@@ -34,7 +34,7 @@ class SetController extends Controller {
 		$table = $inputs['year'] . $inputs['term'] . 't';
 		$mark  = $inputs['year'] . $inputs['term'] . 'Mark';
 
-		if (!Schema::hasTable($table)) {
+		if (!Schema::connection('pgset')->hasTable($table)) {
 			return back()->withStatus('没有评教数据');
 		}
 
