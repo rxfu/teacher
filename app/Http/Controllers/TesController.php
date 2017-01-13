@@ -73,7 +73,7 @@ class TesController extends Controller {
 		}
 
 		$grade = Tesgrade::where('zdfz', '<=', $total)
-			->where('zgfz', '>=', $total)
+			->where('zgfz', '>', $total)
 			->firstOrFail();
 
 		$title = Helper::getAcademicYear($inputs['year']) . '学年' . Term::find($inputs['term'])->mc . '学期' . $kcxh . Course::find(Helper::getCno($kcxh))->kcmc . '课程' . '评学结果';
