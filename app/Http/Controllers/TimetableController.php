@@ -16,14 +16,7 @@ class TimetableController extends Controller {
 
 	/**
 	 * 显示课程列表
-	 * @author FuRongxin
-	 * @date    2016-03-18
-	 * @version 2.0
-	 * @param   \Illuminate\Http\Request $request 课程列表请求
-	 * @return  \Illuminate\Http\Response 课程列表
-	 */
-	/**
-	 * 应教务处要求增加年级、专业、考核方式、总学时
+	 * 2016-05-05：应教务处要求增加年级、专业、考核方式、总学时
 	 * @author FuRongxin
 	 * @date    2016-05-05
 	 * @version 2.1
@@ -70,29 +63,10 @@ class TimetableController extends Controller {
 			];
 		}
 
-		$title = $inputs['year'] . '年度' . Term::find($inputs['term'])->mc . '学期';
+		$title = Helper::getAcademicYear($inputs['year']) . '学年' . Term::find($inputs['term'])->mc . '学期' . '课程列表';
 		return view('timetable.index')
-			->withTitle($title . '课程列表')
+			->withTitle($title)
 			->withCourses($courses);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
 	}
 
 	/**
@@ -147,42 +121,11 @@ class TimetableController extends Controller {
 			];
 		}
 
-		$title = $nd . '年度' . Term::find($inputs['term'])->mc . '学期';
+		$title = Helper::getAcademicYear($nd) . '学年' . Term::find($inputs['term'])->mc . '学期' . '课程表';
 		return view('timetable.timetable')
-			->withTitle('课程表')
+			->withTitle($title)
 			->withCourses($courses)
 			->withPeriods($periods);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id) {
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id) {
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
 	}
 
 	/**
@@ -214,15 +157,17 @@ class TimetableController extends Controller {
 	 */
 	public function search(Request $request) {
 		$departments = Department::where('dw', '<>', '')
-			->whereLx('1')
+			->whereLx(config('constants.department.college'))
 			->whereZt(config('constants.status.enable'))
 			->orderBy('dw')
 			->get();
-		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期' . '听课查询';
+		$title = '听课查询';
 
 		$courses = [];
 		if ($request->isMethod('post')) {
 			$this->validate($request, [
+				'year'       => 'required',
+				'term'       => 'required',
 				'department' => 'required',
 				'week'       => 'required',
 				'class'      => 'required',
@@ -240,14 +185,14 @@ class TimetableController extends Controller {
 				'user.position',
 				'campus',
 			])
-				->whereNd(session('year'))
-				->whereXq(session('term'))
+				->whereNd($input['year'])
+				->whereXq($input['term'])
 				->whereZc($input['week'])
 				->where('ksj', '<=', $input['class'])
 				->where('jsj', '>=', $input['class']);
 
-			$kcxhs = Mjcourse::whereNd(session('year'))
-				->whereXq(session('term'))
+			$kcxhs = Mjcourse::whereNd($input['year'])
+				->whereXq($input['term'])
 				->whereKkxy($input['department'])
 				->select('kcxh')
 				->distinct()
@@ -269,13 +214,17 @@ class TimetableController extends Controller {
 					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
 					'jsxm' => $result->user->xm,
 					'jszc' => $result->user->position->mc,
+					'ksz'  => $result->ksz,
+					'jsz'  => $result->jsz,
 				];
 			}
 
+			$year_name       = $input['year'] . '年度';
+			$term_name       = Term::find($input['term'])->mc . '学期';
 			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
 			$class_name      = '第 ' . $input['class'] . ' 节课';
-			$subtitle        = '查询条件：' . $department_name . $week_name . $class_name;
+			$subtitle        = '查询条件：' . $year_name . $term_name . $department_name . $week_name . $class_name;
 		}
 
 		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle'));

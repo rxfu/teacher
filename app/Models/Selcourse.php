@@ -66,4 +66,15 @@ class Selcourse extends Model {
 	public function score() {
 		return $this->belongsTo('App\Models\Score', 'kcxh', 'kcxh');
 	}
+
+	/**
+	 * 学生信息
+	 * @author FuRongxin
+	 * @date    2016-12-02
+	 * @version 2.1.3
+	 * @return  object 所属对象
+	 */
+	public function student() {
+		return $this->belongsTo('App\Models\Student', 'xh', 'xh');
+	}
 }

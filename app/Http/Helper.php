@@ -36,4 +36,33 @@ class Helper {
 	public static function getCno($kcxh) {
 		return Str::substr($kcxh, 2, 8);
 	}
+
+	/**
+	 * 拆分12位课程序号
+	 * @author FuRongxin
+	 * @date    2016-12-04
+	 * @version 2.1.3
+	 * @param   string $kcxh 12位课程序号
+	 * @return  array 拆分后数组，其中platform为课程平台，property为课程性质，course为课程号，seq为顺序号
+	 */
+	public static function splitCno($kcxh) {
+		$data['platform'] = Str::substr($kcxh, 0, 1);
+		$data['property'] = Str::substr($kcxh, 1, 1);
+		$data['course']   = Str::substr($kcxh, 2, 8);
+		$data['seq']      = Str::substr($kcxh, 10);
+
+		return $data;
+	}
+
+	/**
+	 * 将系统年度设置转换为学年度设置
+	 * @author FuRongxin
+	 * @date    2016-12-02
+	 * @version 2.1.3
+	 * @param   string $year 系统年度
+	 * @return  string 学年度
+	 */
+	public static function getAcademicYear($year) {
+		return $year . '~' . ($year + 1);
+	}
 }

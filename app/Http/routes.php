@@ -40,11 +40,13 @@ Route::group(['middleware' => ['web']], function () {
 		Route::resource('timetable', 'TimetableController', ['only' => ['index', 'show']]);
 
 		Route::get('task/timetable', 'TaskController@timetable');
+		Route::get('task/export/{year}/{term}/{kcxh}', ['as' => 'task.export', 'uses' => 'TaskController@exportStudents']);
 		Route::resource('task', 'TaskController', ['only' => ['index', 'show']]);
 
 		Route::put('score/updateStatus/{kcxh}', 'ScoreController@updateStatus');
 		Route::post('score/confirm/{kcxh}', 'ScoreController@confirm');
-		Route::put('batchUpdate/{kcxh}', ['as' => 'score.batchUpdate', 'uses' => 'ScoreController@batchUpdate']);
+		Route::put('score/batch-update/{kcxh}', ['as' => 'score.batchUpdate', 'uses' => 'ScoreController@batchUpdate']);
+		Route::post('score/import/{kcxh}', ['as' => 'score.import', 'uses' => 'ScoreController@import']);
 		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'edit', 'update']]);
 
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);

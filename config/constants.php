@@ -12,7 +12,7 @@ return [
 	/**
 	 * 数据状态代码
 	 */
-	'status'    => [
+	'status'     => [
 		'enable'  => true,
 		'disable' => false,
 	],
@@ -20,7 +20,7 @@ return [
 	/**
 	 * 成绩状态代码
 	 */
-	'score'     => [
+	'score'      => [
 		'uncommitted' => '0', // 未提交
 		'committed'   => '1', // 教师已提交
 		'confirmed'   => '2', // 学院已提交
@@ -35,7 +35,7 @@ return [
 	/**
 	 * 课程表时间段参数
 	 */
-	'timetable' => [
+	'timetable'  => [
 
 		// 上午
 		'morning'   => [
@@ -68,7 +68,7 @@ return [
 	/**
 	 * 星期名称对应
 	 */
-	'week'      => [
+	'week'       => [
 		'1' => '一',
 		'2' => '二',
 		'3' => '三',
@@ -76,5 +76,31 @@ return [
 		'5' => '五',
 		'6' => '六',
 		'7' => '日',
+	],
+
+	/**
+	 * 单位类型代码
+	 */
+	'department' => [
+		'college'    => '1', // 教学
+		'manager'    => '2', // 管理
+		'assistance' => '3', // 教辅
+		'other'      => '4', // 其他
+	],
+
+	/**
+	 * 上传文件参数
+	 */
+	'file'       => [
+
+		// 路径
+		'path'  => [
+			'import' => 'import/', // 上传成绩路径
+		],
+
+		// 图片参数
+		'mimes' => [
+			'ext' => 'xls,xlsx', // 文件类型
+		],
 	],
 ];

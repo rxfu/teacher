@@ -13,6 +13,7 @@
 	                <div class="pull-right">
 	                    <form id="confirmForm" name="confirmForm" action="{{ url('score/confirm', $course->kcxh) }}" method="post" role="form" onsubmit="return confirm('注意：请检查成绩是否已经录入完毕并且正确，成绩确认后将不可更改！请问确定要上报成绩吗？')">
 	                    	{!! csrf_field() !!}
+	                    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="导入成绩">导入成绩</button>
 	                        <button type="submit" class="btn btn-primary" title="成绩上报">成绩上报</button>
 	                    </form>
 	                </div>
@@ -78,7 +79,7 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				@if (config('constants.score.deferral') == $student->kszt || config('constants.score.retake') == $student->kszt)
+	                        				@if (config('constants.score.deferral') == $student->kszt)
 	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        				@else
 		                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
@@ -115,7 +116,7 @@
 </section>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="processing" data-backdrop="static" data-keyboard="false">
-  	<div class="modal-dialog">
+  	<div class="modal-dialog" role="document">
     	<div class="modal-content">
 			<div class="modal-header">
 	        	<h1 class="modal-title">保存中……</h1>
@@ -130,6 +131,30 @@
     	</div><!-- /.modal-content -->
   	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="importModal">
+  	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+	      	<form id="importForm" name="importForm" action="{{ route('score.import', $course->kcxh) }}" method="post" enctype="multipart/form-data" role="form">
+	      		{{ csrf_field() }}
+				<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	        			<span aria-hidden="true">&times;</span>
+	        		</button>
+		        	<h4 class="modal-title">导入成绩</h4>
+		    	</div>
+		      	<div class="modal-body">
+                    <label for="file" class="control-label">上传成绩</label>
+                    <input type="file" name="file" id="file" placeholder="上传成绩" class="form-control" autofocus required>
+		      	</div>
+			    <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal" title="取消">取消</button>
+			        <button type="submit" class="btn btn-primary" title="导入">导入</button>
+			    </div>
+		    </form>
+    	</div><!-- /.modal-content -->
+  	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 @stop
 
 @push('scripts')
@@ -139,6 +164,10 @@ $(function() {
 		$('#processing').modal();
 	});
 	$('#confirmForm').on('submit', function(e) {
+		$('#processing').modal();
+	});
+	$('#importForm').on('submit', function(e){
+		$('#importModal').modal('toggle');
 		$('#processing').modal();
 	});
 	$('tr').on({
