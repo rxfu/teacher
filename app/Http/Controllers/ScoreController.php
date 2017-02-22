@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper;
 use App\Models\Dtscore;
 use App\Models\Mjcourse;
 use App\Models\Ratio;
@@ -13,7 +14,9 @@ use App\Models\Term;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * 显示并处理学生成绩
@@ -42,30 +45,11 @@ class ScoreController extends Controller {
 			->orderBy('kcxh')
 			->get();
 
-		$title = session('year') . '年度' . Term::find(session('term'))->mc . '学期';
+		$title = Helper::getAcademicYear(session('year')) . '学年' . Term::find(session('term'))->mc . '学期' . '课程列表';
 
 		return view('score.index')
-			->withTitle($title . '课程列表')
+			->withTitle($title)
 			->withTasks($tasks);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create() {
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request) {
-		//
 	}
 
 	/**
@@ -106,10 +90,10 @@ class ScoreController extends Controller {
 			];
 		}
 
-		$title = $task->nd . '年度' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程';
+		$title = Helper::getAcademicYear($task->nd) . '学年' . $task->term->mc . '学期' . $task->kcxh . $task->course->kcmc . '课程' . '成绩单';
 
 		return view('score.show')
-			->withTitle($title . '成绩单')
+			->withTitle($title)
 			->withTask($task)
 			->withRatios($ratios)
 			->withScores($scores);
@@ -208,16 +192,16 @@ class ScoreController extends Controller {
 		}
 
 		$students = Score::with('status')
-			->wherend(session('year'))
+			->whereNd(session('year'))
 			->whereXq(session('term'))
 			->whereKcxh($kcxh)
 			->orderBy('xh')
 			->get();
 
-		$title = $course->college->mc . $course->nd . '年度' . $course->term->mc . '学期' . $course->kcxh . $course->plan->course->kcmc . '课程';
+		$title = Helper::getAcademicYear($course->nd) . '年度' . $course->term->mc . '学期' . $course->college->mc . $course->kcxh . $course->plan->course->kcmc . '课程' . '成绩录入';
 
 		return view('score.edit')
-			->withTitle($title . '成绩录入')
+			->withTitle($title)
 			->withRatios($ratios)
 			->withStudents($students)
 			->withCourse($course)
@@ -349,16 +333,6 @@ class ScoreController extends Controller {
 	}
 
 	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id) {
-		//
-	}
-
-	/**
 	 * 批量更新成绩
 	 * @author FuRongxin
 	 * @date    2016-05-06
@@ -435,5 +409,83 @@ class ScoreController extends Controller {
 		}
 
 		return redirect()->route('score.edit', $kcxh)->withStatus('保存成绩成功');
+	}
+
+	public function import(Request $request, $kcxh) {
+		if ($request->isMethod('post') && $request->hasFile('file')) {
+			$this->validate($request, [
+				'file' => 'required|mimes:' . config('constants.file.mimes.ext'),
+			]);
+
+			if ($request->file('file')->isValid()) {
+				$status   = '导入成绩成功';
+				$file     = $request->file('file');
+				$contents = file_get_contents($file->getRealPath());
+				$filepath = config('constants.file.path.import') . Auth::user()->jsgh . '/';
+				$filename = $filepath . $kcxh . '-' . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+				Storage::put($filename, $contents);
+
+				Excel::selectSheetsByIndex(0)->load(Storage::url('uploads/' . $filename), function ($excel) use ($kcxh, &$status) {
+
+					$excel->noHeading();
+
+					$task = Task::whereKcxh($kcxh)
+						->whereNd(session('year'))
+						->whereXq(session('term'))
+						->whereJsgh(Auth::user()->jsgh)
+						->firstOrFail();
+
+					$ratios = [];
+					$items  = Ratio::whereFs($task->cjfs)
+						->orderBy('id')
+						->get();
+					foreach ($items as $ratio) {
+						$ratios[] = [
+							'id'           => $ratio->id,
+							'name'         => $ratio->idm,
+							'value'        => $ratio->bl / $ratio->mf,
+							'allow_failed' => $ratio->jg,
+						];
+					}
+
+					// 获取所有成绩
+					$results = $excel->skip(6)->get();
+					foreach ($results as $result) {
+						$student = Score::whereNd(session('year'))
+							->whereXq(session('term'))
+							->whereKcxh($kcxh)
+							->whereXh($result[0])
+							->firstOrFail();
+
+						foreach ($items as $item) {
+							$score = $result[$item->id + 1];
+
+							if (100 < $score || 0 > $score) {
+								return $status = '学生' . $student->xh . '成绩有误，请检查后再重新导入';
+							} else {
+								$student->{'cj' . $item->id} = empty($score) ? 0 : $score;
+							}
+						}
+
+						$total = 0;
+						$fails = [];
+						foreach ($ratios as $ratio) {
+							if (config('constants.score.passline') > $student->{'cj' . $ratio['id']} && config('constants.status.enable') == $ratio['allow_failed']) {
+								$fails[] = $student->{'cj' . $ratio['id']};
+							} else {
+								$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
+							}
+						}
+						$student->zpcj = round(empty($fails) ? $total : min($fails));
+
+						$student->save();
+					};
+				}, 'UTF-8');
+
+				return redirect()->route('score.edit', $kcxh)->withStatus($status);
+			}
+		}
+
+		abort(404, '没有文件');
 	}
 }

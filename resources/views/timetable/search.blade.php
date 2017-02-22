@@ -6,6 +6,21 @@
         <form id="searchForm" name="searchForm" method="post" action="{{ url('timetable/search') }}" role="form" class="form-inline">
             {{ csrf_field() }}
             <div class="form-group">
+                <label for="year" class="sr-only">年度</label>
+                <select name="year" class="selectpicker" data-style="btn-success" data-width="150px">
+                    <option value="{{ Carbon\Carbon::now()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->format('Y')) }}学年</option>
+                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->subYear()->format('Y')) }}学年</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="term" class="sr-only">学期</label>
+                <select name="term" class="selectpicker" data-style="btn-success" data-width="100px">
+                    @for ($i = 1; $i < 3; $i++)
+                        <option value="{{ $i }}">{{ App\Models\Term::find($i)->mc }}学期</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="departmtent" class="sr-only">学院</label>
                 <select name="department" class="selectpicker" data-style="btn-success">
                     @foreach ($departments as $department)
@@ -15,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="week" class="sr-only">周次</label>
-                <select name="week" class="selectpicker" data-style="btn-success" data-width="100px">
+                <select name="week" class="selectpicker" data-style="btn-success" data-width="90px">
                     @for($week = 1; $week <= 7; ++$week)
                         <option value="{{ $week }}">星期{{ config('constants.week.' . $week) }}</option>
                     @endfor
@@ -23,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label for="class" class="sr-only">节次</label>
-                <select name="class" class="selectpicker" data-style="btn-success" data-width="120px">
+                <select name="class" class="selectpicker" data-style="btn-success" data-width="100px">
                     @for($class = 1; $class <= 12; ++$class)
                         <option value="{{ $class }}">第 {{ $class }} 节</option>
                     @endfor
@@ -55,6 +70,8 @@
                                 <th class="active">选课人数</th>
                                 <th class="active">教师姓名</th>
                                 <th class="active">教师职称</th>
+                                <th class="active">开始周</th>
+                                <th class="active">结束周</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -69,6 +86,8 @@
                                 <th>选课人数</th>
                                 <th>教师姓名</th>
                                 <th>教师职称</th>
+                                <th>开始周</th>
+                                <th>结束周</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -84,6 +103,8 @@
                                     <td>{{ $course['rs'] }}</td>
                                     <td>{{ $course['jsxm'] }}</td>
                                     <td>{{ $course['jszc'] }}</td>
+                                    <td>{{ $course['ksz'] }}</td>
+                                    <td>{{ $course['jsz'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
