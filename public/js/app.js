@@ -7,7 +7,7 @@ $(document).ready(function() {
 		'pagingType': 'full_numbers',
 		'ordering': false,
 		'language': {
-			'url': '/teacher/js/plugins/dataTables/i18n/zh_cn.lang'
+			'url': '/dean/teacher/js/plugins/dataTables/i18n/zh_cn.lang'
 		}
 	});
 	$('a[href="' + $(location).attr('href') + '"]').parents('ul.nav').not('ul#side-menu').addClass('collapse in');
