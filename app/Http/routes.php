@@ -49,6 +49,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('score/import/{kcxh}', ['as' => 'score.import', 'uses' => 'ScoreController@import']);
 		Route::resource('score', 'ScoreController', ['only' => ['index', 'show', 'edit', 'update']]);
 
+		Route::get('thesis/search', 'ThesisController@showSearchForm');
+		Route::get('thesis/searchThesis', 'ThesisController@search');
+
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 		Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 		Route::put('password/change', 'Auth\PasswordController@change');
