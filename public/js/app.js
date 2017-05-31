@@ -1,15 +1,20 @@
+$.extend(true, $.fn.dataTable.defaults, {
+	'pagingType': 'full_numbers',
+	'lengthMenu': [
+		[10, 25, 50, -1],
+		[10, 25, 50, '全部']
+	],
+	'ordering': false,
+	'processing': true,
+	'serverSide': true,
+	'language': {
+		'url': '/dean/student/js/plugins/dataTables/i18n/zh_cn.lang'
+	},
+	'deferRender': true,
+	'autoWidth': true
+});
+
 $(document).ready(function() {
-	$('.data-table').dataTable({
-		'lengthMenu': [
-			[10, 25, 50, -1],
-			[10, 25, 50, '全部']
-		],
-		'pagingType': 'full_numbers',
-		'ordering': false,
-		'language': {
-			'url': '/dean/teacher/js/plugins/dataTables/i18n/zh_cn.lang'
-		}
-	});
 	$('a[href="' + $(location).attr('href') + '"]').parents('ul.nav').not('ul#side-menu').addClass('collapse in');
 	$('#accordion .panel-collapse:first').collapse('show');
 
