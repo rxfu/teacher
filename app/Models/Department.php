@@ -32,4 +32,17 @@ class Department extends Model {
 		return $this->hasMany('App\Models\User', 'xy', 'dw');
 	}
 
+	/**
+	 * 扩展查询，用于获取学院
+	 * @author FuRongxin
+	 * @date    2017-05-31
+	 * @version 2.2
+	 * @param   \Illuminate\Database\Eloquent\Builder $query 查询对象
+	 * @return  \Illuminate\Database\Eloquent\Builder 查询对象
+	 */
+	public function scopeColleges($query) {
+		return $query->whereLx(config('constants.department.college'))
+			->whereZt(config('constants.status.enable'));
+	}
+
 }
