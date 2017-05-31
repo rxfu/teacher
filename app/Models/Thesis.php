@@ -30,7 +30,7 @@ class Thesis extends Model {
 	 * @return  object 所属对象
 	 */
 	public function instructor() {
-		return $this->belongsTo('App\Models\Teacher', 'zdjs', 'jsgh');
+		return $this->belongsTo('App\Models\User', 'zdjs', 'jsgh');
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Thesis extends Model {
 	 * @return  object 所属对象
 	 */
 	public function reviewer() {
-		return $this->belongsTo('App\Models\Teacher', 'pyjs', 'jsgh');
+		return $this->belongsTo('App\Models\User', 'pyjs', 'jsgh');
 	}
 
 	/**
