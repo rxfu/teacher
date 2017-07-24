@@ -29,6 +29,7 @@ return [
 		'passline'    => 60, // 及格线
 
 		'deferral'    => '1', // 缓考
+		'cheat'       => '3', // 作弊
 		'retake'      => '7', // 重修
 	],
 
