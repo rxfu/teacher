@@ -12,7 +12,7 @@
         	</div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover data-table">
+                    <table id="score-table" class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
                                 <th class="active">学号</th>
@@ -44,3 +44,28 @@
     </div>
 </section>
 @stop
+
+@push('scripts')
+<script>
+$(function() {
+    $('#score-table').dataTable({
+        bServerSide: false,
+        iDisplayLength: -1,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, '全部']
+        ],
+        language: {
+            url: "{{ asset('js/plugins/dataTables/i18n/zh_cn.lang') }}"
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '导出成绩单'
+            }
+        ]
+    });
+});
+</script>
+@endpush
