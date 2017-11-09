@@ -211,7 +211,7 @@ class TimetableController extends Controller {
 					'xy'   => count($result->mjcourse) ? $result->mjcourse->major->college->mc : '',
 					'zy'   => count($result->mjcourse) ? $result->mjcourse->major->mc : '',
 					'nj'   => count($result->mjcourse) ? $result->mjcourse->nj : '',
-					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
+					'rs'   => Selcourse::whereNd($input['year'])->whereXq($input['term'])->whereKcxh($result->kcxh)->count(),
 					'jsxm' => $result->user->xm,
 					'jszc' => $result->user->position->mc,
 					'ksz'  => $result->ksz,
