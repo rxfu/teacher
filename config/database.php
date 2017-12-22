@@ -69,7 +69,7 @@ return [
 			'host'     => env('DB_HOST', '202.193.171.253'),
 			'database' => env('DB_DATABASE', 'abc'),
 			'username' => env('DB_USERNAME', 'jwxt'),
-			'password' => env('DB_PASSWORD', 'jwxt..'),
+			'password' => env('DB_PASSWORD', 'jwxt@..'),
 			'charset'  => 'utf8',
 			'prefix'   => 't_',
 			'schema'   => 'public',
@@ -77,10 +77,10 @@ return [
 
 		'pgset'  => [
 			'driver'   => 'pgsql',
-			'host'     => '202.193.171.253',
+			'host'     => '172.20.71.55',
 			'database' => 'jxpg',
 			'username' => 'jwxt',
-			'password' => 'jwxt..',
+			'password' => 'jwxt@..',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',
