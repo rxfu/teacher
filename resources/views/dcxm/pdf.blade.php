@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="用于广西师范大学学生信息管理，学生选课，查询成绩">
-        <meta name="keywords" content="广西师范大学,教务处,学生信息管理,学生选课,成绩查询">
+        <meta name="description" content="用于广西师范大学教师信息管理，录入成绩，查询成绩，教师评学">
+        <meta name="keywords" content="广西师范大学,教务处,教师信息管理,成绩录入,成绩查询,教师评学">
         <meta name="author" content="Fu Rongxin,符荣鑫">
-        <title>{{ $title or '默认页面'}} - 广西师范大学学生信息管理系统</title>
+        <title>{{ $title or '默认页面'}} - 广西师范大学教师信息管理系统</title>
         <!--link rel="shortcut icon" href="favicon.ico"-->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <style>
@@ -188,7 +188,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">所在单位</td>
-                                <td colspan="4" class="text-center">{{ $tutor->teacher->department->mc }}</td>
+                                <td colspan="4" class="text-center">{{ $tutor->teacher->college->mc }}</td>
                             </tr>
                             <tr>
                                 <td colspan="2">联系电话</td>

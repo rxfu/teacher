@@ -52,6 +52,12 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('thesis/search', 'ThesisController@showSearchForm');
 		Route::get('thesis/searchThesis', 'ThesisController@search');
 
+		Route::get('dcxm/list', 'DcxmController@getList');
+		Route::get('dcxm/jsyj/{id}', 'DcxmController@getOpinion');
+		Route::post('dcxm/jsyj/{id}', 'DcxmController@postOpinion');
+		Route::get('dcxm/pdf/{id}', 'DcxmController@getPdf');
+		Route::get('dcxm/zmcl/{id}', 'DcxmController@getFile');
+
 		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 		Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 		Route::put('password/change', 'Auth\PasswordController@change');

@@ -36,7 +36,7 @@ class Dczdjs extends DcxmModel {
 	 * @return  object 所属对象
 	 */
 	public function teacher() {
-		return $this->belongsTo('App\Models\Teacher', 'jsgh', 'jsgh');
+		return $this->belongsTo('App\Models\User', 'jsgh', 'jsgh');
 	}
 
 	/**
