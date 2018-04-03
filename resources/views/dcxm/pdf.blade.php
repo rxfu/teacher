@@ -335,9 +335,7 @@
                         <td>
                             <h4>七、指导教师意见</h4>
                             <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
+                            {!! $project->application->jsyj !!}
                             <p>&nbsp;</p>
                             <div class="text-right">签 名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                             <p>&nbsp;</p>
