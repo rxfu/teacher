@@ -370,6 +370,11 @@
                     </tr>
                 </table>
             </article>
+
+            <article class="page">
+                <h3 class="text-center">项目前期研究成果证明材料清单</h3>
+                {!! $project->application->zmcl !!}
+            </article>
         </main>
 
         <!-- Load JS here for greater good -->
