@@ -114,7 +114,7 @@ class DcxmController extends Controller {
 			->setOption('margin-bottom', '3.5cm')
 			->setOption('margin-left', '2.8cm')
 			->setOption('margin-right', '2.6cm')
-			->inline('application.pdf');
+			->inline($project->student->xh . '.pdf');
 	}
 
 	/**
