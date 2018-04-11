@@ -21,6 +21,8 @@ class Position extends Model {
 
 	public $timestamps = false;
 
+	protected $connection = 'pgsql';
+
 	/**
 	 * 个人资料
 	 * @author FuRongxin

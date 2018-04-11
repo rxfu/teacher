@@ -120,6 +120,6 @@ class Dcxmxx extends DcxmModel {
 	 * @return  object 所属对象
 	 */
 	public function student() {
-		return $this->belongsTo('App\Models\Profile', 'xh', 'xh');
+		return $this->belongsTo('App\Models\Student', 'xh', 'xh');
 	}
 }

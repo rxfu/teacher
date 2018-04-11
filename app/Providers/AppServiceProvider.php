@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Auth;
+use App\Models\Dcxmxt;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -14,9 +14,12 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot() {
 		view()->composer('app', function ($view) {
-			$user = Auth::user();
 
-			$view->withUser($user);
+			// 是否允许申请大创项目
+			// 2018-03-28：应教务处要求添加
+			$allowed_dcxm = Dcxmxt::find('XT_KG')->value;
+
+			$view->with('allowed_dcxm', $allowed_dcxm);
 		});
 	}
 

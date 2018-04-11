@@ -26,7 +26,7 @@
                             <tr>
                             	<td>{{ $project->xmbh }}</td>
                                 <td>
-                                    <a href="{{ url('dcxm/xmxx/' . $project->id . '/edit') }}">{{ $project->xmmc }}</a>
+                                    {{ $project->xmmc }}
                                 </td>
                                 <td>{{ $project->category->mc }}</td>
                                 <td>{{ $project->subject->mc }}</td>
@@ -45,9 +45,6 @@
                                 <td>
                                     <a href="{{ url('dcxm/jsyj/' . $project->id) }}" title="填写教师意见" role="button" class="btn btn-success">填写教师意见</a>
                                     <a href="{{ url('dcxm/pdf/' . $project->id) }}" title="下载申报书" role="button" class="btn btn-warning">下载申报书</a>
-                                    @if (count($project->application) && (!empty($project->application->zmcl)))
-                                        <a href="{{ url('dcxm/zmcl', $project->id) }}" title="项目证明材料" role="button" class="btn btn-info">下载项目证明材料</a>
-                                    @endif
                                 </td>
                             </tr>
                             @endforeach

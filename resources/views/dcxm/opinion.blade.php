@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label for="jsyj" class="col-sm-3 control-label">导师意见</label>
                         <div class="col-sm-8">
-                            <textarea id="jsyj" name="jsyj" class="form-control" rows="20"></textarea>
+                            <textarea id="jsyj" name="jsyj" class="form-control" rows="20">{{ is_null($project->application) ? '' : $project->application->jsyj }}</textarea>
                         </div>
                     </div>
                 </div>

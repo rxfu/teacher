@@ -42,6 +42,6 @@ class Dcxmcy extends DcxmModel {
 	 * @return  object 所属对象
 	 */
 	public function profile() {
-		return $this->belongsTo('App\Models\Profile', 'xh', 'xh');
+		return $this->belongsTo('App\Models\Student', 'xh', 'xh');
 	}
 }
