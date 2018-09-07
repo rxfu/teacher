@@ -49,7 +49,12 @@ class TimetableController extends Controller {
 					'nj'   => $mjcourse->nj,
 					'zy'   => $mjcourse->major->mc,
 					'kh'   => $mjcourse->plan->mode->mc,
-					'zxs'  => $mjcourse->plan->zxs,
+					'llxf' => $mjcourse->plan->llxf,
+					'syxf' => $mjcourse->plan->syxf,
+					'zxf'  => $mjcourse->plan->zxf,
+					'llxs' => $mjcourse->plan->llxs,
+					'syxs' => $mjcourse->plan->syxs,
+					'zxs'  => $mjcourse->plan->llxs + $mjcourse->plan->syxs,
 				];
 			}
 
