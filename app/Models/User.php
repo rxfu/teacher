@@ -36,16 +36,7 @@ class User extends Authenticatable {
 		'zt' => 'boolean',
 	];
 
-	/**
-	 * 获取用户名
-	 * @author FuRongxin
-	 * @date    2016-03-11
-	 * @version 2.0
-	 * @return  string 用户名
-	 */
-	public function getAuthIdentifierName() {
-		return $this->jsgh;
-	}
+	protected $connection = 'pgsql';
 
 	/**
 	 * 获取密码
