@@ -21,8 +21,13 @@
                                 <th class="active">周日</th>
                                 <th class="active">年级</th>
                                 <th class="active">专业</th>
-                                <th class="active">考核方式</th>
+                                <th class="active">理论学分</th>
+                                <th class="active">实验学分</th>
+                                <th class="active">总学分</th>
+                                <th class="active">理论学时</th>
+                                <th class="active">实验学时</th>
                                 <th class="active">总学时</th>
+                                <th class="active">考核方式</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -39,8 +44,13 @@
                                 <th>周日</th>
                                 <th>年级</th>
                                 <th>专业</th>
-                                <th>考核方式</th>
+                                <th>理论学分</th>
+                                <th>实验学分</th>
+                                <th>总学分</th>
+                                <th>理论学时</th>
+                                <th>实验学时</th>
                                 <th>总学时</th>
+                                <th>考核方式</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -64,8 +74,13 @@
                                     @endfor
                                     <td>{{ $course['nj'] }}</td>
                                     <td>{{ $course['zy'] }}</td>
-                                    <td>{{ $course['kh'] }}</td>
+                                    <td>{{ $course['llxf'] }}</td>
+                                    <td>{{ $course['syxf'] }}</td>
+                                    <td>{{ $course['zxf'] }}</td>
+                                    <td>{{ $course['llxs'] }}</td>
+                                    <td>{{ $course['syxs'] }}</td>
                                     <td>{{ $course['zxs'] }}</td>
+                                    <td>{{ $course['kh'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -49,7 +49,12 @@ class TimetableController extends Controller {
 					'nj'   => $mjcourse->nj,
 					'zy'   => $mjcourse->major->mc,
 					'kh'   => $mjcourse->plan->mode->mc,
-					'zxs'  => $mjcourse->plan->zxs,
+					'llxf' => $mjcourse->plan->llxf,
+					'syxf' => $mjcourse->plan->syxf,
+					'zxf'  => $mjcourse->plan->zxf,
+					'llxs' => $mjcourse->plan->llxs,
+					'syxs' => $mjcourse->plan->syxs,
+					'zxs'  => $mjcourse->plan->llxs + $mjcourse->plan->syxs,
 				];
 			}
 
@@ -206,12 +211,12 @@ class TimetableController extends Controller {
 				$courses[] = [
 					'kcmc' => Course::find(Helper::getCno($result->kcxh))->kcmc,
 					'xqh'  => $result->campus->mc,
-					'jsmc' => count($result->classroom) ? $result->classroom->mc : '',
-					'kkxy' => count($result->mjcourse) ? $result->mjcourse->college->mc : '',
-					'xy'   => count($result->mjcourse) ? $result->mjcourse->major->college->mc : '',
-					'zy'   => count($result->mjcourse) ? $result->mjcourse->major->mc : '',
-					'nj'   => count($result->mjcourse) ? $result->mjcourse->nj : '',
-					'rs'   => Selcourse::whereNd(session('year'))->whereXq(session('term'))->whereKcxh($result->kcxh)->count(),
+					'jsmc' => is_null($result->classroom) ? '' : $result->classroom->mc,
+					'kkxy' => is_null($result->mjcourse) ? '' : $result->mjcourse->college->mc,
+					'xy'   => is_null($result->mjcourse) ? '' : $result->mjcourse->major->college->mc,
+					'zy'   => is_null($result->mjcourse) ? '' : $result->mjcourse->major->mc,
+					'nj'   => is_null($result->mjcourse) ? '' : $result->mjcourse->nj,
+					'rs'   => Selcourse::whereNd($input['year'])->whereXq($input['term'])->whereKcxh($result->kcxh)->count(),
 					'jsxm' => $result->user->xm,
 					'jszc' => $result->user->position->mc,
 					'ksz'  => $result->ksz,
