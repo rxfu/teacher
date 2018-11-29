@@ -36,6 +36,7 @@ return array(
     'App\\Listeners\\PasswordChangeListener' => $baseDir . '/app/Listeners/PasswordChangeListener.php',
     'App\\Models\\BaseModel' => $baseDir . '/app/Models/BaseModel.php',
     'App\\Models\\Campus' => $baseDir . '/app/Models/Campus.php',
+    'App\\Models\\Campuspivot' => $baseDir . '/app/Models/Campuspivot.php',
     'App\\Models\\Classroom' => $baseDir . '/app/Models/Classroom.php',
     'App\\Models\\Country' => $baseDir . '/app/Models/Country.php',
     'App\\Models\\Course' => $baseDir . '/app/Models/Course.php',

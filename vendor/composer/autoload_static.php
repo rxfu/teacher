@@ -483,6 +483,7 @@ class ComposerStaticInitd12d1e6f1d9a19f145107be819f04588
         'App\\Listeners\\PasswordChangeListener' => __DIR__ . '/../..' . '/app/Listeners/PasswordChangeListener.php',
         'App\\Models\\BaseModel' => __DIR__ . '/../..' . '/app/Models/BaseModel.php',
         'App\\Models\\Campus' => __DIR__ . '/../..' . '/app/Models/Campus.php',
+        'App\\Models\\Campuspivot' => __DIR__ . '/../..' . '/app/Models/Campuspivot.php',
         'App\\Models\\Classroom' => __DIR__ . '/../..' . '/app/Models/Classroom.php',
         'App\\Models\\Country' => __DIR__ . '/../..' . '/app/Models/Country.php',
         'App\\Models\\Course' => __DIR__ . '/../..' . '/app/Models/Course.php',

@@ -35,6 +35,17 @@ class Department extends Model {
 	}
 
 	/**
+	 * 学院校区对应表
+	 * @author FuRongxin
+	 * @date    2018-11-29
+	 * @version 2.4
+	 * @return  object     所属对象
+	 */
+	public function pivot() {
+		return $this->hasOne('App\Models\Campuspivot', 'xy', 'dw');
+	}
+
+	/**
 	 * 扩展查询，用于获取学院
 	 * @author FuRongxin
 	 * @date    2017-05-31

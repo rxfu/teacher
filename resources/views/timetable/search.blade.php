@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="row">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-sm-10">
         <form id="searchForm" name="searchForm" method="post" action="{{ url('timetable/search') }}" role="form" class="form-inline">
             {{ csrf_field() }}
             <div class="form-group">
@@ -21,10 +21,20 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="departmtent" class="sr-only">学院</label>
-                <select name="department" class="selectpicker" data-style="btn-success">
+                <label for="campus" class="sr-only">校区</label>
+                <select id="campus" name="campus" class="selectpicker" data-style="btn-success" data-width="100px">
+                    <option value="all">全部校区</option>
+                    @foreach ($campuses as $campus)
+                        <option value="{{ $campus->dm }}">{{ $campus->mc }}校区</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="department" class="sr-only">学院</label>
+                <select id="department" name="department" class="selectpicker" data-style="btn-success">
+                    <option value="all" class="all {{ $campuses->implode('dm', ' ') }}">全部学院</option>
                     @foreach ($departments as $department)
-                        <option value="{{ $department->dw }}">{{ $department->mc }}</option>
+                        <option value="{{ $department->dw }}" class="{{ @$department->pivot->xq }}">{{ $department->mc }}</option>
                     @endforeach
                 </select>
             </div>
@@ -115,3 +125,11 @@
     </section>
 @endif
 @stop
+
+@push('scripts')
+<script>
+$(function() {
+    $('#department').chained('#campus');
+});
+</script>
+@endpush

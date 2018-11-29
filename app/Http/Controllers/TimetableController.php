@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper;
+use App\Models\Campus;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\Mjcourse;
@@ -161,10 +162,14 @@ class TimetableController extends Controller {
 	 * @return  \Illuminate\Http\Response 听课列表
 	 */
 	public function search(Request $request) {
-		$departments = Department::where('dw', '<>', '')
+		$departments = Department::with('pivot')
+			->where('dw', '<>', '')
 			->whereLx(config('constants.department.college'))
 			->whereZt(config('constants.status.enable'))
 			->orderBy('dw')
+			->get();
+		$campuses = Campus::where('dm', '<>', '')
+			->orderBy('dm')
 			->get();
 		$title = '听课查询';
 
@@ -232,6 +237,6 @@ class TimetableController extends Controller {
 			$subtitle        = '查询条件：' . $year_name . $term_name . $department_name . $week_name . $class_name;
 		}
 
-		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle'));
+		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle', 'campuses'));
 	}
 }

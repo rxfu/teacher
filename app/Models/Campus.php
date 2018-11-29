@@ -31,4 +31,15 @@ class Campus extends Model {
 	public function timetables() {
 		return $this->hasMany('App\Models\Timetable', 'xqh', 'dm');
 	}
+
+	/**
+	 * 学院校区对应表
+	 * @author FuRongxin
+	 * @date    2018-11-29
+	 * @version 2.4
+	 * @return  object     所属对象
+	 */
+	public function pivots() {
+		return $this->hasMany('App\Models\Campuspivot', 'xq', 'dm');
+	}
 }
