@@ -185,6 +185,19 @@ class TimetableController extends Controller {
 
 			$input = $request->all();
 
+			if ('all' == $input['campus']) {
+				if ('all' == $input['department']) {
+
+				}
+			} else {
+
+			}
+			if ('all' == $input['department']) {
+				$sections = $departments->pluck('dw');
+			} else {
+				$sections = $input['department'];
+			}
+
 			$query = Timetable::with([
 				'classroom' => function ($query) {
 					$query->select('jsh', 'mc');
@@ -203,7 +216,7 @@ class TimetableController extends Controller {
 
 			$kcxhs = Mjcourse::whereNd($input['year'])
 				->whereXq($input['term'])
-				->whereKkxy($input['department'])
+				->whereIn('kkxy', $sections)
 				->select('kcxh')
 				->distinct()
 				->get()
