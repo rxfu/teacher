@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper;
 use App\Models\Campus;
+use App\Models\Campuspivot;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\Mjcourse;
@@ -185,17 +186,18 @@ class TimetableController extends Controller {
 
 			$input = $request->all();
 
-			if ('all' == $input['campus']) {
-				if ('all' == $input['department']) {
-
+			if ('all' == $input['department']) {
+				if ('all' == $input['campus']) {
+					$depts = Department::where('dw', '<>', '')
+						->whereLx(config('constants.department.college'))
+						->whereZt(config('constants.status.enable'))
+						->pluck('dw');
+				} else {
+					$depts = Campuspivot::whereXq($input['campus'])
+						->pluck('xy');
 				}
 			} else {
-
-			}
-			if ('all' == $input['department']) {
-				$sections = $departments->pluck('dw');
-			} else {
-				$sections = $input['department'];
+				$depts = explode(',', $input['department']);
 			}
 
 			$query = Timetable::with([
@@ -216,7 +218,7 @@ class TimetableController extends Controller {
 
 			$kcxhs = Mjcourse::whereNd($input['year'])
 				->whereXq($input['term'])
-				->whereIn('kkxy', $sections)
+				->whereIn('kkxy', $depts)
 				->select('kcxh')
 				->distinct()
 				->get()
@@ -244,10 +246,11 @@ class TimetableController extends Controller {
 
 			$year_name       = $input['year'] . '年度';
 			$term_name       = Term::find($input['term'])->mc . '学期';
+			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';
 			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
 			$class_name      = '第 ' . $input['class'] . ' 节课';
-			$subtitle        = '查询条件：' . $year_name . $term_name . $department_name . $week_name . $class_name;
+			$subtitle        = '查询条件：' . $year_name . $term_name . $campus_name . $department_name . $week_name . $class_name;
 		}
 
 		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle', 'campuses'));
