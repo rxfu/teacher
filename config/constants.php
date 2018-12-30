@@ -28,9 +28,14 @@ return [
 
 		'passline'    => 60, // 及格线
 
+		'normal'      => '0', // 正常
 		'deferral'    => '1', // 缓考
+		'absent'      => '2', // 旷考
 		'cheat'       => '3', // 作弊
+		'invalid'     => '5', // 无效
 		'retake'      => '7', // 重修
+		'transform'   => '8', // 转换
+		'exempt'      => 'A', // 免试
 	],
 
 	/**

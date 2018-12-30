@@ -138,7 +138,7 @@ class ScoreController extends Controller {
 			->exists();
 
 		$statuses = Status::orderBy('dm')->get()->filter(function ($status) {
-			return config('constants.score.deferral') != $status->dm && config('constants.score.cheat') != $status->dm;
+			return config('constants.score.normal') === $status->dm || config('constants.score.absent') === $status->dm || config('constants.score.invalid') === $status->dm || config('constants.score.transform') === $status->dm || config('constants.score.exempt') === $status->dm;
 		});
 
 		$noScoreStudents = Selcourse::whereNd(session('year'))

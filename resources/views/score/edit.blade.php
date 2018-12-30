@@ -79,14 +79,14 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				@if (config('constants.score.deferral') == $student->kszt)
-	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
-	                        				@else
+	                        				@if (config('constants.score.normal') === $student->kszt || config('constants.score.absent') === $student->kszt || config('constants.score.invalid') === $student->kszt || config('constants.score.transform') === $student->kszt || config('constants.score.exempt') === $student->kszt)
 		                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
 		                        					@foreach ($statuses as $status)
 		                        						<option value="{{ $status->dm }}"{{ $status->dm == $student->kszt ? ' selected' : '' }}>{{ $status->mc }}</option>
 		                        					@endforeach
 		                        				</select>
+	                        				@else
+	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        				@endif
 	                        			@else
 	                        				<div class="form-control-static">{{ $student->status->mc }}</div>
