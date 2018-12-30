@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsExport;
 use App\Http\Helper;
 use App\Models\Course;
 use App\Models\Platform;
@@ -195,6 +196,8 @@ class TaskController extends Controller {
 			});
 
 		})->export('xlsx');
+
+		return Excel::download(new StudentsExport, $fileName . '.xlsx');
 	}
 
 }
