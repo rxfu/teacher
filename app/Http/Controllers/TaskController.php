@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\StudentsExport;
 use App\Http\Helper;
 use App\Models\Course;
-use App\Models\Platform;
-use App\Models\Property;
-use App\Models\Ratio;
 use App\Models\Selcourse;
 use App\Models\Task;
 use App\Models\Term;
@@ -129,75 +126,9 @@ class TaskController extends Controller {
 	 * @return  file Excel文件
 	 */
 	public function exportStudents($year, $term, $kcxh) {
-		$cnos     = Helper::splitCno($kcxh);
-		$platform = Platform::find($cnos['platform']);
-		$property = Property::find($cnos['property']);
-		$course   = Course::find($cnos['course']);
+		$fileName = $kcxh . '-' . date('Ymd');
 
-		$students = Selcourse::whereKcxh($kcxh)
-			->whereNd($year)
-			->whereXq($term)
-			->orderBy('xh')
-			->get();
-
-		$fileName  = $kcxh . '-' . date('Ymd');
-		$sheetName = $course->kcmc;
-		$data[0][] = '广西师范大学' . Helper::getAcademicYear($year) . '学年' . Term::find($term)->mc . '学期成绩单';
-		$data[1][] = '课程名称：' . $course->kcmc;
-		$data[2][] = '课程序号：' . $kcxh;
-		$data[3][] = '课程平台：' . $platform->mc;
-		$data[4][] = '课程性质：' . $property->mc;
-
-		$task = Task::whereKcxh($kcxh)
-			->whereNd($year)
-			->whereXq($term)
-			->whereJsgh(Auth::user()->jsgh)
-			->firstOrFail();
-		$ratios = Ratio::whereFs($task->cjfs)
-			->orderBy('id')
-			->get()
-			->pluck('idm');
-
-		$data[5] = ['学号', '姓名'];
-		foreach ($ratios as $ratio) {
-			$data[5][] = $ratio;
-		}
-
-		foreach ($students as $student) {
-			$row   = [];
-			$row[] = $student->xh;
-			$row[] = $student->xm;
-
-			$data[] = $row;
-		}
-
-		Excel::create($fileName, function ($excel) use ($sheetName, $data) {
-
-			// Set the title
-			$excel->setTitle('Guangxi Normal University Student Score Report');
-
-			// Chain the setters
-			$excel->setCreator('Administrator')->setCompany('Dean of Guangxi Normal University');
-
-			// Call them separately
-			$excel->setDescription('Student score report of Guangxi Normal University');
-
-			$excel->sheet($sheetName, function ($sheet) use ($data) {
-
-				$sheet->setOrientation('landscape');
-				$sheet->setFreeze('A7');
-				$sheet->setWidth('A', 15);
-
-				for ($i = 1; $i <= 5; ++$i) {
-					$sheet->mergeCells('A' . $i . ':' . 'E' . $i);
-				}
-
-				$sheet->fromArray($data, null, 'A1', false, false);
-			});
-
-		})->export('xlsx');
-
-		return Excel::download(new StudentsExport, $fileName . '.xlsx');
+		return Excel::download(new StudentsExport($year, $term, $kcxh), $fileName . '.xlsx');
 	}
 
 }

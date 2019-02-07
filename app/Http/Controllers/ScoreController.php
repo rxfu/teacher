@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper;
+use App\Imports\StudentsImport;
 use App\Models\Dtscore;
 use App\Models\Mjcourse;
 use App\Models\Ratio;
@@ -481,6 +482,8 @@ class ScoreController extends Controller {
 						$student->save();
 					};
 				}, 'UTF-8');
+
+				Excel::import(new StudentsImport, Storage::url('uploads/' . $filename));
 
 				return redirect()->route('score.edit', $kcxh)->withStatus($status);
 			}
