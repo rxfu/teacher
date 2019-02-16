@@ -71,6 +71,10 @@ class DcxmController extends Controller {
 			$xmsq->jsyj   = $inputs['jsyj'];
 			$xmsq->jsyjsj = Carbon::now();
 
+			$xmxx         = Dcxmxx::findOrFail($xmsq->xm_id);
+			$xmxx->jssfty = $inputs['jssfty'];
+			$xmxx->save();
+
 			if ($xmsq->save()) {
 				return redirect('dcxm/list')->withStatus('教师意见保存成功');
 			} else {
