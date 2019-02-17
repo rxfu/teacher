@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 /**
  * 大创项目评审意见
  *
@@ -26,5 +28,10 @@ class Dcxmps extends DcxmModel {
 	 */
 	public function project() {
 		return $this->belongsTo('App\Models\Dcxmxx', 'xm_id', 'id');
+	}
+
+	public function pivot() {
+		return $this->hasOne('App\Models\Dcxmpsfz', 'zjgh', 'zjgh')
+			->whereNd(Carbon::now()->year);
 	}
 }

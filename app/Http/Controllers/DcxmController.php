@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dcxmps;
 use App\Models\Dcxmsq;
+use App\Models\Dcxmxt;
 use App\Models\Dcxmxx;
 use Auth;
 use Carbon\Carbon;
@@ -142,10 +143,13 @@ class DcxmController extends Controller {
 	 * @return  \Illuminate\Http\Response 大创项目列表
 	 */
 	public function getPslist() {
-		$projects = Dcxmxx::whereJssfty(config('constants.status.enable'))
-			->orderBy('cjsj', 'desc')
-			->get();
-		$title = '评审列表';
+		if (Dcxmxt::find('PS_JB')->value == 0) {
+			$projects = Dcxmxx::whereJssfty(config('constants.status.enable'));
+		} elseif (Dcxmxt::find('PS_JB')->value == 1) {
+			$projects = Dcxmxx::wherexysfty(config('constants.status.enable'));
+		}
+		$projects = $projects->orderBy('cjsj', 'desc')->get();
+		$title    = '评审列表';
 
 		return view('dcxm.pslist', compact('title', 'projects'));
 	}
@@ -200,6 +204,8 @@ class DcxmController extends Controller {
 			$xmps->psyj  = $inputs['psyj'];
 			$xmps->pf    = $inputs['pf'];
 			$xmps->zjgh  = Auth::user()->jsgh;
+			$xmps->nd    = Carbon::now()->year;
+			$xmps->psjb  = Dcxmxt::find('PS_JB')->value;
 
 			if ($xmps->save()) {
 				return redirect('dcxm/pslb')->withStatus('评审意见保存成功');
