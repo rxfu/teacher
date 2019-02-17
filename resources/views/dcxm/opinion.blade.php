@@ -20,10 +20,10 @@
                         <label for="jssfty" class="col-sm-3 control-label">是否同意推荐</label>
                         <div class="col-sm-8">
                             <div class="radio-inline">
-                                <input type="radio" name="jssfty" value="1" placeholder="同意">同意
+                                <input type="radio" name="jssfty" value="1" placeholder="同意"{{ 1 == $project->jssfty ? ' checked' : '' }}>同意
                             </div>
                             <div class="radio-inline">
-                                <input type="radio" name="jssfty" value="0" placeholder="不同意">不同意
+                                <input type="radio" name="jssfty" value="0" placeholder="不同意"{{ 0 == $project->jssfty ? ' checked' : '' }}>不同意
                             </div>
                         </div>
                     </div>

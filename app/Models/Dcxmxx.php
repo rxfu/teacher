@@ -122,4 +122,15 @@ class Dcxmxx extends DcxmModel {
 	public function student() {
 		return $this->belongsTo('App\Models\Student', 'xh', 'xh');
 	}
+
+	/**
+	 * 项目评审意见
+	 * @author FuRongxin
+	 * @date    2018-02-03
+	 * @version 2.3
+	 * @return  object 所属对象
+	 */
+	public function reviews() {
+		return $this->hasMany('App\Models\Dcxmps', 'xm_id', 'id');
+	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dcxmps;
 use App\Models\Dcxmsq;
 use App\Models\Dcxmxx;
 use Auth;
@@ -130,5 +131,81 @@ class DcxmController extends Controller {
 	 */
 	public function getDownloadPdf($id) {
 		return PDF::loadFile(url('dcxm/pdf/' . $id))->download('application.pdf');
+	}
+
+	/**
+	 * 显示大创项目评审列表
+	 *
+	 * @author FuRongxin
+	 * @date    2019-02-18
+	 * @version 2.3
+	 * @return  \Illuminate\Http\Response 大创项目列表
+	 */
+	public function getPslist() {
+		$projects = Dcxmxx::whereJssfty(config('constants.status.enable'))
+			->orderBy('cjsj', 'desc')
+			->get();
+		$title = '评审列表';
+
+		return view('dcxm.pslist', compact('title', 'projects'));
+	}
+
+	/**
+	 * 大创项目评审意见
+	 *
+	 * @author FuRongxin
+	 * @date    2018-02-188
+	 * @version 2.3
+	 * @return  \Illuminate\Http\Response 大创项目基本信息
+	 */
+	public function getXmps($id) {
+		$project = Dcxmxx::findOrFail($id);
+		$title   = '评审意见';
+
+		if (Dcxmps::whereXmId($project->id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+			$review = Dcxmps::whereXmId($project->id)
+				->whereZjgh(Auth::user()->jsgh)
+				->first();
+		} else {
+			$review = null;
+		}
+
+		return view('dcxm.xmps', compact('title', 'project', 'review'));
+	}
+
+	/**
+	 * 保存大创项目评审意见
+	 *
+	 * @author FuRongxin
+	 * @date    2019-02-18
+	 * @version 2.3
+	 * @param   \Illuminate\Http\Request $request 评审意见请求
+	 * @return  \Illuminate\Http\Response 大创项目评审意见
+	 */
+	public function postXmps(Request $request, $id) {
+		if ($request->isMethod('post')) {
+			$this->validate($request, [
+				'pf' => 'required|numeric|max:100|min:0',
+			]);
+			$inputs = $request->all();
+
+			if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+				$xmps = Dcxmps::whereXmId($id)
+					->whereZjgh(Auth::user()->jsgh)
+					->first();
+			} else {
+				$xmps = new Dcxmps;
+			}
+			$xmps->xm_id = $id;
+			$xmps->psyj  = $inputs['psyj'];
+			$xmps->pf    = $inputs['pf'];
+			$xmps->zjgh  = Auth::user()->jsgh;
+
+			if ($xmps->save()) {
+				return redirect('dcxm/pslb')->withStatus('评审意见保存成功');
+			} else {
+				return back()->withErrors();
+			}
+		}
 	}
 }

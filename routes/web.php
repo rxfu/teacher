@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
 	Route::post('dcxm/jsyj/{id}', 'DcxmController@postOpinion');
 	Route::get('dcxm/pdf/{id}', 'DcxmController@getPdf');
 	Route::get('dcxm/zmcl/{id}', 'DcxmController@getFile');
+	Route::get('dcxm/pslb', 'DcxmController@getPslist');
+	Route::get('dcxm/xmps/{id}', 'DcxmController@getXmps');
+	Route::post('dcxm/xmps/{id}', 'DcxmController@postXmps');
 
 	Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 	Route::get('password/change', 'Auth\PasswordController@showChangeForm');
