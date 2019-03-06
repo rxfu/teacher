@@ -251,8 +251,17 @@ class TimetableController extends Controller {
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
 			$class_name      = '第 ' . $input['class'] . ' 节课';
 			$subtitle        = '查询条件：' . $year_name . $term_name . $campus_name . $department_name . $week_name . $class_name;
+
+			$condition = [
+				'year' => $input['year'],
+				'term' => $input['term'],
+				'campus' => $input['campus'],
+				'department' => $input['department'],
+				'week' => $input['week'],
+				'class' => $input['class'],
+			];
 		}
 
-		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle', 'campuses'));
+		return view('timetable.search', compact('title', 'departments', 'courses', 'subtitle', 'campuses', 'condition'));
 	}
 }
