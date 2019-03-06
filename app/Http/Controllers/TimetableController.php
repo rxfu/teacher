@@ -244,7 +244,7 @@ class TimetableController extends Controller {
 				];
 			}
 
-			$year_name       = $input['year'] . '年度';
+			$year_name       = Helper::getAcademicYear($input['year']) . '年度';
 			$term_name       = Term::find($input['term'])->mc . '学期';
 			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';
 			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
