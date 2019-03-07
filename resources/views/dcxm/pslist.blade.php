@@ -5,7 +5,7 @@
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="panel-title">项目列表</div>
+                <div class="panel-title">评审列表</div>
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
@@ -33,7 +33,7 @@
                                 <td>{{ $project->subject->mc }}</td>
                                 <td>{{ date('Y-m-d', strtotime($project->cjsj)) }}</td>
                                 <td>
-                                    <a href="{{ url('dcxm/jsyj/' . $project->id) }}" title="填写教师意见" role="button" class="btn btn-success">填写教师意见</a>
+                                    <a href="{{ url('dcxm/xmps/' . $project->id) }}" title="填写评审意见" role="button" class="btn btn-success">填写评审意见</a>
                                     @if (!is_null($project->application))
                                         <a href="{{ url('dcxm/pdf/' . $project->id) }}" title="下载申报书" role="button" class="btn btn-warning">下载申报书</a>
                                     @endif

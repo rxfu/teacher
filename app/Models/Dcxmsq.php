@@ -26,7 +26,7 @@ class Dcxmsq extends DcxmModel {
 	 * @version 2.3
 	 * @return  object 所属对象
 	 */
-	public function projects() {
+	public function project() {
 		return $this->belongsTo('App\Models\Dcxmxx', 'xm_id', 'id');
 	}
 

@@ -142,6 +142,11 @@
                                         <li>
                                             <a href="{{ url('dcxm/list') }}">项目列表</a>
                                         </li>
+                                        @if ($allowed_xmps)
+                                            <li>
+                                                <a href="{{ url('dcxm/pslb') }}">项目评审</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                     <!-- /.nav-second-level -->
                                 </li>

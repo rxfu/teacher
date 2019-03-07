@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dcxmps;
 use App\Models\Dcxmsq;
+use App\Models\Dcxmxt;
 use App\Models\Dcxmxx;
 use Auth;
 use Carbon\Carbon;
@@ -71,6 +73,10 @@ class DcxmController extends Controller {
 			$xmsq->jsyj   = $inputs['jsyj'];
 			$xmsq->jsyjsj = Carbon::now();
 
+			$xmxx         = Dcxmxx::findOrFail($xmsq->xm_id);
+			$xmxx->jssfty = $inputs['jssfty'];
+			$xmxx->save();
+
 			if ($xmsq->save()) {
 				return redirect('dcxm/list')->withStatus('教师意见保存成功');
 			} else {
@@ -126,5 +132,86 @@ class DcxmController extends Controller {
 	 */
 	public function getDownloadPdf($id) {
 		return PDF::loadFile(url('dcxm/pdf/' . $id))->download('application.pdf');
+	}
+
+	/**
+	 * 显示大创项目评审列表
+	 *
+	 * @author FuRongxin
+	 * @date    2019-02-18
+	 * @version 2.3
+	 * @return  \Illuminate\Http\Response 大创项目列表
+	 */
+	public function getPslist() {
+		if (Dcxmxt::find('PS_JB')->value == 0) {
+			$projects = Dcxmxx::whereJssfty(config('constants.status.enable'));
+		} elseif (Dcxmxt::find('PS_JB')->value == 1) {
+			$projects = Dcxmxx::wherexysfty(config('constants.status.enable'));
+		}
+		$projects = $projects->orderBy('cjsj', 'desc')->get();
+		$title    = '评审列表';
+
+		return view('dcxm.pslist', compact('title', 'projects'));
+	}
+
+	/**
+	 * 大创项目评审意见
+	 *
+	 * @author FuRongxin
+	 * @date    2018-02-188
+	 * @version 2.3
+	 * @return  \Illuminate\Http\Response 大创项目基本信息
+	 */
+	public function getXmps($id) {
+		$project = Dcxmxx::findOrFail($id);
+		$title   = '评审意见';
+
+		if (Dcxmps::whereXmId($project->id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+			$review = Dcxmps::whereXmId($project->id)
+				->whereZjgh(Auth::user()->jsgh)
+				->first();
+		} else {
+			$review = null;
+		}
+
+		return view('dcxm.xmps', compact('title', 'project', 'review'));
+	}
+
+	/**
+	 * 保存大创项目评审意见
+	 *
+	 * @author FuRongxin
+	 * @date    2019-02-18
+	 * @version 2.3
+	 * @param   \Illuminate\Http\Request $request 评审意见请求
+	 * @return  \Illuminate\Http\Response 大创项目评审意见
+	 */
+	public function postXmps(Request $request, $id) {
+		if ($request->isMethod('post')) {
+			$this->validate($request, [
+				'pf' => 'required|numeric|max:100|min:0',
+			]);
+			$inputs = $request->all();
+
+			if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+				$xmps = Dcxmps::whereXmId($id)
+					->whereZjgh(Auth::user()->jsgh)
+					->first();
+			} else {
+				$xmps = new Dcxmps;
+			}
+			$xmps->xm_id = $id;
+			$xmps->psyj  = $inputs['psyj'];
+			$xmps->pf    = $inputs['pf'];
+			$xmps->zjgh  = Auth::user()->jsgh;
+			$xmps->nd    = Carbon::now()->year;
+			$xmps->psjb  = Dcxmxt::find('PS_JB')->value;
+
+			if ($xmps->save()) {
+				return redirect('dcxm/pslb')->withStatus('评审意见保存成功');
+			} else {
+				return back()->withErrors();
+			}
+		}
 	}
 }
