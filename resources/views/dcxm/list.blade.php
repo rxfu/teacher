@@ -33,11 +33,9 @@
                                 <td>{{ $project->subject->mc }}</td>
                                 <td>{{ date('Y-m-d', strtotime($project->cjsj)) }}</td>
                                 <td>
-                                    @if (strlen($project->xysfty) !== 0)
-                                        <a href="{{ url('dcxm/jsyj/' . $project->id) }}" title="填写教师意见" role="button" class="btn btn-success">填写教师意见</a>
-                                        @if (!is_null($project->application))
-                                            <a href="{{ url('dcxm/pdf/' . $project->id) }}" title="下载申报书" role="button" class="btn btn-warning">下载申报书</a>
-                                        @endif
+                                    <a href="{{ url('dcxm/jsyj/' . $project->id) }}" title="填写教师意见" role="button" class="btn btn-success">填写教师意见</a>
+                                    @if (!is_null($project->application))
+                                        <a href="{{ url('dcxm/pdf/' . $project->id) }}" title="下载申报书" role="button" class="btn btn-warning">下载申报书</a>
                                     @endif
                                 </td>
                             </tr>
