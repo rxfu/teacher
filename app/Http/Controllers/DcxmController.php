@@ -155,7 +155,7 @@ class DcxmController extends Controller
         if ($psjb == 0) {
             $projects = Dcxmxx::whereJssfty(config('constants.status.enable'));
         } elseif ($psjb == 1) {
-            $projects = Dcxmxx::wherexysfty(config('constants.status.enable'));
+            $projects = Dcxmxx::whereXysfty(config('constants.status.enable'));
         }
 
         $projects = $projects->with(['category', 'subject', 'reviews'])
