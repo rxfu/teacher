@@ -138,8 +138,14 @@ class ScoreController extends Controller {
 			->whereTjzt(config('constants.score.uncommitted'))
 			->exists();
 
-		$statuses = Status::orderBy('dm')->get()->filter(function ($status) {
-			return config('constants.score.normal') === $status->dm || config('constants.score.absent') === $status->dm || config('constants.score.invalid') === $status->dm || config('constants.score.transform') === $status->dm || config('constants.score.exempt') === $status->dm;
+		$statuses = Status::orderBy('dm')->get()->filter(function ($status) use ($course) {
+			$allowed = config('constants.score.normal') === $status->dm || config('constants.score.absent') === $status->dm || config('constants.score.invalid') === $status->dm || config('constants.score.transform') === $status->dm || config('constants.score.exempt') === $status->dm;
+
+			if (in_array($course->pt . $course->xz, ['TW', 'TI', 'TY', 'TQ'])) {
+				$allowed = $allowed || config('constants.score.disqualification') === $status->dm;
+			}
+
+			return $allowed;
 		});
 
 		$noScoreStudents = Selcourse::whereNd(session('year'))

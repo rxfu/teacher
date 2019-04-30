@@ -79,7 +79,7 @@
 	                        			</td>
 	                        			<td>
 	                        			@if (config('constants.score.uncommitted') == $student->tjzt)
-	                        				@if (config('constants.score.deferral') === $student->kszt || config('constants.score.disqualification') === $student->kszt)
+	                        				@if (config('constants.score.deferral') === $student->kszt || (config('constants.score.disqualification') === $student->kszt && !in_array($course->pt . $course->xz, ['TW', 'TI', 'TY', 'TQ'])))
 	                        					<div class="form-control-static">{{ $student->status->mc }}</div>
 	                        				@else
 		                        				<select name="{{ $student->xh . 'kszt' }}" id="{{ $student->xh . 'kszt' }}" class="form-control">
