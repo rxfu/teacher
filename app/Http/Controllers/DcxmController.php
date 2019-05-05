@@ -212,9 +212,10 @@ class DcxmController extends Controller
             ]);
             $inputs = $request->all();
 
-            if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+            if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->wherePsjb(Dcxmxt::find('PS_JB')->value)->exists()) {
                 $xmps = Dcxmps::whereXmId($id)
                     ->whereZjgh(Auth::user()->jsgh)
+                    ->wherePsjb(Dcxmxt::find('PS_JB')->value)
                     ->first();
             } else {
                 $xmps = new Dcxmps;
