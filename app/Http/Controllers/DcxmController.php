@@ -161,7 +161,8 @@ class DcxmController extends Controller
         $projects = $projects->with(['category', 'subject', 'reviews'])
         ->whereHas('reviews', function ($query) use ($psjb) {
             $query->whereZjgh(Auth::user()->jsgh)
-            ->wherePsjb($psjb);
+            ->wherePsjb($psjb)
+            ->whereNd(date('Y'));
         })
         ->orderBy('cjsj', 'desc')
         ->get();
@@ -184,9 +185,11 @@ class DcxmController extends Controller
         $project = Dcxmxx::findOrFail($id);
         $title   = '评审意见';
 
-        if (Dcxmps::whereXmId($project->id)->whereZjgh(Auth::user()->jsgh)->exists()) {
+        if (Dcxmps::whereXmId($project->id)->whereZjgh(Auth::user()->jsgh)->wherePsjb(Dcxmxt::find('PS_JB')->value)->whereNd(date('Y'))->exists()) {
             $review = Dcxmps::whereXmId($project->id)
                 ->whereZjgh(Auth::user()->jsgh)
+                ->wherePsjb(Dcxmxt::find('PS_JB')->value)
+	            ->whereNd(date('Y'))
                 ->first();
         } else {
             $review = null;
@@ -212,10 +215,11 @@ class DcxmController extends Controller
             ]);
             $inputs = $request->all();
 
-            if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->wherePsjb(Dcxmxt::find('PS_JB')->value)->exists()) {
+            if (Dcxmps::whereXmId($id)->whereZjgh(Auth::user()->jsgh)->wherePsjb(Dcxmxt::find('PS_JB')->value)->whereNd(date('Y'))->exists()) {
                 $xmps = Dcxmps::whereXmId($id)
                     ->whereZjgh(Auth::user()->jsgh)
                     ->wherePsjb(Dcxmxt::find('PS_JB')->value)
+            		->whereNd(date('Y'))
                     ->first();
             } else {
                 $xmps = new Dcxmps;
