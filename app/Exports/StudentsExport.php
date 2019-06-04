@@ -67,7 +67,7 @@ class StudentsExport implements FromCollection, WithColumnFormatting, ShouldAuto
 
 		foreach ($students as $student) {
 			$row   = [];
-			$row[] = '\'' . $student->xh;
+			$row[] = "\t" . $student->xh . "\t";
 			$row[] = $student->xm;
 
 			$data[] = $row;
