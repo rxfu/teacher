@@ -29,8 +29,8 @@ class StudentsImport implements ToCollection, WithStartRow {
 
 		// 获取所有成绩
 		foreach ($rows as $row) {
-			$row[0] = trim($row[0], "'");
-
+			$row[0] = trim($row[0], "\t");
+			
 			$student = Score::whereNd(session('year'))
 				->whereXq(session('term'))
 				->whereKcxh($this->kcxh)
