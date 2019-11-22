@@ -105,6 +105,9 @@
                                     <li>
                                         <a href="{{ url('timetable/search') }}">听课查询</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ url('tksq') }}">调停课申请</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li>
