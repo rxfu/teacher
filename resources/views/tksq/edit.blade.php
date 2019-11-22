@@ -46,25 +46,25 @@
                     <div class="form-group">
                         <label for="kcmc" class="col-sm-2 control-label">课程名称</label>
                         <div class="col-sm-4">
-                            <p class="form-control-static">{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</p>
+                            <p class="form-control-static course">{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="date" class="col-sm-2 control-label">变更后日期</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="date" name="date">
+                            <input type="text" class="form-control" id="date" name="date" value="{{ $app->date }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hksj" class="col-sm-2 control-label">变更后节次</label>
                         <div class="col-sm-4">
-                            第 <input type="text" class="form-control" id="hksj" name="hksj"> 节至第 <input type="text" class="form-control" id="hjsj" name="hjsj"> 节
+                            第 <input type="text" class="form-control" id="hksj" name="hksj" value="{{ $app->hksj }}"> 节至第 <input type="text" class="form-control" id="hjsj" name="hjsj" value="{{ $app->hjsj }}"> 节
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="hjs" name="hjs">
+                            <input type="text" class="form-control" id="hjs" name="hjs" value="{{ $app->hjs }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -72,24 +72,24 @@
                         <div class="col-sm-4">
                             <select id="campus" name="campus" class="form-control">
                                 @foreach ($campuses as $item)
-                                    <option value="{{ $item->dm }}">{{ $item->mc }}</option>
+                                    <option value="{{ $item->dm }}" {{ $app->xqh == $item->dm ? 'selected' : '' }}>{{ $item->mc }}</option>
                                 @endforeach
                             </select>
                             <select id="building" name="building" class="form-control">
                                 @foreach ($buildings as $item)
-                                    <option value="{{ $item->dm }}" class="{{ $item->xqh }}">{{ $item->mc }}</option>
+                                    <option value="{{ $item->dm }}" class="{{ $item->xqh }}" {{ $app->jxl == $item->dm ? 'selected' : '' }}>{{ $item->mc }}</option>
                                 @endforeach
                             </select>
                             <select id="classroom" name="classroom" class="form-control">
                                 @foreach ($classrooms as $item)
-                                    <option value="{{ $item->dm }}" class="{{ $item->jxl }}">{{ $item->mc }}</option>
+                                    <option value="{{ $item->dm }}" class="{{ $item->jxl }}" {{ $app->cdbh == $item->dm ? 'selected' : '' }}>{{ $item->mc }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-2">
-                            <button type="submit" class="btn btn-primary">提交申请</button>
+                            <button type="submit" class="btn btn-success">修改申请</button>
                         </div>
                     </div>
                 </form>
@@ -102,10 +102,6 @@
 @push('scripts')
 <script>
 $(function() {
-    @if (('retake' == $type) && (1 < count($courses)))
-        alert('在已选课程中未找到原课程，如果确认需要进行重修申请，请在提示结束后手工选择原课程。特别提示：原课程与重修课程不一致会导致重修申请被拒绝，请提交申请后与教学秘书联系并确认。');
-    @endif
-
     $('#ynd').val($('#ykcxh option:selected').attr('data-ynd'));
     $('#yxq').val($('#ykcxh option:selected').attr('data-yxq'));
     $('#yxqmc').val($('#ykcxh option:selected').attr('data-yxqmc'));
