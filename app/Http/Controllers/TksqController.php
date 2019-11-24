@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Tksq;
 use App\Models\Tksqyy;
+use Auth;
 use Illuminate\Http\Request;
 
 class TksqController extends Controller {
 
 	public function index() {
+		$title = '调停课申请列表';
 		$apps = Tksq::whereJsgh(Auth::user()->jsgh)->orderBy('sqsj', 'desc')->get();
 
-		return view('tksq.index', compact('apps'));
+		return view('tksq.index', compact('title', 'apps'));
 	}
 
 	public function create() {

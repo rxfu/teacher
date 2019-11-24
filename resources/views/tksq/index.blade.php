@@ -4,6 +4,9 @@
 <section class="row">
     <div class="col-sm-12">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{ route('tksq.create') }}" title="申请调停课" class="btn btn-success">申请调停课</a>
+            </div>
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover">
