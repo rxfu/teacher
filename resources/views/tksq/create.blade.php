@@ -37,48 +37,69 @@
                     <div class="form-group">
                         <label for="kcxh" class="col-sm-2 control-label">课程序号</label>
                         <div class="col-sm-4">
-                            @foreach ($courses as $course)
-                                <option value="{{ $course->kcxh }}">{{ $course->kcxh }}</option>}
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="kcmc" class="col-sm-2 control-label">课程名称</label>
-                        <div class="col-sm-4">
-                            <p class="form-control-static course"></p>
+                            <select name="kcxh" id="kcxh" class="form-control">
+                                @foreach ($tasks as $task)
+                                    <option value="{{ $task->kcxh }}">{{ $task->kcxh }} - {{ $task->course->kcmc }}</option>}
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="date" class="col-sm-2 control-label">变更后日期</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="date" name="date">
+                            <div class="input-group date">
+                                <input type="text" class="form-control" id="hrq" name="hrq">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hksj" class="col-sm-2 control-label">变更后节次</label>
                         <div class="col-sm-4">
-                            第 <input type="text" class="form-control" id="hksj" name="hksj"> 节至第 <input type="text" class="form-control" id="hjsj" name="hjsj"> 节
+                            <div class="input-group">
+                                <select name="hksj" id="hksj" class="form-control">
+                                    @foreach (range(1, 12) as $item)
+                                        <option value="{{ $item }}">第 {{ $item }} 节</option>
+                                    @endforeach
+                                </select>
+                                <div class="input-group-addon">至</div>
+                                <select name="hjsj" id="hjsj" class="form-control">
+                                    @foreach (range(1, 12) as $item)
+                                        <option value="{{ $item }}">第 {{ $item }} 节</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="hjs" name="hjs">
+                            <select name="hjs" id="hjs" class="form-control">
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->jsgh }}">{{ $teacher->jsgh }} - {{ $teacher->xm }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="hcdbh" class="col-sm-2 control-label">变更后上课地点</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-1">
                             <select id="campus" name="campus" class="form-control">
                                 @foreach ($campuses as $item)
                                     <option value="{{ $item->dm }}">{{ $item->mc }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-1">
                             <select id="building" name="building" class="form-control">
                                 @foreach ($buildings as $item)
                                     <option value="{{ $item->dm }}" class="{{ $item->xqh }}">{{ $item->mc }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-2">
                             <select id="classroom" name="classroom" class="form-control">
                                 @foreach ($classrooms as $item)
                                     <option value="{{ $item->dm }}" class="{{ $item->jxl }}">{{ $item->mc }}</option>
@@ -87,7 +108,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-6 col-sm-offset-2">
+                        <div class="col-sm-4 col-sm-offset-2">
                             <button type="submit" class="btn btn-primary">提交申请</button>
                         </div>
                     </div>
@@ -101,6 +122,11 @@
 @push('scripts')
 <script>
 $(function() {
+    $('#hrq').datepicker({
+        language: "zh-CN",
+        autoclose: true,
+        format: "yyyy-mm-dd"
+    });
     $('#ynd').val($('#ykcxh option:selected').attr('data-ynd'));
     $('#yxq').val($('#ykcxh option:selected').attr('data-yxq'));
     $('#yxqmc').val($('#ykcxh option:selected').attr('data-yxqmc'));

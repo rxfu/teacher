@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Building;
+use App\Models\Campus;
+use App\Models\Classroom;
+use App\Models\Task;
 use App\Models\Tksq;
 use App\Models\Tksqyy;
+use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -17,9 +22,23 @@ class TksqController extends Controller {
 	}
 
 	public function create() {
+		$title = '调停课申请';
 		$reasons = Tksqyy::all();
+        $campuses = Campus::where('dm', '<>', '')->get();
+        $buildings = Building::where('dm', '<>', '')->get();
+        $classrooms = Classroom::all();
+		$tasks = Task::with([
+			'course' => function ($query) {
+				$query->select('kch', 'kcmc', 'xs');
+			}])
+			->whereJsgh(Auth::user()->jsgh)
+			->whereNd(session('year'))
+			->whereXq(session('term'))
+			->orderBy('kcxh')
+			->get();
+		$teachers = User::orderBy('jsgh')->whereZt(config('constants.status.enable'))->get();
 
-		return view('tksq.create', compact('reasons'));
+		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'classrooms'));
 	}
 
 	public function store(Request $request) {
