@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Building;
+use App\Models\Calendar;
 use App\Models\Campus;
 use App\Models\Classroom;
 use App\Models\Task;
@@ -10,6 +11,7 @@ use App\Models\Tksq;
 use App\Models\Tksqyy;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TksqController extends Controller {
@@ -36,9 +38,16 @@ class TksqController extends Controller {
 			->whereXq(session('term'))
 			->orderBy('kcxh')
 			->get();
-		$teachers = User::orderBy('jsgh')->whereZt(config('constants.status.enable'))->get();
+		$teachers = User::orderBy('jsgh')
+			->where('jsgh', '<>', '')
+			->whereZt(config('constants.status.enable'))
+			->get();
 
-		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'classrooms'));
+        $today = Carbon::now();
+        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+        $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
+
+		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'classrooms', 'currentWeek', 'calendar'));
 	}
 
 	public function store(Request $request) {
