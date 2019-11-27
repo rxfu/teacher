@@ -113,7 +113,7 @@
                         <div class="col-sm-6">
                             <select name="hjs" id="hjs" class="form-control">
                                 @foreach ($teachers as $teacher)
-                                    <option value="{{ $teacher->jsgh }}">{{ $teacher->jsgh }} - {{ $teacher->xm }}</option>
+                                    <option value="{{ $teacher->jsgh }}"{{ auth()->user()->jsgh == $teacher->jsgh ? ' selected' : '' }}>{{ $teacher->jsgh }} - {{ $teacher->xm }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -157,26 +157,8 @@
 @push('scripts')
 <script>
 $(function() {
-    $('#hrq').datepicker({
-        language: "zh-CN",
-        autoclose: true,
-        format: "yyyy-mm-dd",
-        startDate: "{{ date('Y-m-d') }}"
-    });
     $('#building').chained('#campus');
     $('#classroom').chained('#campus, #building');
-    /*
-    $('#ynd').val($('#ykcxh option:selected').attr('data-ynd'));
-    $('#yxq').val($('#ykcxh option:selected').attr('data-yxq'));
-    $('#yxqmc').val($('#ykcxh option:selected').attr('data-yxqmc'));
-    $('#yxf').val($('#ykcxh option:selected').attr('data-yxf'));
-
-    $('#ykcxh').change(function() {
-        $('#ynd').val($('#ykcxh option:selected').attr('data-ynd'));
-        $('#yxq').val($('#ykcxh option:selected').attr('data-yxq'));
-        $('#yxqmc').val($('#ykcxh option:selected').attr('data-yxqmc'));
-        $('#yxf').val($('#ykcxh option:selected').attr('data-yxf'));
-    });*/
 });
 </script>
 @endpush

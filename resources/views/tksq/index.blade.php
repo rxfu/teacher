@@ -39,15 +39,17 @@
                                 		</form>
                                 	@endif
                                 </td>
-                                <td>{{ $app->id }}</td>
+                                <td>
+                                    <a href="{{ route('tksq.edit', $app->id) }}">{{ $app->id }}</a>
+                                </td>
                                 <td>{{ $app->nd }}</td>
                                 <td>{{ $app->term->mc }}</td>
-                                <td>{{ $app->kcxh }}</td>
-                                <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
+                                <td>{{ $app->qkcxh }}</td>
+                                <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->qkcxh))->kcmc }}</td>
                                 <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}第 {{ $app->qksj }} 节至第 {{ $app->qjsj }} 节</td>
-                                <td>{{ $app->qcdbh }}</td>
+                                <td>{{ optional($app->qclassroom)->mc }}</td>
                                 <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}第 {{ $app->hksj }} 节至第 {{ $app->hjsj }} 节</td>
-                                <td>{{ $app->hcdbh }}</td>
+                                <td>{{ optional($app->hclassroom)->mc }}</td>
                                 <td>
                                     @switch ($app->sqsx)
                                         @case (0)

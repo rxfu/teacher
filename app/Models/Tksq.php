@@ -40,6 +40,28 @@ class Tksq extends Model {
 	 * @return  object 所属对象
 	 */
 	public function term() {
-		return $this->hasMany('App\Models\Term', 'xq', 'dm');
+		return $this->belongsTo('App\Models\Term', 'xq', 'dm');
+	}
+
+	/**
+	 * 教室
+	 * @author FuRongxin
+	 * @date    2019-11-27
+	 * @version 2.3
+	 * @return  object 所属对象
+	 */
+	public function qclassroom() {
+		return $this->belongsTo('App\Models\Classroom', 'qcdbh', 'jsh');
+	}
+
+	/**
+	 * 教室
+	 * @author FuRongxin
+	 * @date    2019-11-27
+	 * @version 2.3
+	 * @return  object 所属对象
+	 */
+	public function hclassroom() {
+		return $this->belongsTo('App\Models\Classroom', 'hcdbh', 'jsh');
 	}
 }
