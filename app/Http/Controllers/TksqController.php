@@ -82,10 +82,8 @@ class TksqController extends Controller {
 			$app->sqsx = $request->input('sqsx');
 			$app->sqyy = $request->input('sqyy');
 			$app->sqly = $request->input('sqly');
-			$app->qkcxh = $request->input('kcxh');
+			$app->kcxh = $request->input('kcxh');
 			$app->qjs = Auth::user()->jsgh;
-			$app->qzy = $course->zy;
-			$app->qnj = $course->nj;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
 			$app->qksj = $request->input('qksj');
@@ -93,18 +91,15 @@ class TksqController extends Controller {
 			$app->qcdbh = $classroom->cdbh;
 			$app->hkcxh = $request->input('kcxh');
 			$app->hjs = $request->input('hjs');
-			$app->hzy = $course->zy;
-			$app->hnj = $course->nj;
 			$app->hzc = $request->input('hzc');
 			$app->hxqz = $request->input('hxqz');
 			$app->hksj = $request->input('hksj');
 			$app->hjsj = $request->input('hjsj');
-			$app->hcdbh = $request->input('classroom');
 			$app->sqsj = Carbon::now();
 			$app->save();
 		}
 
-		return redirect()->route('tksq.index')->withStatus('修改申请成功');
+		return redirect()->route('tksq.index')->withStatus('申请调停课成功');
 	}
 
 	public function edit($id) {
@@ -165,10 +160,8 @@ class TksqController extends Controller {
 			$app->sqsx = $request->input('sqsx');
 			$app->sqyy = $request->input('sqyy');
 			$app->sqly = $request->input('sqly');
-			$app->qkcxh = $request->input('kcxh');
+			$app->kcxh = $request->input('kcxh');
 			$app->qjs = Auth::user()->jsgh;
-			$app->qzy = $course->zy;
-			$app->qnj = $course->nj;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
 			$app->qksj = $request->input('qksj');
@@ -176,13 +169,10 @@ class TksqController extends Controller {
 			$app->qcdbh = $classroom->cdbh;
 			$app->hkcxh = $request->input('kcxh');
 			$app->hjs = $request->input('hjs');
-			$app->hzy = $course->zy;
-			$app->hnj = $course->nj;
 			$app->hzc = $request->input('hzc');
 			$app->hxqz = $request->input('hxqz');
 			$app->hksj = $request->input('hksj');
 			$app->hjsj = $request->input('hjsj');
-			$app->hcdbh = $request->input('classroom');
 			$app->xgsj = Carbon::now();
 			$app->save();
 		}

@@ -120,30 +120,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="hcdbh" class="col-sm-2 control-label">变更后上课地点</label>
-                        <div class="col-sm-2">
-                            <select id="campus" name="campus" class="form-control">
-                                @foreach ($campuses as $item)
-                                    <option value="{{ $item->dm }}">{{ $item->mc }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
-                            <select id="building" name="building" class="form-control">
-                                @foreach ($buildings as $item)
-                                    <option value="{{ $item->dm }}" class="{{ $item->xqh }}">{{ $item->mc }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
-                            <select id="classroom" name="classroom" class="form-control">
-                                @foreach ($classrooms as $item)
-                                    <option value="{{ $item->jsh }}" class="{{ $item->xqh }}\{{ $item->jxl }}" {{ $app->hcdbh == $item->jsh ? 'selected' : '' }}>{{ $item->mc }}（{{ $item->zws }}人）</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-2">
                             <button type="submit" class="btn btn-success">修改申请</button>
                         </div>
@@ -154,12 +130,3 @@
     </div>
 </section>
 @stop
-
-@push('scripts')
-<script>
-$(function() {
-    $('#building').chained('#campus');
-    $('#classroom').chained('#campus, #building');
-});
-</script>
-@endpush

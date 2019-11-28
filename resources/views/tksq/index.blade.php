@@ -24,7 +24,6 @@
                                 <th class="active">变更后地点</th>
                                 <th class="active">申请事项</th>
                                 <th class="active">学院审核意见</th>
-                                <th class="active">学校审核意见</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,8 +43,8 @@
                                 </td>
                                 <td>{{ $app->nd }}</td>
                                 <td>{{ $app->term->mc }}</td>
-                                <td>{{ $app->qkcxh }}</td>
-                                <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->qkcxh))->kcmc }}</td>
+                                <td>{{ $app->kcxh }}</td>
+                                <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
                                 <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}第 {{ $app->qksj }} 节至第 {{ $app->qjsj }} 节</td>
                                 <td>{{ optional($app->qclassroom)->mc }}</td>
                                 <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}第 {{ $app->hksj }} 节至第 {{ $app->hjsj }} 节</td>
@@ -75,25 +74,6 @@
                                 </td>
                                 <td>
                                     @switch ($app->xyspzt)
-                                        @case (0)
-                                            未审批
-                                            @break
-
-                                        @case (1)
-                                            不同意
-                                            @break
-
-                                        @case (2)
-                                            同意
-                                            @break
-
-                                        @default
-                                            未审批
-                                        
-                                    @endswitch
-                                </td>
-                                <td>
-                                    @switch ($app->xxspzt)
                                         @case (0)
                                             未审批
                                             @break
