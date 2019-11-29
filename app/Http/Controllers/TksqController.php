@@ -62,13 +62,12 @@ class TksqController extends Controller {
 			]);
 	        $today = Carbon::create(2017,11,27);
 	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
-	        $course = Mjcourse::whereKcxh($request->input('kcxh'))
+	        /*$course = Mjcourse::whereKcxh($request->input('kcxh'))
 		        ->whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
-		        ->firstOrFail();
-	        $classroom = Timetable::whereNd($calendar->nd)
+		        ->firstOrFail();*/
+	        $timetable = Timetable::whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
-		        ->whereKcxh($request->input('kcxh'))
 		        ->whereZc($request->input('qzc'))
 		        ->where('ksz', '<=', $request->input('qxqz'))
 		        ->where('jsz', '>=', $request->input('qxqz'))
@@ -77,9 +76,9 @@ class TksqController extends Controller {
 		        ->firstOrFail();
 
 			$app = new Tksq;
+			$app->id = date('YmdHis') . random_int(1000, 9999);
 			$app->nd = $calendar->nd;
 			$app->xq = $calendar->xq;
-			$app->id = date('YmdHis') . random_int(1000, 9999);
 			$app->jsgh = Auth::user()->jsgh;
 			$app->sqsx = $request->input('sqsx');
 			$app->sqyy = $request->input('sqyy');
@@ -90,7 +89,7 @@ class TksqController extends Controller {
 			$app->qxqz = $request->input('qxqz');
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
-			$app->qcdbh = $classroom->cdbh;
+			$app->qcdbh = $timetable->cdbh;
 			$app->hkcxh = $request->input('kcxh');
 			$app->hjs = $request->input('hjs');
 			$app->hzc = $request->input('hzc');
@@ -197,21 +196,24 @@ class TksqController extends Controller {
 
         $courses = Timetable::whereNd($calendar->nd)
 	        ->whereXq($calendar->xq)
-	        ->whereZc($request->input('qzc'))
-	        ->where('ksz', '<=', $request->input('qxqz'))
-	        ->where('jsz', '>=', $request->input('qxqz'))
-	        ->whereKsj($request->input('qksj'))
-	        ->whereJsj($request->input('qjsj'))
+	        ->whereZc($request->input('zc'))
+	        ->where('ksz', '<=', $request->input('xqz'))
+	        ->where('jsz', '>=', $request->input('xqz'))
+	        ->whereKsj($request->input('ksj'))
+	        ->whereJsj($request->input('jsj'))
 	        ->whereJsgh(Auth::user()->jsgh)
 	        ->get();
 
-	    $result = '';
+	    $message = '';
+	    $kcxh = [];
 	    foreach ($courses as $course) {
-	    	$result .= '《' . $course->kcxh . '-' . Course::find(Helper::getCno($course->kcxh))->kcmc . '》';
+	    	$kcxh[] = $course->kcxh;
+	    	$message .= '《' . $course->kcxh . '-' . Course::find(Helper::getCno($course->kcxh))->kcmc . '》';
 	    }
 
 	    return json_encode([
-	    	'message' => $result,
+	    	'kcxh' => implode('|', $kcxh),
+	    	'message' => $message,
 	    ]);
 	}
 }

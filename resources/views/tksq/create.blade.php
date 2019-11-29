@@ -70,6 +70,7 @@
                         <label for="kcxh" class="col-sm-2 control-label">课程名称</label>
                         <div class="col-sm-6">
                             <div class="form-control-static" id="course">请选择课程变更前时间</div>
+                            <input type="hidden" name="kcxh" id="kcxh" value="">
                             <!--select name="kcxh" id="kcxh" class="form-control">
                                 @foreach ($tasks as $task)
                                     <option value="{{ $task->kcxh }}">{{ $task->kcxh }} - {{ $task->course->kcmc }}</option>}
@@ -140,19 +141,28 @@ $(function() {
             dataType: 'json',
             url: 'course',
             data:{
-                qxqz: $('#qxqz').val(),
-                qzc: $('#qzc').val(),
-                qksj: $('#qksj').val(),
-                qjsj: $('#qjsj').val()
+                xqz: $('#qxqz').val(),
+                zc: $('#qzc').val(),
+                ksj: $('#qksj').val(),
+                jsj: $('#qjsj').val()
             },
             success: function(result) {
                 if (result.message == '') {
                     $('#course').html('<span class="text-danger">此时间段没有可调停课程</span>');
                 } else {
                     $('#course').html(result.message);
+                    $('#kcxh').val(result.kcxh);
                 }
             }
         });
+    });
+    $('#appForm').submit(function() {
+        if ($('#kcxh').val() == '') {
+            alert('此时间段没有可调停课程，请重新选择时间段！');
+            return false;
+        }
+
+        return true;
     });
 });
 </script>
