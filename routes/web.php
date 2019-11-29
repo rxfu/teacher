@@ -52,5 +52,6 @@ Route::middleware('auth')->group(function () {
 	Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 	Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 	Route::put('password/change', 'Auth\PasswordController@change');
+	Route::get('tksq/course', 'TksqController@course')->name('tksq.course');
 	Route::resource('tksq', 'TksqController');
 });

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper;
 use App\Models\Building;
 use App\Models\Calendar;
 use App\Models\Campus;
 use App\Models\Classroom;
+use App\Models\Course;
 use App\Models\Mjcourse;
 use App\Models\Task;
 use App\Models\Timetable;
@@ -187,5 +189,29 @@ class TksqController extends Controller {
 		}
 
 		return redirect()->route('tksq.index')->withStatus('删除申请成功');
+	}
+
+	public function course(Request $request) {
+        $today = Carbon::create(2017,11,27);
+        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+
+        $courses = Timetable::whereNd($calendar->nd)
+	        ->whereXq($calendar->xq)
+	        ->whereZc($request->input('qzc'))
+	        ->where('ksz', '<=', $request->input('qxqz'))
+	        ->where('jsz', '>=', $request->input('qxqz'))
+	        ->whereKsj($request->input('qksj'))
+	        ->whereJsj($request->input('qjsj'))
+	        ->whereJsgh(Auth::user()->jsgh)
+	        ->get();
+
+	    $result = '';
+	    foreach ($courses as $course) {
+	    	$result .= '《' . $course->kcxh . '-' . Course::find(Helper::getCno($course->kcxh))->kcmc . '》';
+	    }
+
+	    return json_encode([
+	    	'message' => $result,
+	    ]);
 	}
 }
