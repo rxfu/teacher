@@ -43,7 +43,7 @@
                                 </td>
                                 <td>{{ $app->nd }}</td>
                                 <td>{{ $app->term->mc }}</td>
-                                <td>{{ $app->kcxh }}</td>
+                                <td>{!! str_replace(',', '<br>', $app->kcxh) !!}</td>
                                 <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
                                 <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}第 {{ $app->qksj }} 节至第 {{ $app->qjsj }} 节</td>
                                 <td>{{ optional($app->qclassroom)->mc }}</td>

@@ -134,7 +134,7 @@ $(function() {
         $.ajax({
             type: 'get',
             dataType: 'json',
-            url: 'course',
+            url: '{{ route('tksq.course') }}',
             data:{
                 xqz: $('#qxqz').val(),
                 zc: $('#qzc').val(),

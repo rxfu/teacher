@@ -70,8 +70,12 @@
                     <div class="form-group">
                         <label for="kcxh" class="col-sm-2 control-label">课程名称</label>
                         <div class="col-sm-6">
-                            <div class="form-control-static" id="course">请选择课程变更前时间</div>
-                            <input type="hidden" name="kcxh" id="kcxh" value="">
+                            <div class="form-control-static" id="course">
+                                @foreach (explode(',', $app->kcxh) as $kcxh)
+                                    《{{ $kcxh }}-{{ App\Models\Course::find(App\Http\Helper::getCno($kcxh))->kcmc }}》
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="kcxh" id="kcxh" value="{{ $app->kcxh }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -135,7 +139,7 @@ $(function() {
         $.ajax({
             type: 'get',
             dataType: 'json',
-            url: 'course',
+            url: '{{ route('tksq.course') }}',
             data:{
                 xqz: $('#qxqz').val(),
                 zc: $('#qzc').val(),

@@ -37,7 +37,6 @@ class TksqController extends Controller {
 		$reasons = Tksqyy::all();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
-        $classrooms = Classroom::all();
 		$tasks = Task::with([
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
@@ -52,7 +51,7 @@ class TksqController extends Controller {
 			->whereZt(config('constants.status.enable'))
 			->get();
 
-		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'classrooms', 'currentWeek', 'calendar'));
+		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings',  'currentWeek', 'calendar'));
 	}
 
 	public function store(Request $request) {
@@ -116,7 +115,6 @@ class TksqController extends Controller {
 		$reasons = Tksqyy::all();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
-        $classrooms = Classroom::all();
 		$tasks = Task::with([
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
@@ -132,7 +130,7 @@ class TksqController extends Controller {
 			->get();
 		$app = Tksq::findOrFail($id);
 
-		return view('tksq.edit', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'classrooms', 'currentWeek', 'calendar', 'app'));
+		return view('tksq.edit', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'currentWeek', 'calendar', 'app'));
 	}
 
 	public function update(Request $request, $id) {
@@ -142,13 +140,14 @@ class TksqController extends Controller {
 			]);
 	        $today = Carbon::create(2017,11,27);
 	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
-	        $course = Mjcourse::whereKcxh($request->input('kcxh'))
+	        $kcxhs = explode(',', $request->input('kcxh'));
+	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
 		        ->firstOrFail();
-	        $classroom = Timetable::whereNd($calendar->nd)
+	        $timetable = Timetable::whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
-		        ->whereKcxh($request->input('kcxh'))
+		        ->whereKcxh($kcxhs[0])
 		        ->whereZc($request->input('qzc'))
 		        ->where('ksz', '<=', $request->input('qxqz'))
 		        ->where('jsz', '>=', $request->input('qxqz'))
@@ -165,17 +164,19 @@ class TksqController extends Controller {
 			$app->sqyy = $request->input('sqyy');
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
+			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
 			$app->qjs = Auth::user()->jsgh;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
-			$app->qcdbh = $classroom->cdbh;
+			$app->qcdbh = $timetable->cdbh;
 			$app->hjs = $request->input('hjs');
 			$app->hzc = $request->input('hzc');
 			$app->hxqz = $request->input('hxqz');
 			$app->hksj = $request->input('hksj');
 			$app->hjsj = $request->input('hjsj');
+			$app->kkxy = $course->kkxy;
 			$app->xgsj = Carbon::now();
 			$app->save();
 		}
