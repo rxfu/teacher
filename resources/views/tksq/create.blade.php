@@ -71,11 +71,6 @@
                         <div class="col-sm-6">
                             <div class="form-control-static" id="course">请选择课程变更前时间</div>
                             <input type="hidden" name="kcxh" id="kcxh" value="">
-                            <!--select name="kcxh" id="kcxh" class="form-control">
-                                @foreach ($tasks as $task)
-                                    <option value="{{ $task->kcxh }}">{{ $task->kcxh }} - {{ $task->course->kcmc }}</option>}
-                                @endforeach
-                            </select-->
                         </div>
                     </div>
                     <div class="form-group">
@@ -149,6 +144,7 @@ $(function() {
             success: function(result) {
                 if (result.message == '') {
                     $('#course').html('<span class="text-danger">此时间段没有可调停课程</span>');
+                    $('#kcxh').val('');
                 } else {
                     $('#course').html(result.message);
                     $('#kcxh').val(result.kcxh);

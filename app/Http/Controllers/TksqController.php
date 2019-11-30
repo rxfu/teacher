@@ -62,12 +62,14 @@ class TksqController extends Controller {
 			]);
 	        $today = Carbon::create(2017,11,27);
 	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
-	        /*$course = Mjcourse::whereKcxh($request->input('kcxh'))
+	        $kcxhs = explode(',', $request->input('kcxh'));
+	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
-		        ->firstOrFail();*/
+		        ->firstOrFail();
 	        $timetable = Timetable::whereNd($calendar->nd)
 		        ->whereXq($calendar->xq)
+		        ->whereKcxh($kcxhs[0])
 		        ->whereZc($request->input('qzc'))
 		        ->where('ksz', '<=', $request->input('qxqz'))
 		        ->where('jsz', '>=', $request->input('qxqz'))
@@ -84,18 +86,19 @@ class TksqController extends Controller {
 			$app->sqyy = $request->input('sqyy');
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
+			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
 			$app->qjs = Auth::user()->jsgh;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $timetable->cdbh;
-			$app->hkcxh = $request->input('kcxh');
 			$app->hjs = $request->input('hjs');
 			$app->hzc = $request->input('hzc');
 			$app->hxqz = $request->input('hxqz');
 			$app->hksj = $request->input('hksj');
 			$app->hjsj = $request->input('hjsj');
+			$app->kkxy = $course->kkxy;
 			$app->sqsj = Carbon::now();
 			$app->save();
 		}
@@ -168,7 +171,6 @@ class TksqController extends Controller {
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $classroom->cdbh;
-			$app->hkcxh = $request->input('kcxh');
 			$app->hjs = $request->input('hjs');
 			$app->hzc = $request->input('hzc');
 			$app->hxqz = $request->input('hxqz');
@@ -212,7 +214,7 @@ class TksqController extends Controller {
 	    }
 
 	    return json_encode([
-	    	'kcxh' => implode('|', $kcxh),
+	    	'kcxh' => implode(',', $kcxh),
 	    	'message' => $message,
 	    ]);
 	}

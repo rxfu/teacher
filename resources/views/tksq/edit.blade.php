@@ -36,16 +36,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kcxh" class="col-sm-2 control-label">课程序号</label>
-                        <div class="col-sm-6">
-                            <select name="kcxh" id="kcxh" class="form-control">
-                                @foreach ($tasks as $task)
-                                    <option value="{{ $task->kcxh }}" {{ $app->kcxh == $task->kcxh ? 'selected' : '' }}>{{ $task->kcxh }} - {{ $task->course->kcmc }}</option>}
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="qxqz" class="col-sm-2 control-label">变更前时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -75,6 +65,13 @@
                                 </select>
                                 <div class="input-group-addon">节</div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kcxh" class="col-sm-2 control-label">课程名称</label>
+                        <div class="col-sm-6">
+                            <div class="form-control-static" id="course">请选择课程变更前时间</div>
+                            <input type="hidden" name="kcxh" id="kcxh" value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -130,3 +127,40 @@
     </div>
 </section>
 @stop
+
+@push('scripts')
+<script>
+$(function() {
+    $('#qxqz, #qzc, #qksj, #qjsj').change(function () {
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: 'course',
+            data:{
+                xqz: $('#qxqz').val(),
+                zc: $('#qzc').val(),
+                ksj: $('#qksj').val(),
+                jsj: $('#qjsj').val()
+            },
+            success: function(result) {
+                if (result.message == '') {
+                    $('#course').html('<span class="text-danger">此时间段没有可调停课程</span>');
+                    $('#kcxh').val('');
+                } else {
+                    $('#course').html(result.message);
+                    $('#kcxh').val(result.kcxh);
+                }
+            }
+        });
+    });
+    $('#appForm').submit(function() {
+        if ($('#kcxh').val() == '') {
+            alert('此时间段没有可调停课程，请重新选择时间段！');
+            return false;
+        }
+
+        return true;
+    });
+});
+</script>
+@endpush
