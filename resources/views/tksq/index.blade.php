@@ -45,9 +45,9 @@
                                 <td>{{ $app->term->mc }}</td>
                                 <td>{!! str_replace(',', '<br>', $app->kcxh) !!}</td>
                                 <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
-                                <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}第 {{ $app->qksj }} 节至第 {{ $app->qjsj }} 节</td>
+                                <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}<br>第 {{ $app->qksj }} ~ {{ $app->qjsj }} 节</td>
                                 <td>{{ optional($app->qclassroom)->mc }}</td>
-                                <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}第 {{ $app->hksj }} 节至第 {{ $app->hjsj }} 节</td>
+                                <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节</td>
                                 <td>{{ optional($app->hclassroom)->mc }}</td>
                                 <td>
                                     @switch ($app->sqsx)
@@ -79,11 +79,11 @@
                                             @break
 
                                         @case (1)
-                                            不同意
+                                            同意
                                             @break
 
                                         @case (2)
-                                            同意
+                                            不同意
                                             @break
 
                                         @default
