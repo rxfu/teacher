@@ -42,7 +42,7 @@ class SetController extends Controller {
 		$data = DB::connection('pgset')->selectOne('SELECT AVG(s_jxtd) AS jxtd, AVG(s_jxnr) AS jxnr, AVG(s_jxff) AS jxff, AVG(s_jxxg) AS jxxg, AVG(s_zhpf) As zhpf FROM "' . $table . '" WHERE c_kcxh = ? and c_jsgh = ? GROUP BY c_kcbh, c_jsgh', [$kcxh, Auth::user()->jsgh]);
 
 		$scores = [];
-		if (count($data)) {
+		if (!is_null($data)) {
 			$scores = [
 				'1'    => sprintf('%.2f', $data->jxtd),
 				'2'    => sprintf('%.2f', $data->jxnr),
@@ -51,7 +51,7 @@ class SetController extends Controller {
 				'zhpf' => sprintf('%.2f', $data->zhpf),
 			];
 
-			$categories = DB::connection('pgset')->select('SELECT a.zb_id, a.zb_mc, COUNT(*) AS total FROM t_zb_yjzb a, t_zb_ejzb b WHERE a.zb_id = b.zb_id GROUP BY a.zb_id, a.zb_mc ORDER BY a.zb_id');
+			$categories = DB::connection('pgset')->select('SELECT a.zb_id, a.zb_mc, COUNT(DISTINCT b.ejzb_id) AS total FROM t_zb_yjzb a, t_zb_ejzb b WHERE a.zb_id = b.zb_id GROUP BY a.zb_id, a.zb_mc ORDER BY a.zb_id');
 			foreach ($categories as $category) {
 				$items = DB::connection('pgset')->select('SELECT ejzb_id, ejzb_mc, AVG(s_mark) AS mark FROM "' . $mark . '", t_zb_ejzb WHERE c_xm = CAST(ejzb_id AS TEXT) AND zb_id = ? AND c_kcxh = ? AND c_jsgh = ? GROUP BY ejzb_id, ejzb_mc, c_kcbh, c_jsgh, c_xm ORDER BY ejzb_id', [$category->zb_id, $kcxh, Auth::user()->jsgh]);
 
