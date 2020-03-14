@@ -150,6 +150,7 @@ return [
 		/**
 		 * Package Service Providers...
 		 */
+		Subfission\Cas\CasServiceProvider::class,
 
 		/**
 		 * Application Service Providers...
@@ -218,6 +219,7 @@ return [
 		'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
 		'PDF'          => Barryvdh\Snappy\Facades\SnappyPdf::class,
 		'SnappyImage'  => Barryvdh\Snappy\Facades\SnappyImage::class,
+		'Cas'		   => \Subfission\Cas\Facades\Cas::class,
 	],
 
 ];

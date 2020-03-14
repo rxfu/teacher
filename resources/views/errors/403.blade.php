@@ -5,7 +5,7 @@
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-body">
-                <h1 class="text-center">403 - 未授权页面</h1>
+                <h1 class="text-center">403 - 未授权页面</a></h1>
                 <h3 class="text-center">警告：{{ isset($exception) ? $exception->getMessage() : '未知消息' }}</h3>
             </div>
         </div>
