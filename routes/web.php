@@ -26,10 +26,6 @@ Route::get('/error', 'HomeController@error')->name('error');
 Route::middleware('cas.auth')->group(function () {
 	Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-	Route::get('/user', function () {
-		return cas()->user();
-	});
-
 	Route::resource('home', 'HomeController', ['only' => ['index']]);
 	Route::resource('profile', 'ProfileController', ['only' => ['index']]);
 	Route::resource('tes', 'TesController', ['only' => ['index', 'edit', 'update', 'show']]);
