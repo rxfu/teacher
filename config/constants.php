@@ -21,16 +21,22 @@ return [
 	 * 成绩状态代码
 	 */
 	'score'      => [
-		'uncommitted' => '0', // 未提交
-		'committed'   => '1', // 教师已提交
-		'confirmed'   => '2', // 学院已提交
-		'dconfirmed'  => '3', // 教务处已确认
+		'uncommitted'      => '0', // 未提交
+		'committed'        => '1', // 教师已提交
+		'confirmed'        => '2', // 学院已提交
+		'dconfirmed'       => '3', // 教务处已确认
 
-		'passline'    => 60, // 及格线
+		'passline'         => 60, // 及格线
 
-		'deferral'    => '1', // 缓考
-		'cheat'       => '3', // 作弊
-		'retake'      => '7', // 重修
+		'normal'           => '0', // 正常
+		'deferral'         => '1', // 缓考
+		'absent'           => '2', // 旷考
+		'cheat'            => '3', // 作弊
+		'invalid'          => '5', // 无效
+		'retake'           => '7', // 重修
+		'transform'        => '8', // 转换
+		'disqualification' => '9', // 取消资格
+		'exempt'           => 'A', // 免试
 	],
 
 	/**

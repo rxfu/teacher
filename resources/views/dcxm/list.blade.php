@@ -12,6 +12,7 @@
                     <table class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
+                                <th class="active">#</th>
                                 <th class="active">项目编号</th>
                                 <th class="active">项目名称</th>
                                 <th class="active">项目类别</th>
@@ -23,6 +24,7 @@
                         <tbody>
                             @foreach ($projects as $project)
                             <tr>
+                                <td>{{ $loop->index + 1 }}</td>
                             	<td>{{ $project->xmbh }}</td>
                                 <td>
                                     {{ $project->xmmc }}

@@ -2,45 +2,55 @@
 
 @section('content')
 <section class="row">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-sm-10 col-sm-offset-1">
         <form id="searchForm" name="searchForm" method="post" action="{{ url('timetable/search') }}" role="form" class="form-inline">
             {{ csrf_field() }}
             <div class="form-group">
                 <label for="year" class="sr-only">年度</label>
-                <select name="year" class="selectpicker" data-style="btn-success" data-width="150px">
-                    <option value="{{ Carbon\Carbon::now()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->format('Y')) }}学年</option>
-                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}">{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->subYear()->format('Y')) }}学年</option>
+                <select name="year" class="form-control" data-width="150px">
+                    <option value="{{ Carbon\Carbon::now()->format('Y') }}"{{ isset($condition) && Carbon\Carbon::now()->format('Y') == $condition['year'] ? ' selected' : '' }}>{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->format('Y')) }}学年</option>
+                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}"{{ isset($condition) && Carbon\Carbon::now()->subYear()->format('Y') == $condition['year'] ? ' selected' : '' }}>{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->subYear()->format('Y')) }}学年</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="term" class="sr-only">学期</label>
-                <select name="term" class="selectpicker" data-style="btn-success" data-width="100px">
+                <select name="term" class="form-control" data-width="100px">
                     @for ($i = 1; $i < 3; $i++)
-                        <option value="{{ $i }}">{{ App\Models\Term::find($i)->mc }}学期</option>
+                        <option value="{{ $i }}"{{ isset($condition) && $i == $condition['term'] ? ' selected' : '' }}>{{ App\Models\Term::find($i)->mc }}学期</option>
                     @endfor
                 </select>
             </div>
             <div class="form-group">
-                <label for="departmtent" class="sr-only">学院</label>
-                <select name="department" class="selectpicker" data-style="btn-success">
+                <label for="campus" class="sr-only">校区</label>
+                <select id="campus" name="campus" class="form-control" data-width="100px">
+                    <option value="all">全部校区</option>
+                    @foreach ($campuses as $campus)
+                        <option value="{{ $campus->dm }}"{{ isset($condition) && $campus->dm == $condition['campus'] ? ' selected' : '' }}>{{ $campus->mc }}校区</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="department" class="sr-only">学院</label>
+                <select id="department" name="department" class="form-control">
+                    <option value="all" class="all {{ $campuses->implode('dm', ' ') }}">全部学院</option>
                     @foreach ($departments as $department)
-                        <option value="{{ $department->dw }}">{{ $department->mc }}</option>
+                        <option value="{{ $department->dw }}" class="all {{ @$department->pivot->xq }}"{{ isset($condition) && $department->dw == $condition['department'] ? ' selected' : '' }}>{{ $department->mc }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="week" class="sr-only">周次</label>
-                <select name="week" class="selectpicker" data-style="btn-success" data-width="90px">
+                <select name="week" class="form-control" data-width="90px">
                     @for($week = 1; $week <= 7; ++$week)
-                        <option value="{{ $week }}">星期{{ config('constants.week.' . $week) }}</option>
+                        <option value="{{ $week }}"{{ isset($condition) && $week == $condition['week'] ? ' selected' : '' }}>星期{{ config('constants.week.' . $week) }}</option>
                     @endfor
                 </select>
             </div>
             <div class="form-group">
                 <label for="class" class="sr-only">节次</label>
-                <select name="class" class="selectpicker" data-style="btn-success" data-width="100px">
+                <select name="class" class="form-control" data-width="100px">
                     @for($class = 1; $class <= 12; ++$class)
-                        <option value="{{ $class }}">第 {{ $class }} 节</option>
+                        <option value="{{ $class }}"{{ isset($condition) && $class == $condition['class'] ? ' selected' : '' }}>第 {{ $class }} 节</option>
                     @endfor
                 </select>
             </div>
@@ -115,3 +125,11 @@
     </section>
 @endif
 @stop
+
+@push('scripts')
+<script>
+$(function() {
+    $('#department').chained('#campus');
+});
+</script>
+@endpush

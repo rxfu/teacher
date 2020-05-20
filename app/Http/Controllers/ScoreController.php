@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper;
+use App\Imports\StudentsImport;
 use App\Models\Dtscore;
 use App\Models\Mjcourse;
 use App\Models\Ratio;
@@ -137,8 +138,14 @@ class ScoreController extends Controller {
 			->whereTjzt(config('constants.score.uncommitted'))
 			->exists();
 
-		$statuses = Status::orderBy('dm')->get()->filter(function ($status) {
-			return config('constants.score.deferral') != $status->dm && config('constants.score.cheat') != $status->dm;
+		$statuses = Status::orderBy('dm')->get()->filter(function ($status) use ($course) {
+			$allowed = config('constants.score.normal') === $status->dm || config('constants.score.absent') === $status->dm || config('constants.score.invalid') === $status->dm || config('constants.score.transform') === $status->dm || config('constants.score.exempt') === $status->dm;
+
+			if (in_array($course->pt . $course->xz, ['TW', 'TI', 'TY', 'TQ'])) {
+				$allowed = $allowed || config('constants.score.disqualification') === $status->dm;
+			}
+
+			return $allowed;
 		});
 
 		$noScoreStudents = Selcourse::whereNd(session('year'))
@@ -425,62 +432,26 @@ class ScoreController extends Controller {
 				$filename = $filepath . $kcxh . '-' . date('YmdHis') . '.' . $file->getClientOriginalExtension();
 				Storage::put($filename, $contents);
 
-				Excel::selectSheetsByIndex(0)->load(Storage::url('uploads/' . $filename), function ($excel) use ($kcxh, &$status) {
+				$task = Task::whereKcxh($kcxh)
+					->whereNd(session('year'))
+					->whereXq(session('term'))
+					->whereJsgh(Auth::user()->jsgh)
+					->firstOrFail();
 
-					$excel->noHeading();
+				$ratios = [];
+				$items  = Ratio::whereFs($task->cjfs)
+					->orderBy('id')
+					->get();
+				foreach ($items as $ratio) {
+					$ratios[] = [
+						'id'           => $ratio->id,
+						'name'         => $ratio->idm,
+						'value'        => $ratio->bl / $ratio->mf,
+						'allow_failed' => $ratio->jg,
+					];
+				}
 
-					$task = Task::whereKcxh($kcxh)
-						->whereNd(session('year'))
-						->whereXq(session('term'))
-						->whereJsgh(Auth::user()->jsgh)
-						->firstOrFail();
-
-					$ratios = [];
-					$items  = Ratio::whereFs($task->cjfs)
-						->orderBy('id')
-						->get();
-					foreach ($items as $ratio) {
-						$ratios[] = [
-							'id'           => $ratio->id,
-							'name'         => $ratio->idm,
-							'value'        => $ratio->bl / $ratio->mf,
-							'allow_failed' => $ratio->jg,
-						];
-					}
-
-					// 获取所有成绩
-					$results = $excel->skip(6)->get();
-					foreach ($results as $result) {
-						$student = Score::whereNd(session('year'))
-							->whereXq(session('term'))
-							->whereKcxh($kcxh)
-							->whereXh($result[0])
-							->firstOrFail();
-
-						foreach ($items as $item) {
-							$score = $result[$item->id + 1];
-
-							if (100 < $score || 0 > $score) {
-								return $status = '学生' . $student->xh . '成绩有误，请检查后再重新导入';
-							} else {
-								$student->{'cj' . $item->id} = empty($score) ? 0 : $score;
-							}
-						}
-
-						$total = 0;
-						$fails = [];
-						foreach ($ratios as $ratio) {
-							if (config('constants.score.passline') > $student->{'cj' . $ratio['id']} && config('constants.status.enable') == $ratio['allow_failed']) {
-								$fails[] = $student->{'cj' . $ratio['id']};
-							} else {
-								$total += $student->{'cj' . $ratio['id']} * $ratio['value'];
-							}
-						}
-						$student->zpcj = round(empty($fails) ? $total : min($fails));
-
-						$student->save();
-					};
-				}, 'UTF-8');
+				Excel::import(new StudentsImport($kcxh, $ratios), $request->file('file'));
 
 				return redirect()->route('score.edit', $kcxh)->withStatus($status);
 			}

@@ -15,9 +15,17 @@ Route::get('/', function () {
 	return redirect()->route('home');
 });
 
-Route::auth();
+// Route::auth();
+Route::get('/login', 'Auth\LoginController@login')->name('login');
+Route::get('/cas_logout', function() {
+	cas()->logout();
+});
 
-Route::middleware('auth')->group(function () {
+Route::get('/error', 'HomeController@error')->name('error');
+
+Route::middleware('cas.auth')->group(function () {
+	Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
 	Route::resource('home', 'HomeController', ['only' => ['index']]);
 	Route::resource('profile', 'ProfileController', ['only' => ['index']]);
 	Route::resource('tes', 'TesController', ['only' => ['index', 'edit', 'update', 'show']]);
@@ -45,8 +53,13 @@ Route::middleware('auth')->group(function () {
 	Route::post('dcxm/jsyj/{id}', 'DcxmController@postOpinion');
 	Route::get('dcxm/pdf/{id}', 'DcxmController@getPdf');
 	Route::get('dcxm/zmcl/{id}', 'DcxmController@getFile');
+	Route::get('dcxm/pslb', 'DcxmController@getPslist');
+	Route::get('dcxm/xmps/{id}', 'DcxmController@getXmps');
+	Route::post('dcxm/xmps/{id}', 'DcxmController@postXmps');
 
 	Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 	Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 	Route::put('password/change', 'Auth\PasswordController@change');
+	Route::get('tksq/course', 'TksqController@course')->name('tksq.course');
+	Route::resource('tksq', 'TksqController');
 });

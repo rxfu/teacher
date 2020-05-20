@@ -20,7 +20,7 @@ class Classroom extends Model {
 	public $incrementing = false;
 
 	public $timestamps = false;
-
+	
 	/**
 	 * 排课表
 	 * @author FuRongxin

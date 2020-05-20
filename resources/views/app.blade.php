@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="{{ asset('css/formValidation.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker3.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/metisMenu.min.css') }}">
         <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap.min.css') }}">
@@ -68,10 +69,7 @@
                             <li><a href="{{ url('profile') }}"><i class="fa fa-user fa-fw"></i> 个人资料</a></li>
                             <li><a href="{{ url('password/change') }}"><i class="fa fa-unlock fa-fw"></i> 修改密码</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out fa-fw"></i> 登出</a></li>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="post" style="display: none;">
-                                {{ csrf_field() }}
+                            <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> 登出</a></li>
                             </form>
                         </ul>
                     </li>
@@ -104,6 +102,9 @@
                                     </li>
                                     <li>
                                         <a href="{{ url('timetable/search') }}">听课查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('tksq') }}">调停课申请</a>
                                     </li>
                                 </ul>
                             </li>
@@ -142,6 +143,11 @@
                                         <li>
                                             <a href="{{ url('dcxm/list') }}">项目列表</a>
                                         </li>
+                                        @if ($allowed_xmps)
+                                            <li>
+                                                <a href="{{ url('dcxm/pslb') }}">项目评审</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                     <!-- /.nav-second-level -->
                                 </li>
@@ -159,7 +165,7 @@
                                 <!-- /.nav-second-level -->
                             </li>
                             <li>
-                                <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
+                                <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
                             </li>
                         </ul>
                         <!-- /#side-menu -->
@@ -254,6 +260,8 @@
         <script src="{{ asset('js/bootstrap-paginator.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap-switch.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-datepicker.zh-CN.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap-typeahead.js') }}"></script>
         <script src="{{ asset('js/jquery.placeholder.js') }}"></script>
         <script src="{{ asset('js/jquery.stacktable.js') }}"></script>
