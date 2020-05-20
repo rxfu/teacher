@@ -30,7 +30,7 @@ class TksqController extends Controller {
 	public function create() {
 		$title = '调停课申请';
 
-        $today = Carbon::create(2016, 11, 27);
+        $today = Carbon::now();
         $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
 
@@ -59,7 +59,7 @@ class TksqController extends Controller {
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-	        $today = Carbon::create(2016,11,27);
+	        $today = Carbon::now();
 	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
@@ -108,7 +108,7 @@ class TksqController extends Controller {
 	public function edit($id) {
 		$title = '调停课申请修改';
 
-        $today = Carbon::create(2016,11,27);
+        $today = Carbon::now();
         $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
 
@@ -138,7 +138,7 @@ class TksqController extends Controller {
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-	        $today = Carbon::create(2016,11,27);
+	        $today = Carbon::now();
 	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
@@ -194,7 +194,7 @@ class TksqController extends Controller {
 	}
 
 	public function course(Request $request) {
-        $today = Carbon::create(2016,11,27);
+        $today = Carbon::now();
         $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
 
         $courses = Timetable::whereNd($calendar->nd)
