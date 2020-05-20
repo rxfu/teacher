@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Dcxmpsfz;
 use App\Models\Dcxmxt;
+use App\Models\Setting;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;

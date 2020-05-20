@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Term;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * 显示并处理系统消息
@@ -27,5 +29,11 @@ class HomeController extends Controller {
 			->withTitle('综合管理系统')
 			->withYear(session('year'))
 			->withTerm($term->mc);
+	}
+
+	public function error(Request $request) {
+		$message = $request->input('message');
+
+		return view('errors.message', compact('message'));
 	}
 }

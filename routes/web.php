@@ -15,9 +15,17 @@ Route::get('/', function () {
 	return redirect()->route('home');
 });
 
-Route::auth();
+// Route::auth();
+Route::get('/login', 'Auth\LoginController@login')->name('login');
+Route::get('/cas_logout', function() {
+	cas()->logout();
+});
 
-Route::middleware('auth')->group(function () {
+Route::get('/error', 'HomeController@error')->name('error');
+
+Route::middleware('cas.auth')->group(function () {
+	Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
 	Route::resource('home', 'HomeController', ['only' => ['index']]);
 	Route::resource('profile', 'ProfileController', ['only' => ['index']]);
 	Route::resource('tes', 'TesController', ['only' => ['index', 'edit', 'update', 'show']]);
