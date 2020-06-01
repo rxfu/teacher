@@ -30,7 +30,7 @@
                             @foreach ($apps as $app)
                             <tr>
                                 <td>
-                                	@if (1 != $app->xyspzt)
+                                	@if (now()->diffInHours($app->sqsj) < 1)
                                 		<form id="deleteForm" name="deleteForm" action="{{ route('tksq.destroy', $app->id) }}" method="post" role="form">
                                 			{!! method_field('delete') !!}
                                 			{!! csrf_field() !!}
