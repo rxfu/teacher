@@ -86,6 +86,10 @@
                                             不同意
                                             @break
 
+                                        @case(3)
+                                            作废
+                                            @break
+
                                         @default
                                             未审批
                                         
