@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="{{ asset('css/sb-admin-2.css') }}">
         <link rel="stylesheet" href="{{ asset('css/timeline.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        @stack('styles')
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
         <!--[if lt IE 9]>
@@ -101,6 +102,9 @@
                                     </li>
                                     <li>
                                         <a href="{{ url('timetable/search') }}">听课查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('tksq/search') }}">调停课查询</a>
                                     </li>
                                     <li>
                                         <a href="{{ url('tksq') }}">调停课申请</a>

@@ -11,6 +11,7 @@ use App\Models\Mjcourse;
 use App\Models\Selcourse;
 use App\Models\Term;
 use App\Models\Timetable;
+use App\Models\Tksq;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -228,7 +229,7 @@ class TimetableController extends Controller {
 			$results = $query->get();
 
 			foreach ($results as $result) {
-				$courses[] = [
+				$course = [
 					'kcmc' => Course::find(Helper::getCno($result->kcxh))->kcmc,
 					'xqh'  => $result->campus->mc,
 					'jsmc' => is_null($result->classroom) ? '' : $result->classroom->mc,
@@ -242,6 +243,31 @@ class TimetableController extends Controller {
 					'ksz'  => $result->ksz,
 					'jsz'  => $result->jsz,
 				];
+
+				// 2020-6-3：应教务处要求，添加备注内容
+				$apps = Tksq::whereNd($input['year'])
+					->whereXq($input['term'])
+					->whereKcxh($result->kcxh)
+					->whereJsgh($result->user->jsgh)
+					->get();
+
+				$bzs = [];
+				if (!$apps->isEmpty()) {
+					foreach ($apps as $app) {
+						$bz = '[ ' . config('constants.suspension.' . $app->sqsx) . '：' . config('constants.audit.' . $app->xyspzt) . ' ] ';
+						$bz .= '第 ' . $app->qxqz . ' 周星期' . config('constants.week.' . $app->qzc) . '第 ' . $app->qksj . ' ~ ' . $app->qjsj . ' 节' . optional($app->qclassroom)->mc . '教室';
+
+						if ($app->sqsx == 0) {
+							$bz .= '变更为第 ' . $app->hxqz . ' 周星期' . config('constants.week.' . $app->hzc) . '第 ' . $app->hksj . ' ~ ' . $app->hjsj . ' 节' . optional($app->hclassroom)->mc . '教室';
+						}
+
+						$bzs[] = $bz;
+					}
+				}
+
+				$course['bz'] = $bzs;
+
+				$courses[] = $course;
 			}
 
 			$year_name       = Helper::getAcademicYear($input['year']) . '学年';

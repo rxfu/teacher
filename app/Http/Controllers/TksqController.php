@@ -6,8 +6,10 @@ use App\Http\Helper;
 use App\Models\Building;
 use App\Models\Calendar;
 use App\Models\Campus;
+use App\Models\Campuspivot;
 use App\Models\Classroom;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\Mjcourse;
 use App\Models\Task;
 use App\Models\Timetable;
@@ -218,5 +220,60 @@ class TksqController extends Controller {
 	    	'kcxh' => implode(',', $kcxh),
 	    	'message' => $message,
 	    ]);
+	}
+
+	public function search(Request $request) {
+		$departments = Department::with('pivot')
+			->where('dw', '<>', '')
+			->whereLx(config('constants.department.college'))
+			->whereZt(config('constants.status.enable'))
+			->orderBy('dw')
+			->get();
+		$campuses = Campus::where('dm', '<>', '')
+			->orderBy('dm')
+			->get();
+		$title = '本学期调停课查询';
+		$subtitle = '查询条件：所有校区所有学院';
+
+		$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
+			->whereNd(session('year'))
+			->whereXq(session('term'))
+			->orderBy('sqsj', 'desc')
+			->get();
+
+		if ($request->isMethod('post')) {
+			$input = $request->all();
+
+			if ('all' == $input['department']) {
+				if ('all' == $input['campus']) {
+					$depts = Department::where('dw', '<>', '')
+						->whereLx(config('constants.department.college'))
+						->whereZt(config('constants.status.enable'))
+						->pluck('dw');
+				} else {
+					$depts = Campuspivot::whereXq($input['campus'])
+						->pluck('xy');
+				}
+			} else {
+				$depts = explode(',', $input['department']);
+			}
+
+			$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
+				->whereNd(session('year'))
+				->whereXq(session('term'))
+				->whereIn('kkxy', $depts)
+				->get();
+
+			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';
+			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
+			$subtitle        = '查询条件：' . $campus_name . $department_name;
+
+			$condition = [
+				'campus' => $input['campus'],
+				'department' => $input['department'],
+			];
+		}
+
+		return view('tksq.search', compact('title', 'departments', 'apps', 'subtitle', 'campuses', 'condition'));
 	}
 }

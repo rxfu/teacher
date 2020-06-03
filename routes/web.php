@@ -62,5 +62,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 	Route::put('password/change', 'Auth\PasswordController@change');
 	Route::get('tksq/course', 'TksqController@course')->name('tksq.course');
+	Route::get('tksq/search', 'TksqController@search')->name('tksq.search');
+	Route::post('tksq/search', 'TksqController@search');
 	Route::resource('tksq', 'TksqController');
 });
