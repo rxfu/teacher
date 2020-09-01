@@ -15,7 +15,6 @@
                                 <option value="0" {{ $app->sqsx == 0 ? 'selected' : '' }}>调课</option>
                                 <option value="1" {{ $app->sqsx == 1 ? 'selected' : '' }}>代课</option>
                                 <option value="2" {{ $app->sqsx == 2 ? 'selected' : '' }}>停课</option>
-                                <option value="3" {{ $app->sqsx == 3 ? 'selected' : '' }}>删课</option>
                             </select>
                         </div>
                     </div>
@@ -78,7 +77,7 @@
                             <input type="hidden" name="kcxh" id="kcxh" value="{{ $app->kcxh }}">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="hxqz">
                         <label for="hxqz" class="col-sm-2 control-label">变更后时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -110,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="hjs">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-6">
                             <select name="hjs" id="hjs" class="form-control">
@@ -164,6 +163,15 @@ $(function() {
         }
 
         return true;
+    });
+    $('#sqsx').change(function() {
+        if ($(this).val() == 1) {
+            $('#hxqz').hide();
+        } else if ($(this).val() == 2) {
+            $('#hxqz, #hjs').hide();
+        } else {
+            $('#hxqz, #hjs').show();
+        }
     });
 });
 </script>

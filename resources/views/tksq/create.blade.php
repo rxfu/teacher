@@ -14,7 +14,6 @@
                                 <option value="0">调课</option>
                                 <option value="1">代课</option>
                                 <option value="2">停课</option>
-                                <option value="3">删课</option>
                             </select>
                         </div>
                     </div>
@@ -73,7 +72,7 @@
                             <input type="hidden" name="kcxh" id="kcxh" value="">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="hxqz">
                         <label for="hxqz" class="col-sm-2 control-label">变更后时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -105,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="hjs">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-6">
                             <select name="hjs" id="hjs" class="form-control">
@@ -159,6 +158,15 @@ $(function() {
         }
 
         return true;
+    });
+    $('#sqsx').change(function() {
+        if ($(this).val() == 1) {
+            $('#hxqz').hide();
+        } else if ($(this).val() == 2) {
+            $('#hxqz, #hjs').hide();
+        } else {
+            $('#hxqz, #hjs').show();
+        }
     });
 });
 </script>
