@@ -6,6 +6,21 @@
         <form id="searchForm" name="searchForm" method="post" action="{{ url('tksq/search') }}" role="form" class="form-inline">
             {{ csrf_field() }}
             <div class="form-group">
+                <label for="year" class="sr-only">年度</label>
+                <select name="year" class="form-control" data-width="150px">
+                    <option value="{{ Carbon\Carbon::now()->format('Y') }}"{{ isset($condition) && Carbon\Carbon::now()->format('Y') == $condition['year'] ? ' selected' : '' }}>{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->format('Y')) }}学年</option>
+                    <option value="{{ Carbon\Carbon::now()->subYear()->format('Y') }}"{{ isset($condition) && Carbon\Carbon::now()->subYear()->format('Y') == $condition['year'] ? ' selected' : '' }}>{{ App\Http\Helper::getAcademicYear(Carbon\Carbon::now()->subYear()->format('Y')) }}学年</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="term" class="sr-only">学期</label>
+                <select name="term" class="form-control" data-width="100px">
+                    @for ($i = 1; $i < 3; $i++)
+                        <option value="{{ $i }}"{{ isset($condition) && $i == $condition['term'] ? ' selected' : '' }}>{{ App\Models\Term::find($i)->mc }}学期</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="campus" class="sr-only">校区</label>
                 <select id="campus" name="campus" class="form-control" data-width="100px">
                     <option value="all">全部校区</option>
@@ -28,7 +43,7 @@
     </div>
 </section>
 
-@if (!$apps->isEmpty())
+@if (!is_null($apps))
     <section class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">

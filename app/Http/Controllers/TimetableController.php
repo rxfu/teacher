@@ -255,10 +255,15 @@ class TimetableController extends Controller {
 				if (!$apps->isEmpty()) {
 					foreach ($apps as $app) {
 						$bz = '[ ' . config('constants.suspension.' . $app->sqsx) . '：' . config('constants.audit.' . $app->xyspzt) . ' ] ';
-						$bz .= '第 ' . $app->qxqz . ' 周星期' . config('constants.week.' . $app->qzc) . '第 ' . $app->qksj . ' ~ ' . $app->qjsj . ' 节' . optional($app->qclassroom)->mc . '教室';
 
 						if ($app->sqsx == 0) {
+							$bz .= '第 ' . $app->qxqz . ' 周星期' . config('constants.week.' . $app->qzc) . '第 ' . $app->qksj . ' ~ ' . $app->qjsj . ' 节' . optional($app->qclassroom)->mc . '教室';
 							$bz .= '变更为第 ' . $app->hxqz . ' 周星期' . config('constants.week.' . $app->hzc) . '第 ' . $app->hksj . ' ~ ' . $app->hjsj . ' 节' . optional($app->hclassroom)->mc . '教室';
+							$bz .= '主讲教师为' . $app->hteacher->xm . $app->hteacher->position->mc;
+						} elseif ($app->sqsx == 1) {
+							$bz .= '主讲教师变更为' . $app->hteacher->xm . $app->hteacher->position->mc;
+						} elseif ($app->sqsx == 2) {
+							$bz .= '该课程已停课';
 						}
 
 						$bzs[] = $bz;

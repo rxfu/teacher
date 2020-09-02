@@ -94,11 +94,18 @@ class TksqController extends Controller {
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $timetable->cdbh;
-			$app->hjs = $request->input('hjs');
-			$app->hzc = $request->input('hzc');
-			$app->hxqz = $request->input('hxqz');
-			$app->hksj = $request->input('hksj');
-			$app->hjsj = $request->input('hjsj');
+
+			if (($request->input('sqsx') == 0) || ($request->input('sqsx') == 1)) {
+				$app->hjs = $request->input('hjs');
+
+				if ($request->input('sqsx') == 0) {
+					$app->hzc = $request->input('hzc');
+					$app->hxqz = $request->input('hxqz');
+					$app->hksj = $request->input('hksj');
+					$app->hjsj = $request->input('hjsj');
+				}
+			}
+
 			$app->kkxy = $course->kkxy;
 			$app->sqsj = Carbon::now();
 			$app->save();
@@ -173,11 +180,18 @@ class TksqController extends Controller {
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $timetable->cdbh;
-			$app->hjs = $request->input('hjs');
-			$app->hzc = $request->input('hzc');
-			$app->hxqz = $request->input('hxqz');
-			$app->hksj = $request->input('hksj');
-			$app->hjsj = $request->input('hjsj');
+
+			if (($request->input('sqsx') == 0) || ($request->input('sqsx') == 1)) {
+				$app->hjs = $request->input('hjs');
+
+				if ($request->input('sqsx') == 0) {
+					$app->hzc = $request->input('hzc');
+					$app->hxqz = $request->input('hxqz');
+					$app->hksj = $request->input('hksj');
+					$app->hjsj = $request->input('hjsj');
+				}
+			}
+			
 			$app->kkxy = $course->kkxy;
 			$app->xgsj = Carbon::now();
 			$app->save();
@@ -232,15 +246,15 @@ class TksqController extends Controller {
 		$campuses = Campus::where('dm', '<>', '')
 			->orderBy('dm')
 			->get();
-		$title = '本学期调停课查询';
-		$subtitle = '查询条件：所有校区所有学院';
-
+		$title = '调停课查询';
+/*
 		$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
 			->whereNd(session('year'))
 			->whereXq(session('term'))
 			->orderBy('sqsj', 'desc')
 			->get();
-
+*/
+		$apps = null;
 		if ($request->isMethod('post')) {
 			$input = $request->all();
 
@@ -259,8 +273,8 @@ class TksqController extends Controller {
 			}
 
 			$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
-				->whereNd(session('year'))
-				->whereXq(session('term'))
+				->whereNd($input['year'])
+				->whereXq($input['term'])
 				->whereIn('kkxy', $depts)
 				->get();
 
@@ -269,6 +283,8 @@ class TksqController extends Controller {
 			$subtitle        = '查询条件：' . $campus_name . $department_name;
 
 			$condition = [
+				'year' => $input['year'],
+				'term' => $input['term'],
 				'campus' => $input['campus'],
 				'department' => $input['department'],
 			];

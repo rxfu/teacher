@@ -22,6 +22,7 @@
                                 <th class="active">变更前地点</th>
                                 <th class="active">变更后时间</th>
                                 <th class="active">变更后地点</th>
+                                <th class="active">变更后主讲教师</th>
                                 <th class="active">申请事项</th>
                                 <th class="active">学院审核意见</th>
                             </tr>
@@ -49,6 +50,7 @@
                                 <td>{{ optional($app->qclassroom)->mc }}</td>
                                 <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节</td>
                                 <td>{{ optional($app->hclassroom)->mc }}</td>
+                                <td>{{ optional($app->hteacher)->xm }}</td>
                                 <td>
                                     @switch ($app->sqsx)
                                         @case (0)

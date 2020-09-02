@@ -72,7 +72,7 @@
                             <input type="hidden" name="kcxh" id="kcxh" value="">
                         </div>
                     </div>
-                    <div class="form-group" id="hxqz">
+                    <div class="form-group" id="bghsj">
                         <label for="hxqz" class="col-sm-2 control-label">变更后时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" id="hjs">
+                    <div class="form-group" id="bghjs">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-6">
                             <select name="hjs" id="hjs" class="form-control">
@@ -161,11 +161,12 @@ $(function() {
     });
     $('#sqsx').change(function() {
         if ($(this).val() == 1) {
-            $('#hxqz').hide();
+            $('#bghjs').show();
+            $('#bghsj').hide();
         } else if ($(this).val() == 2) {
-            $('#hxqz, #hjs').hide();
+            $('#bghsj, #bghjs').hide();
         } else {
-            $('#hxqz, #hjs').show();
+            $('#bghsj, #bghjs').show();
         }
     });
 });
