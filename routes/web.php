@@ -64,5 +64,6 @@ Route::middleware('auth')->group(function () {
 	Route::get('tksq/course', 'TksqController@course')->name('tksq.course');
 	Route::get('tksq/search', 'TksqController@search')->name('tksq.search');
 	Route::post('tksq/search', 'TksqController@search');
+	Route::get('tksq/teacher', 'TksqController@teacher')->name('tksq.teacher');
 	Route::resource('tksq', 'TksqController');
 });

@@ -292,4 +292,19 @@ class TksqController extends Controller {
 
 		return view('tksq.search', compact('title', 'departments', 'apps', 'subtitle', 'campuses', 'condition'));
 	}
+
+	public function teacher(Request $request) {
+		if ($request->ajax()) {
+			$keyword = $request->input('q');
+
+			$result = User::join('xt_department', 'xy', 'dw')
+				->where('jsgh', 'like', $keyword . '%')
+				->orWhere('xm', 'like', $keyword . '%')
+				->orderBy('jsgh')
+				->select('jsgh', 'xm', 'mc')
+				->get();
+
+			return json_encode($result);
+		}
+	}
 }
