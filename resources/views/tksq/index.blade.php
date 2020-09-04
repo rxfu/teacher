@@ -40,7 +40,11 @@
                                 	@endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('tksq.edit', $app->id) }}">{{ $app->id }}</a>
+                                    @if ((0 == $app->xyspzt) && (now()->diffInHours($app->sqsj) < 1))
+                                        <a href="{{ route('tksq.edit', $app->id) }}">{{ $app->id }}</a>
+                                    @else
+                                        {{ $app->id }}
+                                    @endif
                                 </td>
                                 <td>{{ $app->nd }}</td>
                                 <td>{{ $app->term->mc }}</td>
