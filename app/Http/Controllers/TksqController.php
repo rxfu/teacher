@@ -33,7 +33,8 @@ class TksqController extends Controller {
 		$title = '调停课申请';
 
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
 
 		$reasons = Tksqyy::all();
@@ -62,7 +63,8 @@ class TksqController extends Controller {
 				'sqly' => 'required',
 			]);
 	        $today = Carbon::now();
-	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    	$nextWeek = $today->addWeek();
+	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
@@ -118,7 +120,8 @@ class TksqController extends Controller {
 		$title = '调停课申请修改';
 
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
 
 		$reasons = Tksqyy::all();
@@ -148,7 +151,8 @@ class TksqController extends Controller {
 				'sqly' => 'required',
 			]);
 	        $today = Carbon::now();
-	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    	$nextWeek = $today->addWeek();
+	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
@@ -211,7 +215,8 @@ class TksqController extends Controller {
 
 	public function course(Request $request) {
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 
         $courses = Timetable::whereNd($calendar->nd)
 	        ->whereXq($calendar->xq)
