@@ -35,7 +35,7 @@ class TksqController extends Controller {
         $today = Carbon::now();
 	    $nextWeek = $today->addWeek();
         $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
+        $currentWeek = $today->diffInWeeks($calendar->rq);
 
 		$reasons = Tksqyy::all();
         $campuses = Campus::where('dm', '<>', '')->get();
@@ -122,7 +122,7 @@ class TksqController extends Controller {
         $today = Carbon::now();
 	    $nextWeek = $today->addWeek();
         $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
+        $currentWeek = $today->diffInWeeks($calendar->rq);
 
 		$reasons = Tksqyy::all();
         $campuses = Campus::where('dm', '<>', '')->get();
