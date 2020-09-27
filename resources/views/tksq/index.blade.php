@@ -74,7 +74,7 @@
                                             @break
 
                                         @case (3)
-                                            删课
+                                            调教室
                                             @break
 
                                         @default

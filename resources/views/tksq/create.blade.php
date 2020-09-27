@@ -14,6 +14,7 @@
                                 <option value="0">调课</option>
                                 <option value="1">代课</option>
                                 <option value="2">停课</option>
+                                <option value="3">调教室</option>
                             </select>
                         </div>
                     </div>
@@ -165,7 +166,7 @@ $(function() {
         if ($(this).val() == 1) {
             $('#bghjs').show();
             $('#bghsj').hide();
-        } else if ($(this).val() == 2) {
+        } else if ($(this).val() == 2 || $(this).val() == 3) {
             $('#bghsj, #bghjs').hide();
         } else {
             $('#bghsj, #bghjs').show();

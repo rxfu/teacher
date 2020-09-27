@@ -264,6 +264,10 @@ class TimetableController extends Controller {
 							$bz .= '主讲教师变更为' . $app->hteacher->xm . $app->hteacher->position->mc;
 						} elseif ($app->sqsx == 2) {
 							$bz .= '该课程已停课';
+						} elseif ($app->sqsx == 3) {
+							if (!is_null($app->hclassroom)) {
+								$bz .= '授课教室变更为' . $app->hclassroom->mc . '教室';
+							}
 						}
 
 						$bzs[] = $bz;

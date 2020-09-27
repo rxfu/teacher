@@ -74,7 +74,11 @@
                                     <td>{{ $app->teacher->xm }}</td>
                                     <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}<br>第 {{ $app->qksj }} ~ {{ $app->qjsj }} 节</td>
                                     <td>{{ optional($app->qclassroom)->mc }}</td>
-                                    <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节</td>
+                                    <td>
+                                        @if (!is_null($app->hxqz))
+                                            第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节
+                                        @endif
+                                    </td>
                                     <td>{{ optional($app->hclassroom)->mc }}</td>
                                     <td>
                                         @switch ($app->sqsx)
@@ -91,7 +95,7 @@
                                                 @break
 
                                             @case (3)
-                                                删课
+                                                调教室
                                                 @break
 
                                             @default
