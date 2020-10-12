@@ -12,14 +12,13 @@
                         <label for="sqsx" class="col-sm-2 control-label">申请事项</label>
                         <div class="col-sm-6">
                             <select name="sqsx" id="sqsx" class="form-control">
-                                <option value="0" {{ $app->sqsx == 0 ? 'selected' : '' }}>调课</option>
-                                <option value="1" {{ $app->sqsx == 1 ? 'selected' : '' }}>代课</option>
-                                <option value="2" {{ $app->sqsx == 2 ? 'selected' : '' }}>停课</option>
-                                <option value="3" {{ $app->sqsx == 3 ? 'selected' : '' }}>调教室</option>
+                                @foreach (config('constants.suspension') as $k => $v)
+                                    <option value="{{ $k }}"{{ $app->sqsx == $k ? ' selected' : '' }}>{{ $v }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="tksqyy">
                         <label for="sqyy" class="col-sm-2 control-label">申请原因</label>
                         <div class="col-sm-6">
                             <select name="sqyy" id="sqyy" class="form-control">
@@ -179,12 +178,16 @@ $(function() {
 
     $('#sqsx').change(function() {
         if ($(this).val() == 1) {
-            $('#bghjs').show();
+            $('#bghjs, #tksqyy').show();
             $('#bghsj').hide();
-        } else if ($(this).val() == 2 || $(this).val() == 3) {
+        } else if ($(this).val() == 2) {
+            $('#tksqyy').show();
             $('#bghsj, #bghjs').hide();
+        } else if ($(this).val() == 3) {
+            $('#bghsj, #bghjs, #tksqyy').hide();
+            $('#tksqyy').val(0);
         } else {
-            $('#bghsj, #bghjs').show();
+            $('#bghsj, #bghjs, #tksqyy').show();
         }
     });
     $('#jskey').typeahead({

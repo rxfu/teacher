@@ -266,7 +266,7 @@ class TimetableController extends Controller {
 							$bz .= '该课程已停课';
 						} elseif ($app->sqsx == 3) {
 							if (!is_null($app->hclassroom)) {
-								$bz .= '授课教室变更为' . $app->hclassroom->mc . '教室';
+								$bz .= '教学场地变更为' . $app->hclassroom->mc . '教室';
 							}
 						}
 

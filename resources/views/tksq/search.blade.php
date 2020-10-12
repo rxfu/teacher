@@ -80,52 +80,8 @@
                                         @endif
                                     </td>
                                     <td>{{ optional($app->hclassroom)->mc }}</td>
-                                    <td>
-                                        @switch ($app->sqsx)
-                                            @case (0)
-                                                调课
-                                                @break
-
-                                            @case (1)
-                                                代课
-                                                @break
-
-                                            @case (2)
-                                                停课
-                                                @break
-
-                                            @case (3)
-                                                调教室
-                                                @break
-
-                                            @default
-                                                无事项
-
-                                        @endswitch
-                                    </td>
-                                    <td>
-                                        @switch ($app->xyspzt)
-                                            @case (0)
-                                                未审批
-                                                @break
-
-                                            @case (1)
-                                                同意
-                                                @break
-
-                                            @case (2)
-                                                不同意
-                                                @break
-
-                                            @case(3)
-                                                作废
-                                                @break
-
-                                            @default
-                                                未审批
-                                            
-                                        @endswitch
-                                    </td>
+                                <td>{{ config('constants.suspension.' . $app->sqsx, '无事项') }}</td>
+                                <td>{{ config('constants.audit.' . $app->xyspzt, '未审批') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

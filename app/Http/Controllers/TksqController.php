@@ -37,7 +37,9 @@ class TksqController extends Controller {
         $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq);
 
-		$reasons = Tksqyy::all();
+		$reasons = Tksqyy::where('dm', '<>', 0)
+			->orderBy('dm')
+			->get();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
@@ -86,7 +88,7 @@ class TksqController extends Controller {
 			$app->xq = $calendar->xq;
 			$app->jsgh = Auth::user()->jsgh;
 			$app->sqsx = $request->input('sqsx');
-			$app->sqyy = $request->input('sqyy');
+			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
 			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
@@ -124,7 +126,9 @@ class TksqController extends Controller {
         $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
         $currentWeek = $today->diffInWeeks($calendar->rq);
 
-		$reasons = Tksqyy::all();
+		$reasons = Tksqyy::where('dm', '<>', 0)
+			->orderBy('dm')
+			->get();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
@@ -174,7 +178,7 @@ class TksqController extends Controller {
 			$app->id = date('YmdHis') . random_int(1000, 9999);
 			$app->jsgh = Auth::user()->jsgh;
 			$app->sqsx = $request->input('sqsx');
-			$app->sqyy = $request->input('sqyy');
+			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
 			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
@@ -281,6 +285,7 @@ class TksqController extends Controller {
 				->whereNd($input['year'])
 				->whereXq($input['term'])
 				->whereIn('kkxy', $depts)
+				->orderBy('sqsj', 'desc')
 				->get();
 
 			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';

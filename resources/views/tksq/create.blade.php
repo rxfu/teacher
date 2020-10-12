@@ -11,14 +11,13 @@
                         <label for="sqsx" class="col-sm-2 control-label">申请事项</label>
                         <div class="col-sm-6">
                             <select name="sqsx" id="sqsx" class="form-control">
-                                <option value="0">调课</option>
-                                <option value="1">代课</option>
-                                <option value="2">停课</option>
-                                <option value="3">调教室</option>
+                                @foreach (config('constants.suspension') as $k => $v)
+                                    <option value="{{ $k }}">{{ $v }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="tksqyy">
                         <label for="sqyy" class="col-sm-2 control-label">申请原因</label>
                         <div class="col-sm-6">
                             <select name="sqyy" id="sqyy" class="form-control">
@@ -163,13 +162,18 @@ $(function() {
         return true;
     });
     $('#sqsx').change(function() {
+        $('#sqyy').removeAttr('disabled');
         if ($(this).val() == 1) {
-            $('#bghjs').show();
+            $('#bghjs, #tksqyy').show();
             $('#bghsj').hide();
-        } else if ($(this).val() == 2 || $(this).val() == 3) {
+        } else if ($(this).val() == 2) {
+            $('#tksqyy').show();
             $('#bghsj, #bghjs').hide();
+        } else if ($(this).val() == 3) {
+            $('#bghsj, #bghjs, #tksqyy').hide();
+            $('#sqyy').attr('disabled', 'disabled');
         } else {
-            $('#bghsj, #bghjs').show();
+            $('#bghsj, #bghjs, #tksqyy').show();
         }
     });
     $('#jskey').typeahead({
