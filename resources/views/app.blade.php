@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="{{ asset('css/sb-admin-2.css') }}">
         <link rel="stylesheet" href="{{ asset('css/timeline.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        @stack('styles')
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
         <!--[if lt IE 9]>
@@ -69,8 +70,7 @@
                             <li><a href="{{ url('profile') }}"><i class="fa fa-user fa-fw"></i> 个人资料</a></li>
                             <li><a href="{{ url('password/change') }}"><i class="fa fa-unlock fa-fw"></i> 修改密码</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> 登出</a></li>
-                            </form>
+                            <li><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out fa-fw"></i> 登出</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -102,6 +102,9 @@
                                     </li>
                                     <li>
                                         <a href="{{ url('timetable/search') }}">听课查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('tksq/search') }}">调停课查询</a>
                                     </li>
                                     <li>
                                         <a href="{{ url('tksq') }}">调停课申请</a>
@@ -165,7 +168,11 @@
                                 <!-- /.nav-second-level -->
                             </li>
                             <li>
-                                <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="post" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                             </li>
                         </ul>
                         <!-- /#side-menu -->

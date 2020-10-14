@@ -64,4 +64,26 @@ class Tksq extends Model {
 	public function hclassroom() {
 		return $this->belongsTo('App\Models\Classroom', 'hcdbh', 'jsh');
 	}
+
+	/**
+	 * 教师
+	 * @author FuRongxin
+	 * @date    2020-6-3
+	 * @version 2.3
+	 * @return  object 所属对象
+	 */
+	public function teacher() {
+		return $this->belongsTo('App\Models\User', 'jsgh', 'jsgh');
+	}
+
+	/**
+	 * 变更后教师
+	 * @author FuRongxin
+	 * @date    2020-9-2
+	 * @version 2.3
+	 * @return  object 所属对象
+	 */
+	public function hteacher() {
+		return $this->belongsTo('App\Models\User', 'hjs', 'jsgh');
+	}
 }

@@ -6,8 +6,10 @@ use App\Http\Helper;
 use App\Models\Building;
 use App\Models\Calendar;
 use App\Models\Campus;
+use App\Models\Campuspivot;
 use App\Models\Classroom;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\Mjcourse;
 use App\Models\Task;
 use App\Models\Timetable;
@@ -31,10 +33,13 @@ class TksqController extends Controller {
 		$title = '调停课申请';
 
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+        $currentWeek = $today->diffInWeeks($calendar->rq);
 
-		$reasons = Tksqyy::all();
+		$reasons = Tksqyy::where('dm', '<>', 0)
+			->orderBy('dm')
+			->get();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
@@ -60,7 +65,8 @@ class TksqController extends Controller {
 				'sqly' => 'required',
 			]);
 	        $today = Carbon::now();
-	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    	$nextWeek = $today->addWeek();
+	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
@@ -82,7 +88,7 @@ class TksqController extends Controller {
 			$app->xq = $calendar->xq;
 			$app->jsgh = Auth::user()->jsgh;
 			$app->sqsx = $request->input('sqsx');
-			$app->sqyy = $request->input('sqyy');
+			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
 			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
@@ -92,11 +98,18 @@ class TksqController extends Controller {
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $timetable->cdbh;
-			$app->hjs = $request->input('hjs');
-			$app->hzc = $request->input('hzc');
-			$app->hxqz = $request->input('hxqz');
-			$app->hksj = $request->input('hksj');
-			$app->hjsj = $request->input('hjsj');
+
+			if (($request->input('sqsx') == 0) || ($request->input('sqsx') == 1)) {
+				$app->hjs = $request->input('hjs');
+
+				if ($request->input('sqsx') == 0) {
+					$app->hzc = $request->input('hzc');
+					$app->hxqz = $request->input('hxqz');
+					$app->hksj = $request->input('hksj');
+					$app->hjsj = $request->input('hjsj');
+				}
+			}
+
 			$app->kkxy = $course->kkxy;
 			$app->sqsj = Carbon::now();
 			$app->save();
@@ -109,10 +122,13 @@ class TksqController extends Controller {
 		$title = '调停课申请修改';
 
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq) + 1;
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+        $currentWeek = $today->diffInWeeks($calendar->rq);
 
-		$reasons = Tksqyy::all();
+		$reasons = Tksqyy::where('dm', '<>', 0)
+			->orderBy('dm')
+			->get();
         $campuses = Campus::where('dm', '<>', '')->get();
         $buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
@@ -139,7 +155,8 @@ class TksqController extends Controller {
 				'sqly' => 'required',
 			]);
 	        $today = Carbon::now();
-	        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    	$nextWeek = $today->addWeek();
+	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 	        $kcxhs = explode(',', $request->input('kcxh'));
 	        $course = Mjcourse::whereKcxh($kcxhs[0])
 		        ->whereNd($calendar->nd)
@@ -161,7 +178,7 @@ class TksqController extends Controller {
 			$app->id = date('YmdHis') . random_int(1000, 9999);
 			$app->jsgh = Auth::user()->jsgh;
 			$app->sqsx = $request->input('sqsx');
-			$app->sqyy = $request->input('sqyy');
+			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
 			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
@@ -171,11 +188,18 @@ class TksqController extends Controller {
 			$app->qksj = $request->input('qksj');
 			$app->qjsj = $request->input('qjsj');
 			$app->qcdbh = $timetable->cdbh;
-			$app->hjs = $request->input('hjs');
-			$app->hzc = $request->input('hzc');
-			$app->hxqz = $request->input('hxqz');
-			$app->hksj = $request->input('hksj');
-			$app->hjsj = $request->input('hjsj');
+
+			if (($request->input('sqsx') == 0) || ($request->input('sqsx') == 1)) {
+				$app->hjs = $request->input('hjs');
+
+				if ($request->input('sqsx') == 0) {
+					$app->hzc = $request->input('hzc');
+					$app->hxqz = $request->input('hxqz');
+					$app->hksj = $request->input('hksj');
+					$app->hjsj = $request->input('hjsj');
+				}
+			}
+			
 			$app->kkxy = $course->kkxy;
 			$app->xgsj = Carbon::now();
 			$app->save();
@@ -195,7 +219,8 @@ class TksqController extends Controller {
 
 	public function course(Request $request) {
         $today = Carbon::now();
-        $calendar = Calendar::where('rq', '<', $today)->orderBy('rq', 'desc')->firstOrFail();
+	    $nextWeek = $today->addWeek();
+        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 
         $courses = Timetable::whereNd($calendar->nd)
 	        ->whereXq($calendar->xq)
@@ -218,5 +243,78 @@ class TksqController extends Controller {
 	    	'kcxh' => implode(',', $kcxh),
 	    	'message' => $message,
 	    ]);
+	}
+
+	public function search(Request $request) {
+		$departments = Department::with('pivot')
+			->where('dw', '<>', '')
+			->whereLx(config('constants.department.college'))
+			->whereZt(config('constants.status.enable'))
+			->orderBy('dw')
+			->get();
+		$campuses = Campus::where('dm', '<>', '')
+			->orderBy('dm')
+			->get();
+		$title = '调停课查询';
+/*
+		$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
+			->whereNd(session('year'))
+			->whereXq(session('term'))
+			->orderBy('sqsj', 'desc')
+			->get();
+*/
+		$apps = null;
+		if ($request->isMethod('post')) {
+			$input = $request->all();
+
+			if ('all' == $input['department']) {
+				if ('all' == $input['campus']) {
+					$depts = Department::where('dw', '<>', '')
+						->whereLx(config('constants.department.college'))
+						->whereZt(config('constants.status.enable'))
+						->pluck('dw');
+				} else {
+					$depts = Campuspivot::whereXq($input['campus'])
+						->pluck('xy');
+				}
+			} else {
+				$depts = explode(',', $input['department']);
+			}
+
+			$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
+				->whereNd($input['year'])
+				->whereXq($input['term'])
+				->whereIn('kkxy', $depts)
+				->orderBy('sqsj', 'desc')
+				->get();
+
+			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';
+			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
+			$subtitle        = '查询条件：' . $campus_name . $department_name;
+
+			$condition = [
+				'year' => $input['year'],
+				'term' => $input['term'],
+				'campus' => $input['campus'],
+				'department' => $input['department'],
+			];
+		}
+
+		return view('tksq.search', compact('title', 'departments', 'apps', 'subtitle', 'campuses', 'condition'));
+	}
+
+	public function teacher(Request $request) {
+		if ($request->ajax()) {
+			$keyword = $request->input('q');
+
+			$result = User::join('xt_department', 'xy', 'dw')
+				->where('jsgh', 'like', $keyword . '%')
+				->orWhere('xm', 'like', $keyword . '%')
+				->orderBy('jsgh')
+				->select('jsgh', 'xm', 'mc')
+				->get();
+
+			return json_encode($result);
+		}
 	}
 }

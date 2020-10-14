@@ -11,14 +11,13 @@
                         <label for="sqsx" class="col-sm-2 control-label">申请事项</label>
                         <div class="col-sm-6">
                             <select name="sqsx" id="sqsx" class="form-control">
-                                <option value="0">调课</option>
-                                <option value="1">代课</option>
-                                <option value="2">停课</option>
-                                <option value="3">删课</option>
+                                @foreach (config('constants.suspension') as $k => $v)
+                                    <option value="{{ $k }}">{{ $v }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="tksqyy">
                         <label for="sqyy" class="col-sm-2 control-label">申请原因</label>
                         <div class="col-sm-6">
                             <select name="sqyy" id="sqyy" class="form-control">
@@ -31,7 +30,7 @@
                     <div class="form-group">
                         <label for="sqly" class="col-sm-2 control-label">申请理由</label>
                         <div class="col-sm-6">
-                            <textarea id="sqly" name="sqly" class="form-control" rows="20" placeholder="申请理由"></textarea>
+                            <textarea id="sqly" name="sqly" class="form-control" rows="20" placeholder="请写清楚具体事由，字数不少于15字"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -73,7 +72,7 @@
                             <input type="hidden" name="kcxh" id="kcxh" value="">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="bghsj">
                         <label for="hxqz" class="col-sm-2 control-label">变更后时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -105,14 +104,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="bghjs">
                         <label for="hjs" class="col-sm-2 control-label">变更后主讲教师</label>
                         <div class="col-sm-6">
-                            <select name="hjs" id="hjs" class="form-control">
+                            <!--select name="hjs" id="hjs" class="form-control">
                                 @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->jsgh }}"{{ auth()->user()->jsgh == $teacher->jsgh ? ' selected' : '' }}>{{ $teacher->jsgh }} - {{ $teacher->xm }}</option>
                                 @endforeach
-                            </select>
+                            </select-->
+                            <input type="text" name="jskey" id="jskey" class="form-control" placeholder="请输入主讲教师工号或姓名" data-provide="typeahead" value="{{ Auth::user()->college->mc }} - {{ Auth::user()->xm }}（{{ Auth::user()->jsgh }}）" onfocus="this.select()" autocomplete="off">
+                            <input type="hidden" name="hjs" id="hjs" value="{{ Auth::user()->jsgh }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -159,6 +160,57 @@ $(function() {
         }
 
         return true;
+    });
+    $('#sqsx').change(function() {
+        $('#sqyy').removeAttr('disabled');
+        if ($(this).val() == 1) {
+            $('#bghjs, #tksqyy').show();
+            $('#bghsj').hide();
+        } else if ($(this).val() == 2) {
+            $('#tksqyy').show();
+            $('#bghsj, #bghjs').hide();
+        } else if ($(this).val() == 3) {
+            $('#bghsj, #bghjs, #tksqyy').hide();
+            $('#sqyy').attr('disabled', 'disabled');
+        } else {
+            $('#bghsj, #bghjs, #tksqyy').show();
+        }
+    });
+    $('#jskey').typeahead({
+        source: function(query, process) {
+            var parameter = { q: query };
+
+            $.ajax({
+                url: "{{ route('tksq.teacher') }}",
+                type: 'get',
+                data: parameter,
+                dataType: 'json',
+                success: function(data) {
+                    var results = data.map(function(item) {
+                        var teacher = {
+                            id: item.jsgh,
+                            name: item.xm,
+                            department: item.mc
+                        };
+
+                        return JSON.stringify(teacher);
+                    });
+
+                    return process(results);
+                }
+            });
+        },
+
+        highlighter: function(obj) {
+            var item = JSON.parse(obj);
+            return '<strong>' + item.department + ' - ' + item.name + '（' + item.id + '）</strong>';
+        },
+
+        updater: function(obj) {
+            var item = JSON.parse(obj);
+            $('#hjs').attr('value', item.id);
+            return item.department + ' - ' + item.name + '（' + item.id + '）';
+        }
     });
 });
 </script>

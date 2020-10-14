@@ -15,16 +15,17 @@ Route::get('/', function () {
 	return redirect()->route('home');
 });
 
-// Route::auth();
-Route::get('/login', 'Auth\LoginController@login')->name('login');
-Route::get('/cas_logout', function() {
-	cas()->logout();
-});
+Route::auth();
+// Route::get('/login', 'Auth\LoginController@login')->name('login');
+// Route::get('/cas_logout', function() {
+// 	cas()->logout();
+// });
 
 Route::get('/error', 'HomeController@error')->name('error');
 
-Route::middleware('cas.auth')->group(function () {
-	Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+// Route::middleware('cas.auth')->group(function () {
+Route::middleware('auth')->group(function () {
+	// Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 	Route::resource('home', 'HomeController', ['only' => ['index']]);
 	Route::resource('profile', 'ProfileController', ['only' => ['index']]);
@@ -61,5 +62,8 @@ Route::middleware('cas.auth')->group(function () {
 	Route::get('password/change', 'Auth\PasswordController@showChangeForm');
 	Route::put('password/change', 'Auth\PasswordController@change');
 	Route::get('tksq/course', 'TksqController@course')->name('tksq.course');
+	Route::get('tksq/search', 'TksqController@search')->name('tksq.search');
+	Route::post('tksq/search', 'TksqController@search');
+	Route::get('tksq/teacher', 'TksqController@teacher')->name('tksq.teacher');
 	Route::resource('tksq', 'TksqController');
 });

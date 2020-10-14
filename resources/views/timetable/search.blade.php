@@ -82,6 +82,7 @@
                                 <th class="active">教师职称</th>
                                 <th class="active">开始周</th>
                                 <th class="active">结束周</th>
+                                <th class="active">备注</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -98,6 +99,7 @@
                                 <th>教师职称</th>
                                 <th>开始周</th>
                                 <th>结束周</th>
+                                <th>备注</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -115,6 +117,13 @@
                                     <td>{{ $course['jszc'] }}</td>
                                     <td>{{ $course['ksz'] }}</td>
                                     <td>{{ $course['jsz'] }}</td>
+                                    <td>
+                                        <ol>
+                                            @foreach ($course['bz'] as $bz)
+                                                <li>{{ $bz }}</li>
+                                            @endforeach
+                                        </ol>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -132,4 +141,12 @@ $(function() {
     $('#department').chained('#campus');
 });
 </script>
+@endpush
+
+@push('styles')
+<style>
+    ol {
+        padding-left: 15px;
+    }
+</style>
 @endpush

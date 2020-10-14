@@ -22,6 +22,7 @@
                                 <th class="active">变更前地点</th>
                                 <th class="active">变更后时间</th>
                                 <th class="active">变更后地点</th>
+                                <th class="active">变更后主讲教师</th>
                                 <th class="active">申请事项</th>
                                 <th class="active">学院审核意见</th>
                             </tr>
@@ -30,7 +31,7 @@
                             @foreach ($apps as $app)
                             <tr>
                                 <td>
-                                	@if (1 != $app->xyspzt)
+                                	@if ((0 == $app->xyspzt) && (now()->diffInHours($app->sqsj) < 1))
                                 		<form id="deleteForm" name="deleteForm" action="{{ route('tksq.destroy', $app->id) }}" method="post" role="form">
                                 			{!! method_field('delete') !!}
                                 			{!! csrf_field() !!}
@@ -39,7 +40,11 @@
                                 	@endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('tksq.edit', $app->id) }}">{{ $app->id }}</a>
+                                    @if ((0 == $app->xyspzt) && (now()->diffInHours($app->sqsj) < 1))
+                                        <a href="{{ route('tksq.edit', $app->id) }}">{{ $app->id }}</a>
+                                    @else
+                                        {{ $app->id }}
+                                    @endif
                                 </td>
                                 <td>{{ $app->nd }}</td>
                                 <td>{{ $app->term->mc }}</td>
@@ -47,50 +52,15 @@
                                 <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
                                 <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}<br>第 {{ $app->qksj }} ~ {{ $app->qjsj }} 节</td>
                                 <td>{{ optional($app->qclassroom)->mc }}</td>
-                                <td>第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节</td>
+                                <td>
+                                    @if (!is_null($app->hxqz))
+                                        第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节
+                                    @endif
+                                </td>
                                 <td>{{ optional($app->hclassroom)->mc }}</td>
-                                <td>
-                                    @switch ($app->sqsx)
-                                        @case (0)
-                                            调课
-                                            @break
-
-                                        @case (1)
-                                            代课
-                                            @break
-
-                                        @case (2)
-                                            停课
-                                            @break
-
-                                        @case (3)
-                                            删课
-                                            @break
-
-                                        @default
-                                            无事项
-
-                                    @endswitch
-                                </td>
-                                <td>
-                                    @switch ($app->xyspzt)
-                                        @case (0)
-                                            未审批
-                                            @break
-
-                                        @case (1)
-                                            同意
-                                            @break
-
-                                        @case (2)
-                                            不同意
-                                            @break
-
-                                        @default
-                                            未审批
-                                        
-                                    @endswitch
-                                </td>
+                                <td>{{ optional($app->hteacher)->xm }}</td>
+                                <td>{{ config('constants.suspension.' . $app->sqsx, '无事项') }}</td>
+                                <td>{{ config('constants.audit.' . $app->xyspzt, '未审批') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
