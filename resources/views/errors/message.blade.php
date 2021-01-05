@@ -35,7 +35,8 @@
 				            <div class="panel-body">
 				                <h3 class="text-center">错误：{{ $message }}</h3>
 				                <h4 class="text-center">
-				                	<a href="{{ url('/cas_logout') }}">退出系统</a>
+				                	<a href="{{ url('/cas_logout') }}">退出系统</a>或
+                                    <a href="javascript:window.opener=null;window.close();">关闭窗口</a>
 				                </h4>
 				            </div>
 				            <!-- /.panel-body -->

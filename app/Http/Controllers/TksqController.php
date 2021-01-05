@@ -110,6 +110,14 @@ class TksqController extends Controller {
 				}
 			}
 
+			if ($request->input('sqsx') == 3) {
+				$app->hjs = Auth::user()->jsgh;
+				$app->hzc = $request->input('qzc');
+				$app->hxqz = $request->input('qxqz');
+				$app->hksj = $request->input('qksj');
+				$app->hjsj = $request->input('qjsj');
+			}
+
 			$app->kkxy = $course->kkxy;
 			$app->sqsj = Carbon::now();
 			$app->save();
@@ -198,6 +206,14 @@ class TksqController extends Controller {
 					$app->hksj = $request->input('hksj');
 					$app->hjsj = $request->input('hjsj');
 				}
+			}
+
+			if ($request->input('sqsx') == 3) {
+				$app->hjs = Auth::user()->jsgh;
+				$app->hzc = $request->input('qzc');
+				$app->hxqz = $request->input('qxqz');
+				$app->hksj = $request->input('qksj');
+				$app->hjsj = $request->input('qjsj');
 			}
 			
 			$app->kkxy = $course->kkxy;

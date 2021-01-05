@@ -140,7 +140,7 @@
                                 <!-- /.nav-second-level -->
                             </li>
                             @if ($allowed_dcxm)
-                                <li>
+                                <!--li>
                                     <a href="#"><i class="fa fa-pencil-square-o fa-fw"></i> 大创项目<span class="fa arrow"></span></a>
                                     <ul class="nav nav-second-level">
                                         <li>
@@ -152,8 +152,7 @@
                                             </li>
                                         @endif
                                     </ul>
-                                    <!-- /.nav-second-level -->
-                                </li>
+                                </li-->
                             @endif
                             <li>
                                 <a href="#"><i class="fa fa-gear fa-fw"></i> 系统管理<span class="fa arrow"></span></a>
