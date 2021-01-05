@@ -111,34 +111,35 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#"><i class="fa fa-anchor fa-fw"></i> 评教管理<span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level">
-                                    <li>
-                                        <a href="{{ url('task') }}">评教查询</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-comments fa-fw"></i> 评学管理<span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level">
-                                    <li>
-                                        <a href="{{ url('tes') }}">评学录入</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('task') }}">评学查询</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-file-text-o fa-fw"></i> 毕业论文<span class="fa arrow"></span></a>
-                                <ul class="nav nav-second-level">
-                                    <li>
-                                        <a href="{{ url('thesis/search') }}">毕业论文查询</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-second-level -->
-                            </li>
+                            <!-- 2021-01-05：应教务处要求关闭评教评学及毕业论文系统
+                                <li>
+                                    <a href="#"><i class="fa fa-anchor fa-fw"></i> 评教管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="{{ url('task') }}">评教查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-comments fa-fw"></i> 评学管理<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="{{ url('tes') }}">评学录入</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('task') }}">评学查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-file-text-o fa-fw"></i> 毕业论文<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level">
+                                        <li>
+                                            <a href="{{ url('thesis/search') }}">毕业论文查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            -->
                             @if ($allowed_dcxm)
                                 <!--li>
                                     <a href="#"><i class="fa fa-pencil-square-o fa-fw"></i> 大创项目<span class="fa arrow"></span></a>

@@ -55,8 +55,10 @@
                                         <a href="{{ route('timetable.show', [$task->nd, 'term' => $task->xq]) }}" title="课程表" class="btn btn-primary">课程表</a>
                                         <a href="{{ route('task.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="学生名单" class="btn btn-primary">学生名单</a>
                     				    <a href="{{ route('score.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="成绩单" class="btn btn-primary">成绩单</a>
-                                        <a href="{{ route('set.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="评教结果" class="btn btn-primary">评教结果</a>
-                                        <a href="{{ route('tes.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="评学结果" class="btn btn-primary">评学结果</a>
+                                        <!-- 2021-01-05：应教务处要求关闭评教评学系统
+                                            <a href="{{ route('set.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="评教结果" class="btn btn-primary">评教结果</a>
+                                            <a href="{{ route('tes.show', [$task->kcxh, 'year' => $task->nd, 'term' => $task->xq]) }}" title="评学结果" class="btn btn-primary">评学结果</a>
+                                        -->
                         			</td>
                         		</tr>
                         	@endforeach
