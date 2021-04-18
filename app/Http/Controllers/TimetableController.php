@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Http\Helper;
+use App\Models\Term;
+use App\Models\Tksq;
+use App\Models\Major;
 use App\Models\Campus;
-use App\Models\Campuspivot;
 use App\Models\Course;
-use App\Models\Department;
 use App\Models\Mjcourse;
 use App\Models\Selcourse;
-use App\Models\Term;
 use App\Models\Timetable;
-use App\Models\Tksq;
-use Auth;
+use App\Models\Department;
+use App\Models\Campuspivot;
 use Illuminate\Http\Request;
 
-class TimetableController extends Controller {
+class TimetableController extends Controller
+{
 
 	/**
 	 * 显示课程列表
@@ -26,13 +28,15 @@ class TimetableController extends Controller {
 	 * @param   \Illuminate\Http\Request $request 课程列表请求
 	 * @return  \Illuminate\Http\Response 课程列表
 	 */
-	public function index(Request $request) {
+	public function index(Request $request)
+	{
 		$inputs = $request->all();
 
 		$timetables = Timetable::with(['campus', 'classroom'])
 			->whereNd($inputs['year'])
 			->whereXq($inputs['term'])
 			->whereJsgh(Auth::user()->jsgh)
+			->orderBy('ksz')
 			->get();
 
 		$courses = [];
@@ -86,7 +90,8 @@ class TimetableController extends Controller {
 	 * @param   string $nd 年度
 	 * @return \Illuminate\Http\Response 课程表
 	 */
-	public function show(Request $request, $nd) {
+	public function show(Request $request, $nd)
+	{
 		$inputs  = $request->all();
 		$periods = config('constants.timetable');
 
@@ -143,7 +148,8 @@ class TimetableController extends Controller {
 	 * @version 2.1
 	 * @return  \Illuminate\Http\Response 听课查询表单
 	 */
-	public function showSearchForm() {
+	public function showSearchForm()
+	{
 		$departments = Department::where('dw', '<>', '')
 			->whereLx('1')
 			->whereZt(config('constants.status.enable'))
@@ -163,7 +169,8 @@ class TimetableController extends Controller {
 	 * @param   \Illuminate\Http\Request $request 听课查询请求
 	 * @return  \Illuminate\Http\Response 听课列表
 	 */
-	public function search(Request $request) {
+	public function search(Request $request)
+	{
 		$departments = Department::with('pivot')
 			->where('dw', '<>', '')
 			->whereLx(config('constants.department.college'))
@@ -201,6 +208,21 @@ class TimetableController extends Controller {
 				$depts = explode(',', $input['department']);
 			}
 
+			if ('all' == $input['ttdepartment']) {
+				if ('all' == $input['ttcampus']) {
+					$ttdepts = Department::where('dw', '<>', '')
+						->whereLx(config('constants.department.college'))
+						->whereZt(config('constants.status.enable'))
+						->pluck('dw');
+				} else {
+					$ttdepts = Campuspivot::whereXq($input['ttcampus'])
+						->pluck('xy');
+				}
+			} else {
+				$ttdepts = explode(',', $input['ttdepartment']);
+			}
+			$ttmajors = Major::whereIn('xy', $ttdepts)->pluck('zy');
+
 			$query = Timetable::with([
 				'classroom' => function ($query) {
 					$query->select('jsh', 'mc');
@@ -209,7 +231,7 @@ class TimetableController extends Controller {
 					$query->select('jsgh', 'xm', 'zc');
 				},
 				'user.position',
-				'campus',
+				'campus'
 			])
 				->whereNd($input['year'])
 				->whereXq($input['term'])
@@ -220,6 +242,7 @@ class TimetableController extends Controller {
 			$kcxhs = Mjcourse::whereNd($input['year'])
 				->whereXq($input['term'])
 				->whereIn('kkxy', $depts)
+				->whereIn('zy', $ttmajors)
 				->select('kcxh')
 				->distinct()
 				->get()
@@ -242,6 +265,8 @@ class TimetableController extends Controller {
 					'jszc' => $result->user->position->mc,
 					'ksz'  => $result->ksz,
 					'jsz'  => $result->jsz,
+					'ksj' => $result->ksj,
+					'jsj' => $result->jsj,
 				];
 
 				// 2020-6-3：应教务处要求，添加备注内容
@@ -263,7 +288,7 @@ class TimetableController extends Controller {
 						} elseif ($app->sqsx == 1) {
 							$bz .= '主讲教师变更为' . $app->hteacher->xm . $app->hteacher->position->mc;
 						} elseif ($app->sqsx == 2) {
-							$bz .= '该课程已停课';
+							$bz .= '该课程从第 ' . $app->qxqz . ' 周开始停课';
 						} elseif ($app->sqsx == 3) {
 							if (!is_null($app->hclassroom)) {
 								$bz .= '教学场地变更为' . $app->hclassroom->mc . '教室';
@@ -281,11 +306,13 @@ class TimetableController extends Controller {
 
 			$year_name       = Helper::getAcademicYear($input['year']) . '学年';
 			$term_name       = Term::find($input['term'])->mc . '学期';
-			$campus_name     = 'all' == $input['campus'] ? '所有校区' : Campus::find($input['campus'])->mc . '校区';
-			$department_name = 'all' == $input['department'] ? '所有学院' : Department::find($input['department'])->mc;
+			$campus_name     = 'all' == $input['campus'] ? '所有开课校区' : Campus::find($input['campus'])->mc . '开课校区';
+			$department_name = 'all' == $input['department'] ? '所有开课学院' : Department::find($input['department'])->mc . '开课';
+			$ttcampus_name     = 'all' == $input['ttcampus'] ? '所有上课校区' : Campus::find($input['ttcampus'])->mc . '上课校区';
+			$ttdepartment_name = 'all' == $input['ttdepartment'] ? '所有上课学院' : Department::find($input['ttdepartment'])->mc . '上课';
 			$week_name       = 'all' == $input['week'] ? '所有周次' : '星期' . config('constants.week.' . $input['week']);
 			$class_name      = '第 ' . $input['class'] . ' 节课';
-			$subtitle        = '查询条件：' . $year_name . $term_name . $campus_name . $department_name . $week_name . $class_name;
+			$subtitle        = '查询条件：' . $year_name . $term_name . $campus_name . $department_name . $ttcampus_name . $ttdepartment_name . $week_name . $class_name;
 
 			$condition = [
 				'year' => $input['year'],
@@ -294,6 +321,8 @@ class TimetableController extends Controller {
 				'department' => $input['department'],
 				'week' => $input['week'],
 				'class' => $input['class'],
+				'ttcampus' => $input['ttcampus'],
+				'ttdepartment' => $input['ttdepartment'],
 			];
 		}
 

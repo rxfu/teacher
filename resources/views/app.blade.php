@@ -7,7 +7,7 @@
         <meta name="description" content="用于广西师范大学教师信息管理，录入成绩，查询成绩，教师评学">
         <meta name="keywords" content="广西师范大学,教务处,教师信息管理,成绩录入,成绩查询,教师评学">
         <meta name="author" content="Fu Rongxin,符荣鑫">
-        <title>{{ $title or '默认页面'}} - 广西师范大学教师信息管理系统</title>
+        <title>{{ $title or '默认页面'}} - 广西师范大学教务管理系统-教师WEB端</title>
         <!--link rel="shortcut icon" href="favicon.ico"-->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/formValidation.min.css') }}">
@@ -54,12 +54,12 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                     </button>
-                    <a href="{{ route('home') }}" class="navbar-brand">广西师范大学教师信息管理系统</a>
+                    <a href="{{ route('home') }}" class="navbar-brand">广西师范大学教务管理系统-教师WEB端</a>
                 </div>
                 <!-- /.navbar-header -->
 
                 <ul class="nav navbar-top-links navbar-right">
-                    <li>欢迎{{ Auth::user()->college->mc }}{{ Auth::user()->xm }}老师使用教师信息管理系统！</li>
+                    <li>欢迎{{ Auth::user()->college->mc }}{{ Auth::user()->xm }}老师使用广西师范大学教务管理系统-教师WEB端！</li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-user fa-fw"></i>
@@ -156,6 +156,16 @@
                                 </li-->
                             @endif
                             <li>
+                                <a href="https://sso.gxnu.edu.cn/cas/login?service=http://114.220.75.43:1002/About/UnifiedAuthenticationLogin" title="大创管理" target="_blank">
+                                    <i class="fa fa-pencil-square-o fa-fw"></i> 大创管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://zlbz.gxnu.edu.cn/login/login?type=mobile" title="本科教学质量评价系统" target="_blank">
+                                    <i class="fa fa-anchor fa-fw"></i> 本科教学质量评价系统
+                                </a>
+                            </li>
+                            <li>
                                 <a href="#"><i class="fa fa-gear fa-fw"></i> 系统管理<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
@@ -169,7 +179,6 @@
                             </li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="post" style="display: none;">
                                     {{ csrf_field() }}
                                 </form>

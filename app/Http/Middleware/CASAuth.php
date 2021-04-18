@@ -31,7 +31,7 @@ class CASAuth
     {
         if( $this->cas->checkAuthentication() )
         {
-            $user = User::whereGh($this->cas->user())->first();
+            $user = User::whereJsgh($this->cas->user())->first();
 
             if (!$user) {
                 return redirect()->route('error', ['message' => '此用户在教务处不存在']);

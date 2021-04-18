@@ -21,20 +21,38 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="campus" class="sr-only">校区</label>
+                <label for="campus" class="sr-only">开课校区</label>
                 <select id="campus" name="campus" class="form-control" data-width="100px">
-                    <option value="all">全部校区</option>
+                    <option value="all">全部开课校区</option>
                     @foreach ($campuses as $campus)
                         <option value="{{ $campus->dm }}"{{ isset($condition) && $campus->dm == $condition['campus'] ? ' selected' : '' }}>{{ $campus->mc }}校区</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
-                <label for="department" class="sr-only">学院</label>
+                <label for="department" class="sr-only">开课学院</label>
                 <select id="department" name="department" class="form-control">
-                    <option value="all" class="all {{ $campuses->implode('dm', ' ') }}">全部学院</option>
+                    <option value="all" class="all {{ $campuses->implode('dm', ' ') }}">全部开课学院</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->dw }}" class="all {{ @$department->pivot->xq }}"{{ isset($condition) && $department->dw == $condition['department'] ? ' selected' : '' }}>{{ $department->mc }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ttcampus" class="sr-only">上课校区</label>
+                <select id="ttcampus" name="ttcampus" class="form-control" data-width="100px">
+                    <option value="all">全部上课校区</option>
+                    @foreach ($campuses as $campus)
+                        <option value="{{ $campus->dm }}"{{ isset($condition) && $campus->dm == $condition['ttcampus'] ? ' selected' : '' }}>{{ $campus->mc }}校区</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ttdepartment" class="sr-only">上课学院</label>
+                <select id="ttdepartment" name="ttdepartment" class="form-control">
+                    <option value="all" class="all {{ $campuses->implode('dm', ' ') }}">全部上课学院</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->dw }}" class="all {{ @$department->pivot->xq }}"{{ isset($condition) && $department->dw == $condition['ttdepartment'] ? ' selected' : '' }}>{{ $department->mc }}</option>
                     @endforeach
                 </select>
             </div>
@@ -80,8 +98,8 @@
                                 <th class="active">选课人数</th>
                                 <th class="active">教师姓名</th>
                                 <th class="active">教师职称</th>
-                                <th class="active">开始周</th>
-                                <th class="active">结束周</th>
+                                <th class="active">周次</th>
+                                <th class="active">节次</th>
                                 <th class="active">备注</th>
                             </tr>
                         </thead>
@@ -97,8 +115,8 @@
                                 <th>选课人数</th>
                                 <th>教师姓名</th>
                                 <th>教师职称</th>
-                                <th>开始周</th>
-                                <th>结束周</th>
+                                <th>周次</th>
+                                <th>节次</th>
                                 <th>备注</th>
                             </tr>
                         </tfoot>
@@ -115,8 +133,8 @@
                                     <td>{{ $course['rs'] }}</td>
                                     <td>{{ $course['jsxm'] }}</td>
                                     <td>{{ $course['jszc'] }}</td>
-                                    <td>{{ $course['ksz'] }}</td>
-                                    <td>{{ $course['jsz'] }}</td>
+                                    <td>第 {{ $course['ksz'] }} ~ {{ $course['jsz'] }} 周</td>
+                                    <td>第 {{ $course['ksj'] }} ~ {{ $course['jsj'] }} 节</td>
                                     <td>
                                         <ol>
                                             @foreach ($course['bz'] as $bz)
@@ -139,6 +157,7 @@
 <script>
 $(function() {
     $('#department').chained('#campus');
+    $('#ttdepartment').chained('#ttcampus');
 });
 </script>
 @endpush
