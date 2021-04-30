@@ -72,11 +72,24 @@
                                     <td>{!! str_replace(',', '<br>', $app->kcxh) !!}</td>
                                     <td>{{ App\Models\Course::find(App\Http\Helper::getCno($app->kcxh))->kcmc }}</td>
                                     <td>{{ $app->teacher->xm }}</td>
-                                    <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}<br>第 {{ $app->qksj }} ~ {{ $app->qjsj }} 节</td>
+                                    <td>第 {{ $app->qxqz }} 周星期{{ config('constants.week.' . $app->qzc) }}<br>第
+                                        @if ($app->qksj == $app->qjsj)
+                                            {{ $app->qksj }}
+                                        @else
+                                            {{ $app->qksj }} ~ {{ $app->qjsj }}
+                                        @endif
+                                        节
+                                    </td>
                                     <td>{{ optional($app->qclassroom)->mc }}</td>
                                     <td>
                                         @if (!is_null($app->hxqz))
-                                            第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第 {{ $app->hksj }} ~ {{ $app->hjsj }} 节
+                                            第 {{ $app->hxqz }} 周星期{{ config('constants.week.' . $app->hzc) }}<br>第
+                                            @if ($app->hksj == $app->hjsj)
+                                                {{ $app->hksj }}
+                                            @else
+                                                {{ $app->hksj }} ~ {{ $app->hjsj }}
+                                            @endif
+                                            节
                                         @endif
                                     </td>
                                     <td>{{ optional($app->hclassroom)->mc }}</td>

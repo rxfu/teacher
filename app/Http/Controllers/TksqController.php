@@ -20,32 +20,37 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class TksqController extends Controller {
+class TksqController extends Controller
+{
 
-	public function index() {
+	public function index()
+	{
 		$title = '调停课申请列表';
 		$apps = Tksq::whereJsgh(Auth::user()->jsgh)->orderBy('sqsj', 'desc')->get();
 
 		return view('tksq.index', compact('title', 'apps'));
 	}
 
-	public function create() {
+	public function create()
+	{
 		$title = '调停课申请';
 
-        $today = Carbon::now();
-	    $nextWeek = $today->addWeek();
-        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq);
+		// $today = Carbon::now();
+		$today = Carbon::createFromDate(2020, 10, 1);
+		$nextWeek = $today->addWeek();
+		$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+		$currentWeek = $today->diffInWeeks($calendar->rq);
 
 		$reasons = Tksqyy::where('dm', '<>', 0)
 			->orderBy('dm')
 			->get();
-        $campuses = Campus::where('dm', '<>', '')->get();
-        $buildings = Building::where('dm', '<>', '')->get();
+		$campuses = Campus::where('dm', '<>', '')->get();
+		$buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
-			}])
+			}
+		])
 			->whereJsgh(Auth::user()->jsgh)
 			->whereNd($calendar->nd)
 			->whereXq($calendar->xq)
@@ -55,32 +60,38 @@ class TksqController extends Controller {
 			->where('jsgh', '<>', '')
 			->whereZt(config('constants.status.enable'))
 			->get();
+		$courses = Timetable::whereNd($calendar->nd)
+			->whereXq($calendar->xq)
+			->whereJsgh(Auth::user()->jsgh)
+			->get();
 
-		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings',  'currentWeek', 'calendar'));
+		return view('tksq.create', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings',  'currentWeek', 'calendar', 'courses'));
 	}
 
-	public function store(Request $request) {
+	public function store(Request $request)
+	{
 		if ($request->isMethod('post')) {
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-	        $today = Carbon::now();
-	    	$nextWeek = $today->addWeek();
-	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-	        $kcxhs = explode(',', $request->input('kcxh'));
-	        $course = Mjcourse::whereKcxh($kcxhs[0])
-		        ->whereNd($calendar->nd)
-		        ->whereXq($calendar->xq)
-		        ->firstOrFail();
-	        $timetable = Timetable::whereNd($calendar->nd)
-		        ->whereXq($calendar->xq)
-		        ->whereKcxh($kcxhs[0])
-		        ->whereZc($request->input('qzc'))
-		        ->where('ksz', '<=', $request->input('qxqz'))
-		        ->where('jsz', '>=', $request->input('qxqz'))
-		        ->whereKsj($request->input('qksj'))
-		        ->whereJsj($request->input('qjsj'))
-		        ->firstOrFail();
+			// $today = Carbon::now();
+			$today = Carbon::createFromDate(2020, 10, 1);
+			$nextWeek = $today->addWeek();
+			$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+			// $kcxhs = explode(',', $request->input('kcxh'));
+			$course = Mjcourse::whereKcxh($request->input('kcxh'))
+				->whereNd($calendar->nd)
+				->whereXq($calendar->xq)
+				->firstOrFail();
+			$timetable = Timetable::whereNd($calendar->nd)
+				->whereXq($calendar->xq)
+				->whereKcxh($request->input('kcxh'))
+				->whereZc($request->input('qzc'))
+				->where('ksz', '<=', $request->input('qxqz'))
+				->where('jsz', '>=', $request->input('qxqz'))
+				->where('ksj', '<=', $request->input('qksj'))
+				->where('jsj', '>=', $request->input('qjsj'))
+				->firstOrFail();
 
 			$app = new Tksq;
 			$app->id = date('YmdHis') . random_int(1000, 9999);
@@ -91,7 +102,7 @@ class TksqController extends Controller {
 			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
-			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
+			$app->kcmc = Course::find(Helper::getCno($request->input('kcxh')))->kcmc;
 			$app->qjs = Auth::user()->jsgh;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
@@ -119,6 +130,8 @@ class TksqController extends Controller {
 			}
 
 			$app->kkxy = $course->kkxy;
+			$app->yksj = $timetable->ksj;
+			$app->yjsj = $timetable->jsj;
 			$app->sqsj = Carbon::now();
 			$app->save();
 		}
@@ -126,23 +139,26 @@ class TksqController extends Controller {
 		return redirect()->route('tksq.index')->withStatus('申请调停课成功');
 	}
 
-	public function edit($id) {
+	public function edit($id)
+	{
 		$title = '调停课申请修改';
 
-        $today = Carbon::now();
-	    $nextWeek = $today->addWeek();
-        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-        $currentWeek = $today->diffInWeeks($calendar->rq);
+		// $today = Carbon::now();
+		$today = Carbon::createFromDate(2020, 10, 1);
+		$nextWeek = $today->addWeek();
+		$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+		$currentWeek = $today->diffInWeeks($calendar->rq);
 
 		$reasons = Tksqyy::where('dm', '<>', 0)
 			->orderBy('dm')
 			->get();
-        $campuses = Campus::where('dm', '<>', '')->get();
-        $buildings = Building::where('dm', '<>', '')->get();
+		$campuses = Campus::where('dm', '<>', '')->get();
+		$buildings = Building::where('dm', '<>', '')->get();
 		$tasks = Task::with([
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
-			}])
+			}
+		])
 			->whereJsgh(Auth::user()->jsgh)
 			->whereNd($calendar->nd)
 			->whereXq($calendar->xq)
@@ -152,33 +168,39 @@ class TksqController extends Controller {
 			->where('jsgh', '<>', '')
 			->whereZt(config('constants.status.enable'))
 			->get();
+		$courses = Timetable::whereNd($calendar->nd)
+			->whereXq($calendar->xq)
+			->whereJsgh(Auth::user()->jsgh)
+			->get();
 		$app = Tksq::findOrFail($id);
 
-		return view('tksq.edit', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'currentWeek', 'calendar', 'app'));
+		return view('tksq.edit', compact('title', 'reasons', 'tasks', 'teachers', 'campuses', 'buildings', 'currentWeek', 'calendar', 'app', 'courses'));
 	}
 
-	public function update(Request $request, $id) {
+	public function update(Request $request, $id)
+	{
 		if ($request->isMethod('put')) {
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-	        $today = Carbon::now();
-	    	$nextWeek = $today->addWeek();
-	        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
-	        $kcxhs = explode(',', $request->input('kcxh'));
-	        $course = Mjcourse::whereKcxh($kcxhs[0])
-		        ->whereNd($calendar->nd)
-		        ->whereXq($calendar->xq)
-		        ->firstOrFail();
-	        $timetable = Timetable::whereNd($calendar->nd)
-		        ->whereXq($calendar->xq)
-		        ->whereKcxh($kcxhs[0])
-		        ->whereZc($request->input('qzc'))
-		        ->where('ksz', '<=', $request->input('qxqz'))
-		        ->where('jsz', '>=', $request->input('qxqz'))
-		        ->whereKsj($request->input('qksj'))
-		        ->whereJsj($request->input('qjsj'))
-		        ->firstOrFail();
+			// $today = Carbon::now();
+			$today = Carbon::createFromDate(2020, 10, 1);
+			$nextWeek = $today->addWeek();
+			$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+			// $kcxhs = explode(',', $request->input('kcxh'));
+			$course = Mjcourse::whereKcxh($request->input('kcxh'))
+				->whereNd($calendar->nd)
+				->whereXq($calendar->xq)
+				->firstOrFail();
+			$timetable = Timetable::whereNd($calendar->nd)
+				->whereXq($calendar->xq)
+				->whereKcxh($request->input('kcxh'))
+				->whereZc($request->input('qzc'))
+				->where('ksz', '<=', $request->input('qxqz'))
+				->where('jsz', '>=', $request->input('qxqz'))
+				->where('ksj', '<=', $request->input('qksj'))
+				->where('jsj', '>=', $request->input('qjsj'))
+				->firstOrFail();
 
 			$app = Tksq::findOrFail($id);
 			$app->nd = $calendar->nd;
@@ -189,7 +211,7 @@ class TksqController extends Controller {
 			$app->sqyy = $request->input('sqyy') ?? 0;
 			$app->sqly = $request->input('sqly');
 			$app->kcxh = $request->input('kcxh');
-			$app->kcmc = Course::find(Helper::getCno($kcxhs[0]))->kcmc;
+			$app->kcmc = Course::find(Helper::getCno($request->input('kcxh')))->kcmc;
 			$app->qjs = Auth::user()->jsgh;
 			$app->qzc = $request->input('qzc');
 			$app->qxqz = $request->input('qxqz');
@@ -215,8 +237,10 @@ class TksqController extends Controller {
 				$app->hksj = $request->input('qksj');
 				$app->hjsj = $request->input('qjsj');
 			}
-			
+
 			$app->kkxy = $course->kkxy;
+			$app->yksj = $timetable->ksj;
+			$app->yjsj = $timetable->jsj;
 			$app->xgsj = Carbon::now();
 			$app->save();
 		}
@@ -224,7 +248,8 @@ class TksqController extends Controller {
 		return redirect()->route('tksq.index')->withStatus('修改申请成功');
 	}
 
-	public function destroy(Request $request, $id) {
+	public function destroy(Request $request, $id)
+	{
 		if ($request->isMethod('delete')) {
 			$app = Tksq::findOrFail($id);
 			$app->delete();
@@ -233,35 +258,37 @@ class TksqController extends Controller {
 		return redirect()->route('tksq.index')->withStatus('删除申请成功');
 	}
 
-	public function course(Request $request) {
-        $today = Carbon::now();
-	    $nextWeek = $today->addWeek();
-        $calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
+	public function course(Request $request)
+	{
+		$today = Carbon::now();
+		$nextWeek = $today->addWeek();
+		$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 
-        $courses = Timetable::whereNd($calendar->nd)
-	        ->whereXq($calendar->xq)
-	        ->whereZc($request->input('zc'))
-	        ->where('ksz', '<=', $request->input('xqz'))
-	        ->where('jsz', '>=', $request->input('xqz'))
-	        ->whereKsj($request->input('ksj'))
-	        ->whereJsj($request->input('jsj'))
-	        ->whereJsgh(Auth::user()->jsgh)
-	        ->get();
+		$courses = Timetable::whereNd($calendar->nd)
+			->whereXq($calendar->xq)
+			->whereZc($request->input('zc'))
+			->where('ksz', '<=', $request->input('xqz'))
+			->where('jsz', '>=', $request->input('xqz'))
+			->whereKsj($request->input('ksj'))
+			->whereJsj($request->input('jsj'))
+			->whereJsgh(Auth::user()->jsgh)
+			->get();
 
-	    $message = '';
-	    $kcxh = [];
-	    foreach ($courses as $course) {
-	    	$kcxh[] = $course->kcxh;
-	    	$message .= '《' . $course->kcxh . '-' . Course::find(Helper::getCno($course->kcxh))->kcmc . '》';
-	    }
+		$message = '';
+		$kcxh = [];
+		foreach ($courses as $course) {
+			$kcxh[] = $course->kcxh;
+			$message .= '《' . $course->kcxh . '-' . Course::find(Helper::getCno($course->kcxh))->kcmc . '》';
+		}
 
-	    return json_encode([
-	    	'kcxh' => implode(',', $kcxh),
-	    	'message' => $message,
-	    ]);
+		return json_encode([
+			'kcxh' => implode(',', $kcxh),
+			'message' => $message,
+		]);
 	}
 
-	public function search(Request $request) {
+	public function search(Request $request)
+	{
 		$departments = Department::with('pivot')
 			->where('dw', '<>', '')
 			->whereLx(config('constants.department.college'))
@@ -272,7 +299,7 @@ class TksqController extends Controller {
 			->orderBy('dm')
 			->get();
 		$title = '调停课查询';
-/*
+		/*
 		$apps = Tksq::with('teacher', 'qclassroom', 'hclassroom')
 			->whereNd(session('year'))
 			->whereXq(session('term'))
@@ -319,7 +346,8 @@ class TksqController extends Controller {
 		return view('tksq.search', compact('title', 'departments', 'apps', 'subtitle', 'campuses', 'condition'));
 	}
 
-	public function teacher(Request $request) {
+	public function teacher(Request $request)
+	{
 		if ($request->ajax()) {
 			$keyword = $request->input('q');
 

@@ -35,6 +35,47 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="kcxh" class="col-sm-2 control-label">课程列表</label>
+                        <div class="col-sm-6">
+                            <table class="table table-responsive table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>ID</th>
+                                        <th>课程序号</th>
+                                        <th>课程名称</th>
+                                        <th>星期</th>
+                                        <th>周次</th>
+                                        <th>节次</th>
+                                        <th>教室</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($courses as $course)
+                                    <tr>
+                                        <td>
+                                            <input type="radio" name="kcxh" value="{{ $course->kcxh }}" data-zc="{{ $course->zc }}" data-ksj="{{ $course->ksj }}" data-jsj="{{ $course->jsj }}"{{ $app->kcxh == $course->kcxh ? ' checked' : '' }}>
+                                        </td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $course->kcxh }}</td>
+                                        <td>{{ App\Models\Course::find(App\Http\Helper::getCno($course->kcxh))->kcmc }}</td>
+                                        <td>{{ config('constants.week.' . $course->zc) }}</td>
+                                        <td>{{ $course->ksz }} ~ {{ $course->jsz }}</td>
+                                        <td>{{ $course->ksj }} ~ {{ $course->jsj }}</td>
+                                        <td>{{ $course->classroom->mc }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentWeek" class="col-sm-2 control-label">当前学期周</label>
+                        <div class="col-sm-6">
+                            <div class="form-control-static">{{ App\Http\Helper::getAcademicYear($calendar->nd) }}学年度{{ $calendar->term->mc }}学期第 {{ $currentWeek }} 周</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="qxqz" class="col-sm-2 control-label">变更前时间</label>
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -52,29 +93,18 @@
                                 </select>
                                 <div class="input-group-addon">第</div>
                                 <select name="qksj" id="qksj" class="form-control">
-                                    @foreach (range(1, 12) as $item)
-                                        <option value="{{ $item }}" {{ $app->qksj == $item ? 'selected' : '' }}>{{ $item }}</option>
-                                    @endforeach
+                                    @for ($i = $app->yksj; $i <= $app->yjsj; ++$i)
+                                        <option value="{{ $i }}" {{ $app->qksj == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                    @endfor
                                 </select>
                                 <div class="input-group-addon">节至第</div>
                                 <select name="qjsj" id="qjsj" class="form-control">
-                                    @foreach (range(1, 12) as $item)
-                                        <option value="{{ $item }}" {{ $app->qjsj == $item ? 'selected' : '' }}>{{ $item }}</option>
-                                    @endforeach
+                                    @for ($i = $app->yksj; $i <= $app->yjsj; ++$i)
+                                        <option value="{{ $i }}" {{ $app->qjsj == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                    @endfor
                                 </select>
                                 <div class="input-group-addon">节</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="kcxh" class="col-sm-2 control-label">课程名称</label>
-                        <div class="col-sm-6">
-                            <div class="form-control-static" id="course">
-                                @foreach (explode(',', $app->kcxh) as $kcxh)
-                                    《{{ $kcxh }}-{{ App\Models\Course::find(App\Http\Helper::getCno($kcxh))->kcmc }}》
-                                @endforeach
-                            </div>
-                            <input type="hidden" name="kcxh" id="kcxh" value="{{ $app->kcxh }}">
                         </div>
                     </div>
                     <div class="form-group" id="bghsj">
@@ -136,6 +166,27 @@
 @push('scripts')
 <script>
 $(function() {
+    $(':radio').click(function(e) {
+        $('table tr').removeClass('bg-success');
+        $(this).parents('tr').addClass('bg-success');
+
+        $('#qxqz, #qzc, #qksj, #qjsj').removeAttr('disabled');
+        $('#qzc').val($(this).data('zc')).attr('readonly', true);
+        $('#qksj').empty();
+        $('#qjsj').empty();
+
+        var ksj = $(this).data('ksj');
+        var jsj = $(this).data('jsj');
+        for (i = $(this).data('ksj'); i <= $(this).data('jsj'); i++){
+            var option = '<option value="' + i + '">' + i + '</option>';
+
+            $('#qksj, #qjsj').append(option);
+        }
+
+        $('#qksj option:contains(' + ksj + ')').attr('selected', true);
+        $('#qjsj option:contains(' + jsj + ')').attr('selected', true);
+    });
+    /* 
     $('#qxqz, #qzc, #qksj, #qjsj').change(function () {
         $.ajax({
             type: 'get',
@@ -166,7 +217,7 @@ $(function() {
 
         return true;
     });
-
+ */
     if ($('#sqsx').val() == 1) {
         $('#bghjs').show();
         $('#bghsj').hide();

@@ -37,6 +37,7 @@ class TimetableController extends Controller
 			->whereXq($inputs['term'])
 			->whereJsgh(Auth::user()->jsgh)
 			->orderBy('ksz')
+			->orderBy('kcxh')
 			->get();
 
 		$courses = [];
@@ -281,9 +282,9 @@ class TimetableController extends Controller
 					foreach ($apps as $app) {
 						$bz = '[ ' . config('constants.suspension.' . $app->sqsx) . '：' . config('constants.audit.' . $app->xyspzt) . ' ] ';
 
-						$bz .= '第 ' . $app->qxqz . ' 周星期' . config('constants.week.' . $app->qzc) . '第 ' . $app->qksj . ' ~ ' . $app->qjsj . ' 节' . optional($app->qclassroom)->mc . '教室';
+						$bz .= '第 ' . $app->qxqz . ' 周星期' . config('constants.week.' . $app->qzc) . '第 ' . ($app->qksj == $app->qjsj ? $app->qksj : $app->qksj . ' ~ ' . $app->qjsj) . ' 节' . (is_null($app->qclassroom) ? '未知' : $app->qclassroom->mc) . '教室';
 						if ($app->sqsx == 0) {
-							$bz .= '变更为第 ' . $app->hxqz . ' 周星期' . config('constants.week.' . $app->hzc) . '第 ' . $app->hksj . ' ~ ' . $app->hjsj . ' 节' . optional($app->hclassroom)->mc . '教室';
+							$bz .= '变更为第 ' . $app->hxqz . ' 周星期' . config('constants.week.' . $app->hzc) . '第 ' . ($app->hksj == $app->hjsj ? $app->hksj : $app->hksj . ' ~ ' . $app->hjsj) . ' 节' . (is_null($app->hclassroom) ? '未知' : $app->hclassroom->mc) . '教室';
 							$bz .= '主讲教师为' . $app->hteacher->xm . $app->hteacher->position->mc;
 						} elseif ($app->sqsx == 1) {
 							$bz .= '主讲教师变更为' . $app->hteacher->xm . $app->hteacher->position->mc;
