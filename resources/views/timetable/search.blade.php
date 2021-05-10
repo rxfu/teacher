@@ -40,7 +40,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-3">
-                    <label for="campus">开课校区</label>
+                    <label for="campus">开课学院所在校区</label>
                     <select id="campus" name="campus" class="form-control" data-width="100px">
                         <option value="all">全部开课校区</option>
                         @foreach ($campuses as $campus)
