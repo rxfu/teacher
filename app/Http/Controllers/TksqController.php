@@ -35,8 +35,8 @@ class TksqController extends Controller
 	{
 		$title = '调停课申请';
 
-		// $today = Carbon::now();
-		$today = Carbon::createFromDate(2020, 10, 1);
+		$today = Carbon::now();
+		// $today = Carbon::createFromDate(2020, 10, 1);
 		$nextWeek = $today->addWeek();
 		$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 		$currentWeek = $today->diffInWeeks($calendar->rq);
@@ -74,8 +74,9 @@ class TksqController extends Controller
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-			// $today = Carbon::now();
-			$today = Carbon::createFromDate(2020, 10, 1);
+
+			$today = Carbon::now();
+			// $today = Carbon::createFromDate(2020, 10, 1);
 			$nextWeek = $today->addWeek();
 			$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 			// $kcxhs = explode(',', $request->input('kcxh'));
@@ -143,8 +144,8 @@ class TksqController extends Controller
 	{
 		$title = '调停课申请修改';
 
-		// $today = Carbon::now();
-		$today = Carbon::createFromDate(2020, 10, 1);
+		$today = Carbon::now();
+		// $today = Carbon::createFromDate(2020, 10, 1);
 		$nextWeek = $today->addWeek();
 		$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 		$currentWeek = $today->diffInWeeks($calendar->rq);
@@ -183,8 +184,9 @@ class TksqController extends Controller
 			$this->validate($request, [
 				'sqly' => 'required',
 			]);
-			// $today = Carbon::now();
-			$today = Carbon::createFromDate(2020, 10, 1);
+
+			$today = Carbon::now();
+			// $today = Carbon::createFromDate(2020, 10, 1);
 			$nextWeek = $today->addWeek();
 			$calendar = Calendar::where('rq', '<', $nextWeek)->orderBy('rq', 'desc')->firstOrFail();
 			// $kcxhs = explode(',', $request->input('kcxh'));
