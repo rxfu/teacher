@@ -26,7 +26,8 @@ use Maatwebsite\Excel\Facades\Excel;
  * @date 2016-03-12
  * @version 2.0
  */
-class ScoreController extends Controller {
+class ScoreController extends Controller
+{
 
 	/**
 	 * 显示当前课程列表
@@ -35,11 +36,13 @@ class ScoreController extends Controller {
 	 * @version 2.0
 	 * @return  \Illuminate\Http\Response 学生成绩列表
 	 */
-	public function index() {
+	public function index()
+	{
 		$tasks = Task::with([
 			'course' => function ($query) {
 				$query->select('kch', 'kcmc', 'xs');
-			}])
+			}
+		])
 			->whereJsgh(Auth::user()->jsgh)
 			->whereNd(session('year'))
 			->whereXq(session('term'))
@@ -62,7 +65,8 @@ class ScoreController extends Controller {
 	 * @param   string $kcxh 12位课程序号
 	 * @return  \Illuminate\Http\Response 课程成绩列表
 	 */
-	public function show(Request $request, $kcxh) {
+	public function show(Request $request, $kcxh)
+	{
 		$inputs = $request->all();
 
 		$scores = Dtscore::with('status')
@@ -108,7 +112,8 @@ class ScoreController extends Controller {
 	 * @param  	string $kcxh 12位课程序号
 	 * @return  \Illuminate\Http\Response 学生名单
 	 */
-	public function edit($kcxh) {
+	public function edit($kcxh)
+	{
 		$course = Mjcourse::whereNd(session('year'))
 			->whereXq(session('term'))
 			->whereKcxh($kcxh)
@@ -174,6 +179,9 @@ class ScoreController extends Controller {
 				$score->tjzt = 0; // 提交状态：未提交
 				$score->kkxy = $student->kkxy;
 
+				// 2021-06-20：增加留学生管理单位
+				$score->gldw = $student->gldw;
+
 				for ($i = 1; $i <= 6; ++$i) {
 					$score->{'cj' . $i} = 0;
 				}
@@ -225,7 +233,8 @@ class ScoreController extends Controller {
 	 * @param   string $kcxh 12位课程序号
 	 * @return 	\Illuminate\Http\Response 学生成绩
 	 */
-	public function update(Request $request, $kcxh) {
+	public function update(Request $request, $kcxh)
+	{
 		if ($request->isMethod('put')) {
 			$inputs = $request->all();
 
@@ -290,7 +299,8 @@ class ScoreController extends Controller {
 	 * @param   string $kcxh 12位课程序号
 	 * @return 	\Illuminate\Http\Response 考试状态
 	 */
-	public function updateStatus(Request $request, $kcxh) {
+	public function updateStatus(Request $request, $kcxh)
+	{
 		if ($request->isMethod('put')) {
 			$inputs = $request->all();
 
@@ -323,18 +333,25 @@ class ScoreController extends Controller {
 	 * @param   string $kcxh 12位课程序号
 	 * @return \Illuminate\Http\Response 上报成绩
 	 */
-	public function confirm($kcxh) {
-		$noScoreStudents = DB::select('SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
-			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]);
-		$scoreNoStudents = DB::select('SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
-			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]);
+	public function confirm($kcxh)
+	{
+		$noScoreStudents = DB::select(
+			'SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]
+		);
+		$scoreNoStudents = DB::select(
+			'SELECT xh, xm, nd, xq FROM t_cj_web WHERE nd = :year AND xq = :term AND kcxh = :kcxh EXCEPT SELECT xh, xm, nd, xq FROM t_xk_xkxx WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh]
+		);
 
 		if (count($noScoreStudents) || count($scoreNoStudents)) {
 			return redirect()->route('score.index')->withNoScoreStudents($noScoreStudents)->withScoreNoStudents($scoreNoStudents);
 		}
 
-		$affected = DB::update('UPDATE t_cj_web SET tjzt = :committed WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
-			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh, 'committed' => config('constants.score.committed')]);
+		$affected = DB::update(
+			'UPDATE t_cj_web SET tjzt = :committed WHERE nd = :year AND xq = :term AND kcxh = :kcxh',
+			['year' => session('year'), 'term' => session('term'), 'kcxh' => $kcxh, 'committed' => config('constants.score.committed')]
+		);
 
 		return redirect()->route('score.index')->withStatus('成绩上报成功');
 	}
@@ -348,7 +365,8 @@ class ScoreController extends Controller {
 	 * @param   string $kcxh 12位课程序号
 	 * @return  \Illuminate\Http\Response 学生成绩
 	 */
-	public function batchUpdate(Request $request, $kcxh) {
+	public function batchUpdate(Request $request, $kcxh)
+	{
 		if ($request->isMethod('put')) {
 			$inputs = $request->all();
 
@@ -387,7 +405,6 @@ class ScoreController extends Controller {
 				$rules = [];
 				foreach ($items as $item) {
 					$rules[$student->xh . $item->id] = 'numeric|min:0|max:100';
-
 				}
 				$rules[$student->xh . 'kszt'] = 'numeric';
 				$this->validate($request, $rules);
@@ -418,7 +435,8 @@ class ScoreController extends Controller {
 		return redirect()->route('score.edit', $kcxh)->withStatus('保存成绩成功');
 	}
 
-	public function import(Request $request, $kcxh) {
+	public function import(Request $request, $kcxh)
+	{
 		if ($request->isMethod('post') && $request->hasFile('file')) {
 			$this->validate($request, [
 				'file' => 'required|mimes:' . config('constants.file.mimes.ext'),
