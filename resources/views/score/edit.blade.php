@@ -96,7 +96,7 @@
 	                        				<div id="status{{ $student->xh }}">
 	                        					@if (config('constants.score.uncommitted') == $student->tjzt)
 	                        						未上报
-	                        					@elseif (config('constants.score.committed') == $student->tjzt)
+	                        					@elseif (config('constants.score.committed') <= $student->tjzt)
 	                        						已上报
 	                        					@endif
 	                        				</div>
